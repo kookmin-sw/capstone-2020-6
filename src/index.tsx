@@ -8,11 +8,11 @@ import {Provider} from 'mobx-react';
 import stores from './stores';
 
 ReactDOM.render(
-    <React.StrictMode>
+    // <React.StrictMode>
       <Provider {...stores}>
         <Router/>
       </Provider>
-    </React.StrictMode>
+    // </React.StrictMode>
   ,
   document.getElementById('root')
 );

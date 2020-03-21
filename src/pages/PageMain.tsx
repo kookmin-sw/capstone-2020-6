@@ -1,15 +1,30 @@
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { Container } from "semantic-ui-react"
+import { Container, Grid } from "semantic-ui-react"
 import "./PageMain.css"
 
-interface Props extends RouteComponentProps<any>{
-  navigate?: any
+// Components
+import CardProject from '../components/CardProject'
+
+// for Mobx
+import { observer, inject } from 'mobx-react'
+import ProjectListStore from '../stores/ProjectListStore'
+
+// interface Props extends RouteComponentProps<any>{
+interface Props {
+  // navigate: any,
+  projectListStore?: ProjectListStore
 }
 
+@inject("projectListStore") @observer
 class App extends React.Component<Props> {
+  constructor(props:any) {
+    super(props)
+    // 답변 가능한 프로젝트 목록 요청
+    this.props.projectListStore!.getAvailableProject()
+  }
   render() {
-    console.log(this.props.navigate)
+    console.log(this.props.projectListStore!.list)
     return (
       <>
         <div className="main_body_image" style={{backgroundImage: "url('/body.jpg')"}}>
@@ -21,9 +36,28 @@ class App extends React.Component<Props> {
             </Container>
           </div>
         </div>
+        <br/>
+        <Container>
+        <h3>진행중인 라벨링 프로젝트</h3>
+        <Grid columns={3}>
+          {
+            this.props.projectListStore!.list.map((item: any) => {
+              return (
+                <Grid.Column>
+                  <CardProject
+                    thumbnail={item.thumbnail}
+                    title={item.title}
+                  />
+                </Grid.Column>
+              )
+            })
+          }
+        </Grid>
+        </Container>
       </>
     )
   }
 }
 
-export default withRouter(App);
+// export default withRouter(App);
+export default App;
