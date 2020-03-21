@@ -3,4 +3,21 @@
     height: 350px;
     background-size: cover;
     background-position: center center;
+    text-align: center;
+}
+
+.main_body_image > div {
+    background-color: rgba(0, 0, 0, 0.5);
+    height: 100%;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    padding-top: 100px;
+}
+
+.main_body_text {
+    font-size: 20px;
+    line-height: 20px;
+    font-weight: 100;
+    margin-top: 50px;
 }
