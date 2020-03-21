@@ -21,5 +21,10 @@
   },
   "include": [
     "src"
-  ]
+  ],
+  "prettier": {
+    "singleQuote": true,
+    "trailingComma": "all",
+    "semi": false
+  }
 }
