@@ -47,12 +47,12 @@ AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 
 
 **0. 최은미 교수님**
 
-<img src="img/최은미.jpeg" alt="최은미" />
+<img src="img/최은미.png" alt="최은미" />
 
 
 **1. 이정하**
 
-
+<img src="img/이정하.png" alt="이정하" />
 
 ```markdown
 ✓ StudentID: 20171677
@@ -62,7 +62,7 @@ AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 
 
 **2. 박상일**
 
-
+<img src="img/박상일.png" alt="박상일" />
 
 ```markdown
 ✓ StudentID: 20152818
@@ -73,15 +73,17 @@ AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 
 
 **3. 박지희**
 
+<img src="img/박지희.png" alt="박지희" />
 
 ```markdown
 ✓ StudentID: 20172772
 ✓ E-mail: jihi1013@kookmin.ac.kr
-✓ Role: 블록체인
+✓ Role: Back-End
 ```
 
 **4. 윤여환**
 
+<img src="img/윤여환.png" alt="윤여환" />
 
 ```markdown
 ✓ StudentID: 20171658
@@ -91,7 +93,7 @@ AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 
 
 **5. 이다은**
 
-
+<img src="img/이다은.png" alt="이다은" />
 
 ```markdown
 ✓ StudentID: 20171661
@@ -101,12 +103,12 @@ AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 
 
 **6. 장태진**
 
-
+<img src="img/장태진.png" alt="이정하" />
 
 ```markdown
 ✓ StudentID: 20171695
 ✓ E-mail: jtjisgod@gmail.com
-✓ Role: Project Manager, 블록체인, 문서 벡터화 제작 및 분석 알고리즘
+✓ Role: Project Manager, 문서 벡터화 제작 및 분석 알고리즘
 ```
 
 
