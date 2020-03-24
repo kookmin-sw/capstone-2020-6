@@ -38,6 +38,7 @@ AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 
 
 ### 2. 소개 영상
 <iframe width="1206" height="678" src="https://www.youtube.com/embed/qzj5CS8uCCQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Video Label](https://i.imgur.com/JFEmUir.png)](https://www.youtube.com/embed/qzj5CS8uCCQ)
 
 ### 3. 팀 소개
 <img src="teams.png"/>
