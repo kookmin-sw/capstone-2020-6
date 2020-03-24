@@ -27,7 +27,10 @@
 ## 내용에 아래와 같은 내용들을 추가하세요.
 
 -->
-<img src="https://i.imgur.com/JFEmUir.png"/>
+
+# T-SAN(티끌모아 태산)
+
+<img src="img/logo.png" alt="logo" style="zoom:50%;" />
 
 ### 1. 프로젝트 소개
 
@@ -41,7 +44,71 @@ AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 
 영상 업로드 전, 테스트 링크 및 영상입니다.
 
 ### 3. 팀 소개
-<img src="teams.png"/>
+
+**0. 최은미 교수님**
+
+<img src="img/최은미.jpeg" alt="최은미" />
+
+
+**1. 이정하**
+
+<img src="img/이정하.jpeg" alt="이정하" style="zoom:10%;" />
+```markdown
+✓ StudentID: 20171677
+✓ E-mail: jeongha3751@kookmin.ac.kr
+✓ Role: 팀장, Front-End
+```
+
+
+**2. 박상일**
+
+<img src="img/박상일.jpeg" alt="박상일" style="zoom:35%;" />
+
+```markdown
+✓ StudentID: 20152818
+✓ E-mail: psi1104@kookmin.ac.kr
+✓ Role: ML 이용한 데이터 분석 및 시각화
+```
+
+
+**3. 박지희**
+
+<img src="img/박지희.jpeg" alt="박지희" style="zoom:15%;" />
+```markdown
+✓ StudentID: 20172772
+✓ E-mail: jihi1013@kookmin.ac.kr
+✓ Role: 블록체인
+```
+
+
+**4. 윤여환**
+
+<img src="img/윤여환.jpeg" alt="윤여환" style="zoom:25%;" />
+```markdown
+✓ StudentID: 20171658
+✓ E-mail: johnyhgmg@gmail.com
+✓ Role: Front-End
+```
+
+**5. 이다은**
+
+<img src="img/이다은.jpeg" alt="이다은" style="zoom:10%;" />
+
+```markdown
+✓ StudentID: 20171661
+✓ E-mail: cg140428@gmail.com
+✓ Role: Back-End
+```
+
+**6. 장태진**
+
+<img src="img/장태진.jpeg" alt="장태진" style="zoom:15%;" />
+```markdown
+✓ StudentID: 20171695
+✓ E-mail: jtjisgod@gmail.com
+✓ Role: Project Manager, 블록체인, 문서 벡터화 제작 및 분석 알고리즘
+```
+
 
 ### 4. 사용법
 
