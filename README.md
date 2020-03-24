@@ -52,17 +52,17 @@ AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 
 
 **1. 이정하**
 
-<img src="img/이정하.jpeg" alt="이정하" style="zoom:10%;" />
+
+
 ```markdown
 ✓ StudentID: 20171677
 ✓ E-mail: jeongha3751@kookmin.ac.kr
 ✓ Role: 팀장, Front-End
 ```
 
-
 **2. 박상일**
 
-<img src="img/박상일.jpeg" alt="박상일" style="zoom:35%;" />
+
 
 ```markdown
 ✓ StudentID: 20152818
@@ -73,17 +73,16 @@ AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 
 
 **3. 박지희**
 
-<img src="img/박지희.jpeg" alt="박지희" style="zoom:15%;" />
+
 ```markdown
 ✓ StudentID: 20172772
 ✓ E-mail: jihi1013@kookmin.ac.kr
 ✓ Role: 블록체인
 ```
 
-
 **4. 윤여환**
 
-<img src="img/윤여환.jpeg" alt="윤여환" style="zoom:25%;" />
+
 ```markdown
 ✓ StudentID: 20171658
 ✓ E-mail: johnyhgmg@gmail.com
@@ -92,7 +91,7 @@ AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 
 
 **5. 이다은**
 
-<img src="img/이다은.jpeg" alt="이다은" style="zoom:10%;" />
+
 
 ```markdown
 ✓ StudentID: 20171661
@@ -102,7 +101,8 @@ AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 
 
 **6. 장태진**
 
-<img src="img/장태진.jpeg" alt="장태진" style="zoom:15%;" />
+
+
 ```markdown
 ✓ StudentID: 20171695
 ✓ E-mail: jtjisgod@gmail.com
