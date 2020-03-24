@@ -1,3 +1,4 @@
+<!--
 # Welcome to GitHub
 
 캡스톤 팀 생성을 축하합니다.
@@ -24,30 +25,35 @@
 
 ## 내용에 아래와 같은 내용들을 추가하세요.
 
-### 1. 프로잭트 소개
+-->
+<img src="https://i.imgur.com/JFEmUir.png"/>
 
-프로젝트
+### 1. 프로젝트 소개
+
+#### 1.1. 프로젝트 진행 동기
+AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 할 수 있는 데이터라벨링의 중요성도 대두되고 있다. 하지만 라벨링 작업은 사람이 직접 해야 하는 만큼 많은 비용과 시간을 필요로 하기 때문에 많은 글로벌 IT 기업이 이 작업을 임금이 저렴한 제 3세계 업체에 맡기고 있다. 따라서 저임금 노동자를 이용한 데이터라벨링의 문제점 해결을 위해 효율적인 데이터마이닝 작업 플랫폼이 필요하다.
+
+#### 1.2. 프로젝트의 목표
+본 프로젝트는 크라우드소싱이 도입된 데이터 마이닝 플랫폼 개발을 목표로 한다. 플랫폼 사용자를 의뢰자와 라벨러로 구분하고 의뢰자는 데이터셋과 무엇을 어떻게 라벨링을 진행해야 하는 등의 정보를 제공한다.제공한 데이터를 라벨러가 라벨링함으로서 보상으로 토큰을 획득할 수 있다. 또한 군집화를 통해 라벨링된 데이터의 신뢰도를 파악하여 양질의 라벨링 데이터를 획득할 수 있다. 보상을 통해 사용자들에게 데이터 라벨링에 대한 참여 동기를 부여하며, 라벨러들을 그들의 신뢰도에 따른 차등 관리를 진행하는 것은 자연스럽게 높은 신뢰도를 유지하도록 함으로써 높은 신뢰도에 기반한 데이터 라벨링이 가능하다.
 
 ### 2. 소개 영상
-
-프로젝트 소개하는 영상을 추가하세요
+<iframe width="1206" height="678" src="https://www.youtube.com/embed/qzj5CS8uCCQ" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 
 ### 3. 팀 소개
-
-팀을 소개하세요.
-
-팀원정보 및 담당이나 사진 및 SNS를 이용하여 소개하세요.
+<img src="teams.png"/>
 
 ### 4. 사용법
 
-소스코드제출시 설치법이나 사용법을 작성하세요.
+<!-- 소스코드제출시 설치법이나 사용법을 작성하세요. -->
+#### Docker를 통한 설치 및 배포
+개발 진행 중
 
 ### 5. 기타
 
-추가적인 내용은 자유롭게 작성하세요.
+<!-- 추가적인 내용은 자유롭게 작성하세요. -->
 
 
-## Markdown을 사용하여 내용꾸미기
+<!-- ## Markdown을 사용하여 내용꾸미기
 
 Markdown은 작문을 스타일링하기위한 가볍고 사용하기 쉬운 구문입니다. 여기에는 다음을위한 규칙이 포함됩니다.
 
@@ -73,4 +79,4 @@ Syntax highlighted code block
 
 ### Support or Contact
 
-readme 파일 생성에 추가적인 도움이 필요하면 [도움말](https://help.github.com/articles/about-readmes/) 이나 [contact support](https://github.com/contact) 을 이용하세요.
+readme 파일 생성에 추가적인 도움이 필요하면 [도움말](https://help.github.com/articles/about-readmes/) 이나 [contact support](https://github.com/contact) 을 이용하세요. -->
