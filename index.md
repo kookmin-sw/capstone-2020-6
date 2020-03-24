@@ -81,7 +81,7 @@
 ```markdown
 ✓ StudentID: 20172772
 ✓ E-mail: jihi1013@kookmin.ac.kr
-✓ Role: Back-End
+✓ Role: 블록체인
 ```
 
 **4. 윤여환**
@@ -111,7 +111,7 @@
 ```markdown
 ✓ StudentID: 20171695
 ✓ E-mail: jtjisgod@gmail.com
-✓ Role: Project Manager, 문서 벡터화 제작 및 분석 알고리즘
+✓ Role: Project Manager, 블록체인, 문서 벡터화 제작 및 분석 알고리즘
 ```
 
 
