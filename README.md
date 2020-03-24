@@ -38,7 +38,7 @@ AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 
 
 ### 2. 소개 영상
 영상 업로드 전, 테스트 링크 및 영상입니다.
-[![Video Label](youtube.png)](https://youtu.be/qzj5CS8uCCQ?t=0s)
+[<img src="youtube.png"/>](https://youtu.be/qzj5CS8uCCQ?t=0s)
 
 ### 3. 팀 소개
 <img src="teams.png"/>
