@@ -39,8 +39,9 @@
 ​		본 프로젝트는 크라우드소싱이 도입된 데이터 마이닝 플랫폼 개발을 목표로 한다. 플랫폼 사용자를 의뢰자와 라벨러로 구분하고 의뢰자는 데이터셋과 무엇을 어떻게 라벨링을 진행해야 하는 등의 정보를 제공한다.제공한 데이터를 라벨러가 라벨링함으로서 보상으로 토큰을 획득할 수 있다. 또한 군집화를 통해 라벨링된 데이터의 신뢰도를 파악하여 양질의 라벨링 데이터를 획득할 수 있다. 보상을 통해 사용자들에게 데이터 라벨링에 대한 참여 동기를 부여하며, 라벨러들을 그들의 신뢰도에 따른 차등 관리를 진행하는 것은 자연스럽게 높은 신뢰도를 유지하도록 함으로써 높은 신뢰도에 기반한 데이터 라벨링이 가능하다.
 
 ## 2. Abstration
+Data labeling, which is the most basic task of AI technology is getting important as the AI market expands. Currently, labeling is generally performed by humans, so the price of a dataset processed through them is very high. Therefore, many companies and research organizations bear a financial burden to build a labeled dataset. Or, they can not progress AI training/tests because of an unaffordable price. An efficient data mining platform that complements the economy is needed to solve the problems mentioned above.
 
-
+ This project aims to develop a data mining platform with crowdsourcing. The users of the platform are divided into clients and labelers. The clients should provide two big pieces of information, a dataset and ways of labeling. The labelers can receive tokens as a reward when they do labeling works. In addition, it is possible to gather high-quality labeling data by measuring the reliability of the labeled data through clustering. Rewards can motivate users to participate in data labeling. Therefore, T-SAN guarantees high reliability of the labelers by graded management based on their reliability.
 
 ## 3. 소개 영상
 
@@ -120,9 +121,6 @@
 ## 5. 사용법
 
 <!-- 소스코드제출시 설치법이나 사용법을 작성하세요. -->
-
-#### Docker를 통한 설치 및 배포
-개발 진행 중
 
 ## 6. 기타
 
