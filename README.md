@@ -33,15 +33,14 @@
 <img src="img/logo.png" alt="logo" style="zoom:50%;" />
 
 ## 1. 프로젝트 개요
+​		AI 시장이 확대되면서 AI 기술의 가장 기본적인 과제인 데이터 라벨링이 중요해지고 있다. 현재 라벨링은 일반적으로 인간에 의해 수행되므로 이를 통해 처리되는 데이터셋의 가격은 매우 높다. 따라서 많은 기업과 연구 기관들은 라벨이 붙은 데이터 세트를 구축해야 하는 재정적 부담을 안고 있다. 또는 감당할 수 없는 가격 때문에 AI 훈련/테스트를 진행할 수 없다. 위에서 언급한 문제를 해결하기 위해서는 경제를 보완하는 효율적인 데이터 마이닝 플랫폼이 필요하다.
 
-​		AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 할 수 있는 데이터 라벨링의 중요성도 대두되고 있다. 현재 라벨링 작업은 전반적으로 사람이 직접 수행하고 있기 때문에 이를 통해 가공된 데이터 셋의 가격은 몹시 높은 상황이다. 따라서 많은 기업과 연구 조직이 라벨링 된 데이터셋를 구축하기 위해 부담이 되는 비용을 지불하고 있거나, 감당할 수 없는 가격으로 인하여 AI 훈련/테스트를 진행하지 못하고 있다. 이와 같은 문제점 해결을 위해, 경제성을 보완한 효율적인 데이터마이닝 작업 플랫폼이 필요하다.
-
-​		본 프로젝트는 크라우드소싱이 도입된 데이터 마이닝 플랫폼 개발을 목표로 한다. 플랫폼 사용자를 의뢰자와 라벨러로 구분하고 의뢰자는 데이터셋과 무엇을 어떻게 라벨링을 진행해야 하는 등의 정보를 제공한다.제공한 데이터를 라벨러가 라벨링함으로서 보상으로 토큰을 획득할 수 있다. 또한 군집화를 통해 라벨링된 데이터의 신뢰도를 파악하여 양질의 라벨링 데이터를 획득할 수 있다. 보상을 통해 사용자들에게 데이터 라벨링에 대한 참여 동기를 부여하며, 라벨러들을 그들의 신뢰도에 따른 차등 관리를 진행하는 것은 자연스럽게 높은 신뢰도를 유지하도록 함으로써 높은 신뢰도에 기반한 데이터 라벨링이 가능하다.
+​		T-SAN 프로젝트는 크라우드소싱이 포함된 데이터 마이닝 플랫폼을 개발하는 것을 목표로 한다. 플랫폼 사용자는 의뢰자와 라벨링 참여자로 나뉜다. 의뢰자는 데이터 셋과 라벨링 방법, 두 가지 정보를 제공해야 한다. 라벨링 참여자는 라벨링 작업을 할 때 보상으로 포인트를 받을 수 있다. 또한 클러스터링을 통해 라벨링된 데이터를 검수하여 신뢰도 있는 데이터셋을 수집할 수 있다. 결과적으로 T-SAN은 인공지능을 통한 검수과정으로 선별된 데이터 라벨링을 보장할 수 있다.
 
 ## 2. Abstration
-Data labeling, which is the most basic task of AI technology is getting important as the AI market expands. Currently, labeling is generally performed by humans, so the price of a dataset processed through them is very high. Therefore, many companies and research organizations bear a financial burden to build a labeled dataset. Or, they can not progress AI training/tests because of an unaffordable price. An efficient data mining platform that complements the economy is needed to solve the problems mentioned above.
+    Data labeling, which is the most basic task of AI technology is getting important as the AI market expands. Currently, labeling is generally performed by humans, so the price of a dataset processed through them is very high. Thus, many companies and research organizations bear a financial burden to build a labeled dataset. Or, they can not progress AI training/tests because of an unaffordable price. An efficient data mining platform that complements the economy is needed to solve the problems mentioned above.
 
- This project aims to develop a data mining platform with crowdsourcing. The users of the platform are divided into clients and labelers. The clients should provide two big pieces of information, a dataset and ways of labeling. The labelers can receive tokens as a reward when they do labeling works. In addition, it is possible to gather high-quality labeling data by measuring the reliability of the labeled data through clustering. Rewards can motivate users to participate in data labeling. Therefore, T-SAN guarantees high reliability of the labelers by graded management based on their reliability.
+    T-SAN project aims to develop a data mining platform with crowdsourcing. The users of the platform are divided into clients and labelers. The clients should provide two big pieces of information, a dataset and ways of labeling. The labelers can receive tokens as a reward when they do labeling works. Besides, it is possible to gather high-quality labeling data by measuring the reliability of the labeled data through clustering. Rewards could motivate users to take part in data labeling. Graded management let the labelers maintain their high reliability. To sum up, T-SAN can guarantee high-quality data labeling based on the high reliability.
 
 ## 3. 소개 영상
 
