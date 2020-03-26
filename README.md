@@ -29,6 +29,7 @@
 -->
 
 # T-SAN(티끌모아 태산)
+팀 페이지: https://kookmin-sw.github.io/capstone-2020-6/
 
 <img src="img/logo.png" alt="logo" style="zoom:50%;" />
 
