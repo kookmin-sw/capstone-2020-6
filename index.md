@@ -1,4 +1,5 @@
 <!--
+
 # Welcome to GitHub
 
 캡스톤 팀 생성을 축하합니다.
@@ -26,33 +27,103 @@
 ## 내용에 아래와 같은 내용들을 추가하세요.
 
 -->
-<img src="https://i.imgur.com/JFEmUir.png"/>
 
-### 1. 프로젝트 소개
+# T-SAN(티끌모아 태산)
 
-#### 1.1. 프로젝트 진행 동기
-AI시장이 확대됨에 따라 AI기술의 가장 기본적인 작업이라고 할 수 있는 데이터라벨링의 중요성도 대두되고 있다. 하지만 라벨링 작업은 사람이 직접 해야 하는 만큼 많은 비용과 시간을 필요로 하기 때문에 많은 글로벌 IT 기업이 이 작업을 임금이 저렴한 제 3세계 업체에 맡기고 있다. 따라서 저임금 노동자를 이용한 데이터라벨링의 문제점 해결을 위해 효율적인 데이터마이닝 작업 플랫폼이 필요하다.
+<img src="img/logo.png" alt="logo" style="zoom:50%;" />
 
-#### 1.2. 프로젝트의 목표
-본 프로젝트는 크라우드소싱이 도입된 데이터 마이닝 플랫폼 개발을 목표로 한다. 플랫폼 사용자를 의뢰자와 라벨러로 구분하고 의뢰자는 데이터셋과 무엇을 어떻게 라벨링을 진행해야 하는 등의 정보를 제공한다.제공한 데이터를 라벨러가 라벨링함으로서 보상으로 토큰을 획득할 수 있다. 또한 군집화를 통해 라벨링된 데이터의 신뢰도를 파악하여 양질의 라벨링 데이터를 획득할 수 있다. 보상을 통해 사용자들에게 데이터 라벨링에 대한 참여 동기를 부여하며, 라벨러들을 그들의 신뢰도에 따른 차등 관리를 진행하는 것은 자연스럽게 높은 신뢰도를 유지하도록 함으로써 높은 신뢰도에 기반한 데이터 라벨링이 가능하다.
+## 1. 프로젝트 개요
+&nbsp;&nbsp;AI 시장이 확대되면서 AI 기술의 가장 기본적인 과제인 데이터 라벨링이 중요해지고 있다. 현재 라벨링은 일반적으로 인간에 의해 수행되므로 이를 통해 처리되는 데이터셋의 가격은 매우 높다. 따라서 많은 기업과 연구 기관들은 라벨이 붙은 데이터 세트를 구축해야 하는 재정적 부담을 안고 있다. 또는 감당할 수 없는 가격 때문에 AI 훈련/테스트를 진행할 수 없다. 위에서 언급한 문제를 해결하기 위해서는 경제를 보완하는 효율적인 데이터 마이닝 플랫폼이 필요하다.
 
-### 2. 소개 영상
-영상 업로드 전, 테스트 링크 및 영상입니다.
-[<img src="youtube.png"/>](https://youtu.be/qzj5CS8uCCQ?t=0s)
+&nbsp;&nbsp;T-SAN 프로젝트는 크라우드소싱이 포함된 데이터 마이닝 플랫폼을 개발하는 것을 목표로 한다. 플랫폼 사용자는 의뢰자와 라벨링 참여자로 나뉜다. 의뢰자는 데이터셋과 라벨링 방법, 두 가지 정보를 제공해야 한다. 라벨링 참여자는 라벨링 작업을 할 때 보상으로 포인트를 받을 수 있다. 또한 클러스터링을 통해 라벨링 된 데이터를 검수하여 신뢰도 있는 데이터셋을 수집할 수 있다. 결과적으로 T-SAN은 인공지능을 통한 검수 과정으로 선별된 데이터 라벨링을 보장할 수 있다.
 
-### 3. 팀 소개
-<img src="teams.png"/>
+## 2. Abstration
+&nbsp;&nbsp;Data labeling, which is the most basic task of AI technology is getting important as the AI market expands. Currently, labeling is generally performed by humans, so the price of a dataset processed through them is very high. Thus, many companies and research organizations bear a financial burden to build a labeled dataset. Or, they can not progress AI training/tests because of an unaffordable price. An efficient data mining platform that complements the economy is needed to solve the problems mentioned above.
 
-### 4. 사용법
+&nbsp;&nbsp;T-SAN project aims to develop a data mining platform with crowdsourcing. The users of the platform are divided into clients and labelers. The clients should provide two big pieces of information, a dataset and ways of labeling. The labelers can receive tokens as a reward when they do labeling works. Besides, it is possible to gather high-quality labeling data by measuring the reliability of the labeled data through clustering. Rewards could motivate users to take part in data labeling. Graded management let the labelers maintain their high reliability. To sum up, T-SAN can guarantee high-quality data labeling based on the high reliability.
+
+## 3. 소개 영상
+
+[![Watch the video](./youtube.png)](https://youtu.be/vt5fpE0bzSY)
+
+## 4. 팀 소개
+
+**0. 최은미 교수님**
+
+<img src="img/최은미.png" alt="최은미" />
+
+```markdown
+✓ 6조 지도교수님
+```
+
+**1. 이정하**
+
+<img src="img/이정하.png" alt="이정하" />
+
+```markdown
+✓ StudentID: 20171677
+✓ E-mail: jeongha3751@kookmin.ac.kr
+✓ Role: 팀장, Front-End
+```
+
+**2. 박상일**
+
+<img src="img/박상일.png" alt="박상일" />
+
+```markdown
+✓ StudentID: 20152818
+✓ E-mail: psi1104@kookmin.ac.kr
+✓ Role: ML 이용한 데이터 분석 및 시각화
+```
+
+
+**3. 박지희**
+
+<img src="img/박지희.png" alt="박지희" />
+
+```markdown
+✓ StudentID: 20172772
+✓ E-mail: jihi1013@kookmin.ac.kr
+✓ Role: 블록체인
+```
+
+**4. 윤여환**
+
+<img src="img/윤여환.png" alt="윤여환" />
+
+```markdown
+✓ StudentID: 20171658
+✓ E-mail: johnyhgmg@gmail.com
+✓ Role: Front-End
+```
+
+**5. 이다은**
+
+<img src="img/이다은.png" alt="이다은" />
+
+```markdown
+✓ StudentID: 20171661
+✓ E-mail: cg140428@gmail.com
+✓ Role: Back-End
+```
+
+**6. 장태진**
+
+<img src="img/장태진.png" alt="이정하" />
+
+```markdown
+✓ StudentID: 20171695
+✓ E-mail: jtjisgod@gmail.com
+✓ Role: Project Manager, 블록체인, 문서 벡터화 제작 및 분석 알고리즘
+```
+
+## 5. 사용법
 
 <!-- 소스코드제출시 설치법이나 사용법을 작성하세요. -->
-#### Docker를 통한 설치 및 배포
-개발 진행 중
 
-### 5. 기타
+## 6. 기타
 
 <!-- 추가적인 내용은 자유롭게 작성하세요. -->
-
 
 <!-- ## Markdown을 사용하여 내용꾸미기
 
