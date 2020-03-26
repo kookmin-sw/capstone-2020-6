@@ -44,7 +44,7 @@
 
 ## 3. 소개 영상
 
-[![Watch the video](./youtube.png)](https://youtu.be/vt5fpE0bzSY)
+[![Watch the video](./youtube.png)](https://youtu.be/zOQfu3Gawzw)
 
 ## 4. 팀 소개
 
