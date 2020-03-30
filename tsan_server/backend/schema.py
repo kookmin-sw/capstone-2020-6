@@ -31,12 +31,12 @@ class CreateAccount(graphene.Mutation):
             res = User.objects.exclude().get(username=username)
             return CreateAccount(message=Message(status=False, message="이미 존재하는 아이디입니다."))
         except:
-            new_user = User.objects.create_user(username=username, email=email, password=password, phone=phone)
+            new_user = User.objects.create_user(username=username, email=email, password=password)
             return CreateAccount(message=Message(status=True, message="정상적으로 가입되었습니다."))
 
 """
 mutation {
-	createDatabase(name: "네이버 뉴스기사 댓글") {
+	createDataset(name: "네이버 뉴스기사 댓글") {
     message {
       status
       message
