@@ -1,4 +1,5 @@
 from django.db import models
+import django.contrib.auth.models
 
 class Dataset(models.Model):
     # PK, MongoDB에서 해당 키를 기반으로 데이터셋을 저장함
@@ -9,3 +10,6 @@ class Dataset(models.Model):
         self.name = name
         self.save()
         return self
+
+class User(django.contrib.auth.models.User):
+    phone = models.CharField(max_length=30)
