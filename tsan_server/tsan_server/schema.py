@@ -2,7 +2,7 @@ import graphene
 from graphene_django.types import DjangoObjectType
 
 from backend.models import User, Dataset
-from backend.schema import CreateAccount, CreateDataset
+from backend.schema import CreateAccount, CreateDataset, LoginAccount
 
 class UserType(DjangoObjectType):
     class Meta:
@@ -15,6 +15,7 @@ class DatasetType(DjangoObjectType):
 class Mutation(graphene.ObjectType):
     create_account = CreateAccount.Field()
     create_dataset = CreateDataset.Field()
+    login_account = LoginAccount.Field()
 
 class Query(graphene.ObjectType):
     get_all_user = graphene.List(UserType)
