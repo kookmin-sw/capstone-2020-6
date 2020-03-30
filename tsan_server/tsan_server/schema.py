@@ -14,7 +14,7 @@ class DatasetType(DjangoObjectType):
 
 class Mutation(graphene.ObjectType):
     create_account = CreateAccount.Field()
-    create_database = CreateDataset.Field()
+    create_dataset = CreateDataset.Field()
 
 class Query(graphene.ObjectType):
     get_all_user = graphene.List(UserType)
