@@ -1,11 +1,17 @@
-import { observable, action, runInAction, computed, IObservableValue } from 'mobx'
+import {
+  action,
+  computed,
+  IObservableValue,
+  observable,
+  runInAction,
+} from 'mobx';
 
 export default class MenuStore {
-    @observable active: string = "main"
+    @observable active: string = 'main'
     constructor() {
-        this.active = "main"
+      this.active = 'main';
     }
     @action setActive(active: string) {
-        this.active = active
+      this.active = active;
     }
 }
