@@ -37,6 +37,7 @@ class App extends React.Component<Props> {
           </div>
         </div>
         <br/>
+
         <Container>
         <h3>진행중인 라벨링 프로젝트</h3>
         <Grid columns={3}>
@@ -47,12 +48,42 @@ class App extends React.Component<Props> {
                   <CardProject
                     thumbnail={item.thumbnail}
                     title={item.title}
+                    author={item.author}
+                    start_date={item.start_date}
+                    end_date={item.end_date}
+                    type={item.type}
+                    point={item.point}
+                    description={item.description}
+                    progress_rate={item.progress_rate}
                   />
                 </Grid.Column>
               )
             })
           }
         </Grid>
+        <h3>완료된 라벨링 프로젝트</h3>
+            <Grid columns={3}>
+                {
+                    this.props.projectListStore!.list.map((item: any) => {
+                        return (
+                            <Grid.Column>
+                                <CardProject
+                                    thumbnail={item.thumbnail}
+                                    title={item.title}
+                                    author={item.author}
+                                    start_date={item.start_date}
+                                    end_date={item.end_date}
+                                    type={item.type}
+                                    point={item.point}
+                                    description={item.description}
+                                    progress_rate={item.progress_rate}
+                                />
+                            </Grid.Column>
+                        )
+                    })
+                }
+            </Grid>
+
         </Container>
       </>
     )
