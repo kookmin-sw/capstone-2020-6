@@ -5,15 +5,16 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
-import {Container, Header} from 'semantic-ui-react';
 
 // for Pages
 import PageMain from './pages/PageMain';
 import PageLogin from './pages/PageLogin';
 import PageRegister from './pages/PageRegister';
 import PageAbout from './pages/PageAbout';
-import Navigation from './components/Navigation';
 import PageMypage from './pages/PageMypage';
+
+// for Components
+import Navigation from './components/Navigation';
 
 // for Mobx
 import {inject, observer} from 'mobx-react';
@@ -31,11 +32,7 @@ class App extends React.Component<Props> {
   render() {
     return (
       <Router>
-        <Header>
-          <Container>
-            <Navigation/>
-          </Container>
-        </Header>
+        <Navigation/>
         <Switch>
           <Route path="/about">
             <PageAbout/>

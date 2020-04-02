@@ -1,12 +1,15 @@
 .card_project {
-    background-color: #eee;
+    /*background-color: #eee;*/
 }
 
-.card_project > img {
+.ui.card > .image > img {
     width: 100%;
+    height: 150px;
+}
+
+.ui.card >.content {
     height: 200px;
 }
-
 .card_description {
     padding: 10px;
 }

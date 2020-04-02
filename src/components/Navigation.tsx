@@ -22,13 +22,13 @@ class Navigation extends React.Component<Props> {
         </div>
         <div className='menu'>
           <div className='menu_item'>
-            <Link to="/about">About</Link>
+            <Link className='text' to="/about">About</Link>
           </div>
           <div className='menu_item'>
-            <Link to="/login">Login</Link>
+            <Link className='text' to="/login">Login</Link>
           </div>
           <div className='menu_item'>
-            <Link to="/register">Register</Link>
+            <Link className='text' to="/register">Register</Link>
           </div>
           <div className='avatar'>
             <Avatar/>

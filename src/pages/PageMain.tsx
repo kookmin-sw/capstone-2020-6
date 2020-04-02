@@ -5,6 +5,7 @@ import './PageMain.css';
 
 // Components
 import CardProject from '../components/CardProject';
+import Header from '../components/Header';
 
 // for Mobx
 import { observer, inject } from 'mobx-react';
@@ -27,22 +28,9 @@ class App extends React.Component<Props> {
     console.log(this.props.projectListStore!.list)
     return (
       <>
-        <div className="main_body_image"
-          style={{backgroundImage: "url('/body.jpg')"}}>
-          <div>
-            <span>T-SAN, 티끌모아 태산</span>
-            <Container className="main_body_text">
-              T-SAN은 Ex dolore veniam fugiat quis adipisicing esse sunt
-              ea enim eu consectetur ea sunt ad.Quideserunt fugiat id
-              aliquip esse laboris irure in adipisicing occaecat sint
-              est. Lorem exercitation duis adipisicing veniam ullamco
-              minim nostrud. Amet sint cillum enim dolore consectetur
-              veniam enim id consequat commodo commodo nostrud.
-            </Container>
-          </div>
-        </div>
+        <Header/>
         <br/>
-        <Container>
+        <Container style={{position: 'relative'}}>
           <h3>진행중인 라벨링 프로젝트</h3>
           <Grid columns={3}>
             {this.props.projectListStore!.list.map((item: any) => {
@@ -51,12 +39,43 @@ class App extends React.Component<Props> {
                   <CardProject
                     thumbnail={item.thumbnail}
                     title={item.title}
+                    author={item.author}
+                    start_date={item.start_date}
+                    end_date={item.end_date}
+                    type={item.type}
+                    point={item.point}
+                    description={item.description}
+                    progress_rate={item.progress_rate}
                   />
                 </Grid.Column>
               );
             })
-            }
-          </Grid>
+
+          }
+        </Grid>
+        <h3>완료된 라벨링 프로젝트</h3>
+            <Grid columns={3}>
+                {
+                    this.props.projectListStore!.list.map((item: any) => {
+                        return (
+                            <Grid.Column>
+                                <CardProject
+                                    thumbnail={item.thumbnail}
+                                    title={item.title}
+                                    author={item.author}
+                                    start_date={item.start_date}
+                                    end_date={item.end_date}
+                                    type={item.type}
+                                    point={item.point}
+                                    description={item.description}
+                                    progress_rate={item.progress_rate}
+                                />
+                            </Grid.Column>
+                        )
+                    })
+                }
+            </Grid>
+
         </Container>
       </>
     );

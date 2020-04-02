@@ -13,7 +13,7 @@ class Avatar extends React.Component<Props> {
   render() {
     return (
       <div className='avatar'>
-        <Image style={{height: '50px', width: '50px'}} src='https://react.semantic-ui.com/images/wireframe/square-image.png' avatar />
+        <Image style={{height: '45px', width: '45px'}} src='https://react.semantic-ui.com/images/wireframe/square-image.png' avatar />
       </div>
     );
   }
