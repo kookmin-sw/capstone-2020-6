@@ -1,0 +1,42 @@
+.navigation {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    height: 70px;
+    justify-content: space-between;
+    left: 0;
+    position: fixed;
+    right: 0;
+    top: 0;
+}
+
+.logo {
+    float: left;
+    height: 50px;
+    margin-left: 5%;
+}
+
+.menu {
+    align-items: center;
+    display: flex;
+    flex-direction: row;
+    height: 70px;
+    justify-content: flex-end;
+    margin-right: 5%;
+}
+
+.menu_item {
+    align-items: center;
+    display: flex;
+    height: inherit;
+    justify-content: center;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.avatar {
+    align-items: center;
+    height: inherit;
+    justify-content: center;
+    margin-right: 10px;
+}
