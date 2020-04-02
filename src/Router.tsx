@@ -4,41 +4,36 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
-} from "react-router-dom";
-import { Header, Container, Menu, Image } from "semantic-ui-react"
+} from 'react-router-dom';
+import {Container, Header} from 'semantic-ui-react';
 
 // for Pages
-import PageMain from './pages/PageMain'
-import PageLogin from './pages/PageLogin'
-import PageRegister from './pages/PageRegister'
-import PageAbout from './pages/PageAbout'
+import PageMain from './pages/PageMain';
+import PageLogin from './pages/PageLogin';
+import PageRegister from './pages/PageRegister';
+import PageAbout from './pages/PageAbout';
+import Navigation from './components/Navigation';
+import PageMypage from './pages/PageMypage';
 
 // for Mobx
-import { observer, inject } from 'mobx-react'
-import MenuStore from './stores/MenuStore'
+import {inject, observer} from 'mobx-react';
+import MenuStore from './stores/MenuStore';
 
 export interface Props {
     menuStore?: MenuStore
 }
 
-@inject("menuStore") @observer
+@inject('menuStore') @observer
 class App extends React.Component<Props> {
   constructor(props:any) {
-    super(props)
-    console.log(props)
+    super(props);
   }
   render() {
     return (
       <Router>
         <Header>
-          <Container className="main_top_header">
-            <Link to="/"><img src="/logo.png" className="router_top_logo"/></Link>
-            <div className="main_top_menu">
-              <Link to="/about">About</Link>
-              <Link to="/login">Login</Link>
-              <Link to="/register">Register</Link>
-            </div>
+          <Container>
+            <Navigation/>
           </Container>
         </Header>
         <Switch>
@@ -48,6 +43,9 @@ class App extends React.Component<Props> {
           <Route path="/login">
             <PageLogin/>
           </Route>
+          <Route path="/mypage">
+            <PageMypage/>
+          </Route>
           <Route path="/register">
             <PageRegister/>
           </Route>
@@ -56,7 +54,7 @@ class App extends React.Component<Props> {
           </Route>
         </Switch>
       </Router>
-    )
+    );
   }
 }
 
