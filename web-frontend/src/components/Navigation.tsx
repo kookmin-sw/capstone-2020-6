@@ -32,16 +32,16 @@ class Navigation extends React.Component<Props> {
           </div>
           <div className='menu'>
             <div className='menu_item'>
-              <Link className='text' to="/about">About</Link>
+              <Link className='text' to="/about">소개</Link>
             </div>
             <div className='menu_item'>
-              <Link className='text' to="/login">Login</Link>
+              <Link className='text' to="/login">로그인</Link>
             </div>
             <div className='menu_item'>
-              <Link className='text' to="/register">Register</Link>
+              <Link className='text' to="/register">회원가입</Link>
             </div>
             <div className='menu_item'>
-              <Link className='text' to="/mypage">Mypage</Link>
+              <Link className='text' to="/mypage">마이페이지</Link>
             </div>
             {/* <div className='avatar'>
             <Link to={{
