@@ -3,17 +3,19 @@ import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {Image} from 'semantic-ui-react';
 
 import './Avatar.css';
+import {observer} from 'mobx-react';
 
 interface Props extends RouteComponentProps<any>{
-    id?: string
-    thumbnail?: string
+    thumbnail?: any
 }
 
+@observer
 class Avatar extends React.Component<Props> {
   render() {
     return (
       <div className='avatar'>
-        <Image style={{height: '45px', width: '45px'}} src='https://react.semantic-ui.com/images/wireframe/square-image.png' avatar />
+        <Image style={{height: '45px', width: '45px'}}
+          src={this.props.thumbnail} avatar />
       </div>
     );
   }

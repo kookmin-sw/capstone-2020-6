@@ -1,11 +1,11 @@
 import {action, observable} from 'mobx';
 
 export default class Avatar {
-    @observable thumbnail: string = '../../img/defaultAvatar.png';
+    @observable thumbnail: any = '';
     constructor() {
-      this.thumbnail = '../../img/defaultAvatar.png';
+      this.thumbnail = '';
     }
     @action getAvatar() {
-      this.thumbnail = '../../img/defaultAvatar.png';
+      this.thumbnail = 'defaultAvatar.png';
     }
 }
