@@ -1,0 +1,52 @@
+.box {
+    padding: 40px;
+    border: 1px solid #ddd;
+    width: 380px;
+    margin: auto;
+    margin-top: 60px;
+}
+
+.login_form_logo {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.login_form_logo > img {
+    width: 200px;
+}
+
+.login_form_register_area {
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #ddd;
+}
+
+.login_form_register_area > div {
+    font-size: 15px;
+    color: #313131;
+}
+
+.login_form_register_area span {
+    font-weight: bold;
+    color: #104ec2;
+}
+
+.login_form_btn {
+    width: 100%;
+    border: 0px solid;
+    padding: 10px;
+    border: 1px solid #ddd;
+    color: #444;
+    margin-top: 10px;
+    outline: none;
+}
+
+.login_form_btn:hover {
+    cursor: pointer;
+}
+
+.login_btn {
+    background-color: #104ec2;
+    color: #fff;
+    font-weight: bold;
+}
