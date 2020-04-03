@@ -9,16 +9,20 @@ interface Props extends RouteComponentProps<any> {
   label?: string,
   placeholder?: string,
   value?: string,
-  onChange?: any
+  onChange?: any,
+  type?: string,
+  style?: any
 }
 
 class JInput extends React.Component<Props> {
   static defaultProps = {
-    onChange: () => {}
+    onChange: () => {},
+    type: "text",
+    style: {}
   }
   render() {
     return (
-      <>
+      <div style={this.props.style}>
         {
           this.props.label ? (
             <div className="jinput_label">
@@ -31,8 +35,9 @@ class JInput extends React.Component<Props> {
           placeholder={this.props.placeholder}
           value={this.props.value}
           onChange={this.props.onChange}
+          type={this.props.type}
         />
-      </>
+      </div>
     );
   }
 }

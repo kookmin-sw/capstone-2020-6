@@ -8,6 +8,8 @@
     width: 100%;
     border: 0px solid;
     border-bottom: 1px solid #ddd;
+    color: #777;
+    outline: 0px;
 }
 
 .jinput::placeholder {
