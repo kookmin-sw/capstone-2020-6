@@ -1,0 +1,2 @@
+django
+graphene-django
