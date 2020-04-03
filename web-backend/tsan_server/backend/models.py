@@ -17,14 +17,20 @@ class User(django.contrib.auth.models.User):
     point = models.IntegerField() # 포인트
     reliability = models.FloatField() # 신뢰도
 
+# 데이터 라벨링 유형
+class Category(models.Model):
+    idx = models.AutoField(primary_key=True) # 고유번호
+    type = models.CharField(max_length=15) # 이미지/텍스트
+    name = models.CharField(max_length=50) # 카테고리 명
+
 # 의뢰 요청 테이블
 class Request(models.Model):
     idx = models.AutoField(primary_key=True) # 고유번호
     user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 생성자
+    category = models.ForeignKey("Category", on_delete=models.DO_NOTHING) # 데이터 라벨링 유형
     subject = models.CharField(max_length=100) # 요청 주제
     start_date = models.DateTimeField() # 시작
     due_date = models.DateTimeField() # 마감
     current_cycle = models.IntegerField() # 현재 사이클
     max_cycle = models.IntegerField() # 최대 사이클
     total_point = models.IntegerField() # 총 가격
-
