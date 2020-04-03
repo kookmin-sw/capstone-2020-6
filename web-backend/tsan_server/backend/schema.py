@@ -64,3 +64,19 @@ class CreateDataset(graphene.Mutation):
                         message=Message(status=True, message=message),
                         idx=dataset.idx
                     )
+
+
+class LoginAccount(graphene.Mutation):
+    message = graphene.Field(Message)
+    jwt = graphene.String() # json web token
+
+    class Arguments:
+        username = graphene.String()
+        password = graphene.String()
+
+    def mutate(self, info, username, password):
+        try:
+            User.objects.get(username=username, password=password)
+            return LoginAccount(message=Message(status=True, message="정상적으로 로그인 되었습니다."))
+        except:
+            return LoginAccount(message=Message(status=False, message="아이디 또는 비밀번호가 올바르지 않습니다."))
