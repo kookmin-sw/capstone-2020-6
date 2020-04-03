@@ -10,15 +10,17 @@
     right: 0;
     top: 0;
     z-index: 1;
-    -webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.75);
-    -moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.75);
-    box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.75);
+    margin-top: 30px;
+    /*
+        -webkit-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.75);
+        -moz-box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.75);
+        box-shadow: 1px 0px 5px 1px rgba(0,0,0,0.75);
+    */
 }
 
 .logo {
     float: left;
     height: 50px;
-    margin-left: 5%;
 }
 
 .menu {
@@ -27,7 +29,6 @@
     flex-direction: row;
     height: 70px;
     justify-content: flex-end;
-    margin-right: 5%;
 }
 
 .menu_item {
@@ -37,6 +38,7 @@
     justify-content: center;
     padding-left: 10px;
     padding-right: 10px;
+    font-size: 18px;
 }
 
 .avatar {

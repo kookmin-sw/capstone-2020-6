@@ -34,7 +34,7 @@ class App extends React.Component<Props> {
         <br />
         <Container style={{ position: "relative" }}>
           <h3>진행중인 라벨링 프로젝트</h3>
-          <Grid columns={3}>
+          <Grid columns={4}>
             {this.props.projectListStore!.list.map((item: any) => {
               return (
                 <Grid.Column>
@@ -56,7 +56,7 @@ class App extends React.Component<Props> {
             })}
           </Grid>
           <h3>완료된 라벨링 프로젝트</h3>
-          <Grid columns={3}>
+          <Grid columns={4}>
             {this.props.projectListStore!.list.map((item: any) => {
               return (
                 <Grid.Column>
@@ -78,7 +78,7 @@ class App extends React.Component<Props> {
             })}
           </Grid>
         </Container>
-        <Footer/>
+        <Footer />
       </>
     );
   }

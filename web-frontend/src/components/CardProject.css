@@ -1,5 +1,18 @@
+.ui.card:hover {
+    cursor: pointer;
+    background-color: #f7f7f7;
+}
+
 .card_project {
     /*background-color: #eee;*/
+}
+
+.card_project_title {
+    display: block;
+    max-width: 98%;
+    white-space: nowrap;
+    overflow: hidden !important;
+    text-overflow: ellipsis;
 }
 
 .ui.card > .image > img {
@@ -8,7 +21,7 @@
 }
 
 .ui.card >.content {
-    height: 230px;
+    max-height: 230px;
 }
 
 .ui.card > .content > .description{
