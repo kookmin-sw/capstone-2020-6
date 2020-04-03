@@ -5,6 +5,7 @@ import './PageMain.css';
 
 // Components
 import CardProject from '../components/CardProject';
+import Footer from '../components/Footer';
 import Header from '../components/Header';
 
 // for Mobx
@@ -14,7 +15,7 @@ import ProjectListStore from '../stores/ProjectListStore';
 // interface Props extends RouteComponentProps<any>{
 interface Props {
   // navigate: any,
-  projectListStore?: ProjectListStore
+  projectListStore?: ProjectListStore,
 }
 
 @inject('projectListStore') @observer
@@ -75,8 +76,8 @@ class App extends React.Component<Props> {
                     })
                 }
             </Grid>
-
         </Container>
+        <Footer/>
       </>
     );
   }
