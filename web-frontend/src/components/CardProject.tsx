@@ -27,7 +27,7 @@ class CardProject extends React.Component<Props> {
         <Card>
           <Image src={this.props.thumbnail} wrapped ui={false} />
           <Card.Content>
-            <Card.Header>
+            <Card.Header className="card_project_title">
               [{this.props.type}] {this.props.title}
             </Card.Header>
             <Icon name="bitcoin" />
