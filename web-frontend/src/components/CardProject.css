@@ -1,0 +1,30 @@
+.card_project {
+    /*background-color: #eee;*/
+}
+
+.ui.card > .image > img {
+    width: 100%;
+    height: 150px;
+}
+
+.ui.card >.content {
+    height: 230px;
+}
+
+.ui.card > .content > .description{
+    height: 60px;
+}
+
+.card_description {
+    padding: 10px;
+}
+
+.card_description > div:first-child {
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+i.icon.bitcoin:before{
+    color: #F0E000
+}
