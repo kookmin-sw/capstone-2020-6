@@ -26,7 +26,7 @@ class Navigation extends React.Component<Props> {
       <div className='navigation'>
         <div className='logo'>
           <Link to='/'>
-            <img className='logo' src='/logo.png'/>
+            <img className='logo' src='/images/logo.png'/>
           </Link>
         </div>
         <div className='menu'>

@@ -6,6 +6,6 @@ export default class Avatar {
       this.thumbnail = '';
     }
     @action getAvatar() {
-      this.thumbnail = 'defaultAvatar.png';
+      this.thumbnail = '/images/defaultAvatar.png';
     }
 }
