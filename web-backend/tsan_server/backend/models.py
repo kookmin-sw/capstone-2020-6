@@ -42,3 +42,11 @@ class Labeling(models.Model):
     user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 생성자
     start_date = models.DateTimeField(auto_now=True) # 시작 시간
     end_date = models.DateTimeField() # 종료 시간
+
+# 금액 지급 내역 테이블
+class PaymentLog(models.Model):
+    idx = models.AutoField(primary_key=True) # 고유번호
+    type = models.IntegerField() # 0 = 보상, 1 = 충전, 2 = 기타 사유
+    user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 사용자
+    request = models.ForeignKey("Request", on_delete=models.DO_NOTHING) # 보상을 주는 의뢰
+    message = models.CharField(max_length=300) # 사유
