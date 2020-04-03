@@ -34,3 +34,11 @@ class Request(models.Model):
     current_cycle = models.IntegerField() # 현재 사이클
     max_cycle = models.IntegerField() # 최대 사이클
     total_point = models.IntegerField() # 총 가격
+
+# 라벨링 참여 테이블
+class Labeling(models.Model):
+    idx = models.AutoField(primary_key=True) # 고유번호
+    request = models.ForeignKey("Request", on_delete=models.DO_NOTHING) # 의뢰 번호
+    user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 생성자
+    start_date = models.DateTimeField(auto_now=True) # 시작 시간
+    end_date = models.DateTimeField() # 종료 시간
