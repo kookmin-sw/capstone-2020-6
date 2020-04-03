@@ -4,15 +4,15 @@ import Router from './Router';
 import * as serviceWorker from './serviceWorker';
 
 // for Mobx
-import {Provider} from 'mobx-react';
+import { Provider } from 'mobx-react';
 import stores from './stores';
 
 ReactDOM.render(
-    // <React.StrictMode>
-      <Provider {...stores}>
-        <Router/>
-      </Provider>
-    // </React.StrictMode>
+  // <React.StrictMode>
+  <Provider {...stores}>
+    <Router />
+  </Provider>
+  // </React.StrictMode>
   ,
   document.getElementById('root')
 );

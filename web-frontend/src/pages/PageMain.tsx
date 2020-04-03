@@ -78,7 +78,7 @@ class App extends React.Component<Props> {
             })}
           </Grid>
         </Container>
-        <Footer/>
+        <Footer />
       </>
     );
   }
