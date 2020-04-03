@@ -1,9 +1,9 @@
-import Avatar from './Avatar';
+import NavigationStore from './NavigationStore';
 import MenuStore from './MenuStore';
 import ProjectListStore from './ProjectListStore';
 
 export default {
-  avatarStore: new Avatar(),
+  navigationStore: new NavigationStore(),
   menuStore: new MenuStore(),
   projectListStore: new ProjectListStore(),
 };

@@ -1,25 +1,26 @@
 import React from 'react';
-import {Link, RouteComponentProps, withRouter} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 import Avatar from './Avatar';
 import './Navigation.css';
 
 // for Mobx
 import {observer, inject} from 'mobx-react';
-import AvatarStore from '../stores/Avatar';
+import NavigationStore from '../stores/NavigationStore';
 
 interface Props {
-    avatarStore?: AvatarStore;
+    navigationStore?: NavigationStore;
 }
 
 // eslint-disable-next-line require-jsdoc
-@inject('avatarStore')
+@inject('navigationStore')
 @observer
 class Navigation extends React.Component<Props> {
   // eslint-disable-next-line require-jsdoc
   constructor(props: any) {
     super(props);
-    this.props.avatarStore!.getAvatar();
+    this.props.navigationStore!.getAvatarThumbnail();
+    this.props.navigationStore!.getUserId();
   }
   render() {
     return (
@@ -40,7 +41,13 @@ class Navigation extends React.Component<Props> {
             <Link className='text' to="/register">Register</Link>
           </div>
           <div className='avatar'>
-            <Avatar thumbnail={this.props.avatarStore!.thumbnail}/>
+            <Link to={{
+              pathname: '/mypage',
+              search: `userId=${this.props.navigationStore!.userId}`,
+            }}>
+              <Avatar userId={this.props.navigationStore!.userId}
+                thumbnail={this.props.navigationStore!.thumbnail}/>
+            </Link>
           </div>
         </div>
       </div>

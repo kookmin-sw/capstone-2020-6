@@ -6,7 +6,8 @@ import './Avatar.css';
 import {observer} from 'mobx-react';
 
 interface Props extends RouteComponentProps<any>{
-    thumbnail?: any
+    userId?: string
+    thumbnail?: string
 }
 
 @observer
