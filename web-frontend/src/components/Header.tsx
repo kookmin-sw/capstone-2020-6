@@ -13,7 +13,7 @@ class Header extends React.Component<Props> {
   render() {
     return (
       <div className="main_body_image"
-        style={{backgroundImage: "url('/body.jpg')"}}>
+        style={{backgroundImage: "url('/images/body.jpg')"}}>
         <div>
           <span>T-SAN, 티끌모아 태산</span>
           <Container className="main_body_text">

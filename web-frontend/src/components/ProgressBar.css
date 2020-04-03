@@ -1,0 +1,9 @@
+
+.ui.progress .bar{
+    background: #415D9E;
+    min-width: 0em;
+}
+
+.ui.progress .bar>.progress{
+    color: white;
+}

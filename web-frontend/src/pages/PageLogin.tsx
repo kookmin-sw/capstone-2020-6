@@ -1,6 +1,6 @@
 import React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { Container } from "semantic-ui-react"
+import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {Container} from 'semantic-ui-react';
 
 interface Props extends RouteComponentProps<any>{
   navigate?: any
@@ -11,9 +11,9 @@ class App extends React.Component<Props> {
     console.log(this.props.navigate)
     return (
       <Container>
-      Login
+        Login
       </Container>
-    )
+    );
   }
 }
 
