@@ -4,7 +4,7 @@
 }
 
 .card_project {
-    /*background-color: #eee;*/
+    /*height: ;*/
 }
 
 .card_project_title {
@@ -15,29 +15,22 @@
     text-overflow: ellipsis;
 }
 
-.ui.card > .image > img {
-    width: 100%;
-    height: 150px;
-}
-
-.ui.card >.content {
+.card_content{
     max-height: 230px;
+
 }
 
-.ui.card > .content > .description{
+.card_image > .image > img{
+    width: 100% !important;
+    height: 150px !important;
+}
+
+.card_description{
     height: 60px;
-}
-
-.card_description {
-    padding: 10px;
 }
 
 .card_description > div:first-child {
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 10px;
-}
-
-i.icon.bitcoin:before{
-    color: #F0E000
 }
