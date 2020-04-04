@@ -42,9 +42,9 @@ class CardProject extends React.Component<Props> {
     console.log(this.props.navigate);
     return (
       <div className="card_project">
-        <Card>
-          <Image src={this.props.thumbnail} wrapped ui={false} />
-          <Card.Content>
+        <Card className="card_image">
+          <Image src={this.props.thumbnail} wrapped ui={false}/>
+          <Card.Content className="card_content">
             <Card.Header className="card_project_title">
               [{this.props.type}] {this.props.title}
             </Card.Header>
@@ -55,7 +55,7 @@ class CardProject extends React.Component<Props> {
               &nbsp;|&nbsp;
               {calcAgo(this.props.end_date - this.props.start_date).trim()} 뒤 종료
             </Card.Meta>
-            <Card.Description>{this.props.description}</Card.Description>
+            <Card.Description className="card_description">{this.props.description}</Card.Description>
             <ProgressBar
               progress={this.props.progress}
               all={this.props.all}

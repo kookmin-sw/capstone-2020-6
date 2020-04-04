@@ -1,0 +1,13 @@
+/*.mycard_description{*/
+/*    padding-bottom: 140px;*/
+/*}*/
+
+.mycard_content{
+    height: 300px;
+}
+
+.mycard_btn{
+    margin-bottom: 20px !important;
+    width: 150px !important;
+    margin-left: 1em !important;
+}
