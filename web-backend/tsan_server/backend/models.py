@@ -18,6 +18,15 @@ class User(django.contrib.auth.models.AbstractUser):
     reliability = models.FloatField(default=0) # 신뢰도
     is_requester = models.BooleanField(default=False) # 디폴트: 의뢰자
 
+    def create_user(self, username, email, password, phone, is_requester):
+        new_user = self.models(username=username, email=email, password=password)
+        new_user.phone = phone
+        new_user.point = 0
+        new_user.reliability = 0
+        new_user.is_requester = is_requester
+        new_user.save()
+        return new_user
+
 # 데이터 라벨링 유형
 class Category(models.Model):
     idx = models.AutoField(primary_key=True) # 고유번호
