@@ -44,7 +44,7 @@
 
 ## 3. 소개 영상
 
-[![Watch the video](https://raw.githubusercontent.com/kookmin-sw/capstone-2020-6/master/youtube.png)](https://youtu.be/zOQfu3Gawzw)
+[![Watch the video](https://raw.githubusercontent.com/kookmin-sw/capstone-2020-6/master/img/youtube.png)](https://youtu.be/zOQfu3Gawzw)
 
 ## 4. 팀 소개
 
