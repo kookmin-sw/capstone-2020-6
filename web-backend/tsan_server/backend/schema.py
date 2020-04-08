@@ -102,3 +102,17 @@ class LoginAccount(graphene.Mutation):
             user = serializer.object['user']
             return LoginAccount(message=Message(status=True, message="정상적으로 로그인 되었습니다."), jwt=token)
         return LoginAccount(message=Message(status=False, message="아이디 또는 비밀번호가 올바르지 않습니다."))
+
+class RefreshToken(graphene.Mutation):
+    message = graphene.Field(Message)
+    jwt = graphene.String()
+
+    class Arguments:
+        token = graphene.String()
+
+    def mutate(self, info, token):
+        serializer = RefreshJSONWebTokenSerializer(data={'token': token})
+        if serializer.is_valid():
+            token = serializer.object['token']
+            return RefreshToken(message=Message(), jwt=token)
+        return RefreshToken(message=Message(status=False, message="토큰 재발급에 실패하였습니다."))
