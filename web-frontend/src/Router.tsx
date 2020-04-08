@@ -18,28 +18,31 @@ import PageMypagePW from "./pages/PageMypagePW";
 import Navigation from './components/Navigation';
 
 // for Mobx
-import {inject, observer} from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import MenuStore from './stores/MenuStore';
+import { useCookies } from 'react-cookie';
+import { instanceOf } from 'prop-types';
+import { withCookies, Cookies } from 'react-cookie';
 
 export interface Props {
-    menuStore?: MenuStore
+  menuStore?: MenuStore
 }
 
 @inject('menuStore') @observer
 class App extends React.Component<Props> {
-  constructor(props:any) {
+  constructor(props: any) {
     super(props);
   }
   render() {
     return (
       <Router>
-        <Navigation/>
+        <Navigation />
         <Switch>
           <Route path="/about">
-            <PageAbout/>
+            <PageAbout />
           </Route>
           <Route path="/login">
-            <PageLogin/>
+            <PageLogin />
           </Route>
           <Route exact path="/mypage">
             <PageMypage/>
@@ -48,10 +51,10 @@ class App extends React.Component<Props> {
             <PageMypagePW/>
           </Route>
           <Route path="/register">
-            <PageRegister/>
+            <PageRegister />
           </Route>
           <Route path="/">
-            <PageMain/>
+            <PageMain />
           </Route>
         </Switch>
       </Router>

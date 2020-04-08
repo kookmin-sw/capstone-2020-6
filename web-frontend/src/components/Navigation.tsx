@@ -6,13 +6,15 @@ import './Navigation.css';
 // for Mobx
 import { observer, inject } from 'mobx-react';
 import NavigationStore from '../stores/NavigationStore';
+import LoginStore from '../stores/loginStore';
 
 interface Props {
   navigationStore?: NavigationStore;
+  loginStore?: LoginStore;
 }
 
 // eslint-disable-next-line require-jsdoc
-@inject('navigationStore')
+@inject('navigationStore', 'loginStore')
 @observer
 class Navigation extends React.Component<Props> {
   // eslint-disable-next-line require-jsdoc
@@ -34,15 +36,27 @@ class Navigation extends React.Component<Props> {
             <div className='menu_item'>
               <Link className='text' to="/about">소개</Link>
             </div>
-            <div className='menu_item'>
-              <Link className='text' to="/login">로그인</Link>
-            </div>
-            <div className='menu_item'>
-              <Link className='text' to="/register">회원가입</Link>
-            </div>
-            <div className='menu_item'>
-              <Link className='text' to="/mypage">마이페이지</Link>
-            </div>
+            {
+              this.props.loginStore?.is_login ? (
+                <>
+                  <div className='menu_item'>
+                    <Link className='text' to="/mypage">마이페이지</Link>
+                  </div>
+                  <div className='menu_item'>
+                    <Link className='text' to="/logout">로그아웃</Link>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className='menu_item'>
+                    <Link className='text' to="/login">로그인</Link>
+                  </div>
+                  <div className='menu_item'>
+                    <Link className='text' to="/register">회원가입</Link>
+                  </div>
+                </>
+              )
+            }
             {/* <div className='avatar'>
             <Link to={{
               pathname: '/mypage',

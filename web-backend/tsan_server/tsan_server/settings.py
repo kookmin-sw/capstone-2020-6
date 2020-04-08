@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles', # Required for GraphiQL
     'graphene_django',
     'command_center',
+    'corsheaders',
     'backend'
 ]
 
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'tsan_server.urls'
