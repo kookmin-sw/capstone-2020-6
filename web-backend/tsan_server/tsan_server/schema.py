@@ -1,10 +1,9 @@
 import graphene
 from graphene_django.types import DjangoObjectType
 
-# from backend.models import User, Dataset
 from backend import models
-# User, Dataset
-from backend.schema import CreateAccount, CreateDataset, LoginAccount, Message
+from backend.schema.User import CreateAccount, LoginAccount, Message
+from backend.schema.Dataset import CreateDataset
 
 from rest_framework_jwt.serializers import (
   JSONWebTokenSerializer,
