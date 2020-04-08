@@ -7,14 +7,21 @@ from rest_framework_jwt.serializers import (
   RefreshJSONWebTokenSerializer,
   jwt_decode_handler
 )
-
-class Message(graphene.ObjectType):
-    status = graphene.Boolean() # True = 정상, False = 에러
-    message = graphene.String() # 반환 메시지 (예: 비밀번호가 서로 일치하지 않습니다.)
+from backend.utils import (
+    only_user,
+    only_admin,
+    only_requester,
+    Message
+)
 
 """
 mutation {
-  createAccount(email:"jtjisgod@gmail.com", password:"password", username:"asdfasdf") {
+  createAccount(
+    email:"guest@gmail.com",
+    password:"guest",
+    username:"guest",
+    phone: "01028858793"
+  ) {
     message {
       status
       message
@@ -32,7 +39,7 @@ class CreateAccount(graphene.Mutation):
         phone = graphene.String()
         is_requester = graphene.Boolean()
         
-    def mutate(self, info, username, email, password, phone, is_requester):
+    def mutate(self, info, username, email, password, phone, is_requester=False):
         try:
             res = User.objects.exclude().get(username=username)
             return CreateAccount(message=Message(status=False, message="이미 존재하는 아이디입니다."))
@@ -58,8 +65,11 @@ class CreateDataset(graphene.Mutation):
 
     class Arguments:
         name = graphene.String()
+        token= graphene.String()
 
-    def mutate(self, info, name):
+    @only_user
+    @only_admin
+    def mutate(self, info, token, name):
         try:
             Dataset.objects.get(name=name)
             return CreateDataset(message=Message(status=False, message="이미 존재하는 데이터셋 이름입니다."))
@@ -74,7 +84,7 @@ class CreateDataset(graphene.Mutation):
 
 """
 mutation {
-  loginAccount(username: "taejin", password: "password12#") {
+  loginAccount(username: "guest", password: "guest") {
     message {
       status
       message
