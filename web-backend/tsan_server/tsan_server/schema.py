@@ -4,6 +4,12 @@ from graphene_django.types import DjangoObjectType
 from backend.models import User, Dataset
 from backend.schema import CreateAccount, CreateDataset, LoginAccount
 
+from rest_framework_jwt.serializers import (
+  JSONWebTokenSerializer,
+  RefreshJSONWebTokenSerializer,
+  jwt_decode_handler
+)
+
 class UserType(DjangoObjectType):
     class Meta:
         model = User
