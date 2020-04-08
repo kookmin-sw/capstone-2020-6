@@ -6,10 +6,12 @@ export default class LoginStore {
   @observable username: string = '';
   @observable password: string = '';
   @observable jwt: string = '';
+  @observable is_login: boolean = false;
   constructor() {
     this.username = ''
     this.password = ''
     this.jwt = localStorage.token
+    this.is_login = !!this.jwt
   }
   @action setUsername = (event: any) => {
     this.username = event.target.value
