@@ -12,6 +12,7 @@ import PageLogin from './pages/PageLogin';
 import PageRegister from './pages/PageRegister';
 import PageAbout from './pages/PageAbout';
 import PageMypage from './pages/PageMypage';
+import PageMypagePW from "./pages/PageMypagePW";
 
 // for Components
 import Navigation from './components/Navigation';
@@ -40,8 +41,11 @@ class App extends React.Component<Props> {
           <Route path="/login">
             <PageLogin/>
           </Route>
-          <Route path="/mypage">
+          <Route exact path="/mypage">
             <PageMypage/>
+          </Route>
+          <Route path="/mypage/pw">
+            <PageMypagePW/>
           </Route>
           <Route path="/register">
             <PageRegister/>

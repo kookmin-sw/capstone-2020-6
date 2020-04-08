@@ -1,0 +1,16 @@
+.mypage_pw{
+    padding: 40px;
+    border: 1px solid #ddd;
+    width: 500px !important;
+    margin: auto;
+    margin-top: 60px;
+}
+
+.mp_content > em{
+    color: orangered;
+    letter-spacing: -1px;
+}
+
+.mp_btn{
+    width: 130px;
+}
