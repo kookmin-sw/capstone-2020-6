@@ -2,6 +2,11 @@ import graphene
 from .forms import UserForm
 from .models import Dataset, User
 from django.contrib.auth import login
+from rest_framework_jwt.serializers import (
+  JSONWebTokenSerializer,
+  RefreshJSONWebTokenSerializer,
+  jwt_decode_handler
+)
 
 class Message(graphene.ObjectType):
     status = graphene.Boolean() # True = 정상, False = 에러
@@ -67,7 +72,17 @@ class CreateDataset(graphene.Mutation):
                         idx=dataset.idx
                     )
 
-
+"""
+mutation {
+  loginAccount(username: "taejin", password: "password12#") {
+    message {
+      status
+      message
+    }
+    jwt
+  }
+}
+"""
 class LoginAccount(graphene.Mutation):
     message = graphene.Field(Message)
     jwt = graphene.String() # json web token
@@ -77,8 +92,13 @@ class LoginAccount(graphene.Mutation):
         password = graphene.String()
 
     def mutate(self, info, username, password):
-        try:
-            User.objects.get(username=username, password=password)
-            return LoginAccount(message=Message(status=True, message="정상적으로 로그인 되었습니다."))
-        except:
-            return LoginAccount(message=Message(status=False, message="아이디 또는 비밀번호가 올바르지 않습니다."))
+        user = {
+          'username': username,
+          'password': password
+        }
+        serializer = JSONWebTokenSerializer(data=user)
+        if serializer.is_valid():
+            token = serializer.object['token']
+            user = serializer.object['user']
+            return LoginAccount(message=Message(status=True, message="정상적으로 로그인 되었습니다."), jwt=token)
+        return LoginAccount(message=Message(status=False, message="아이디 또는 비밀번호가 올바르지 않습니다."))
