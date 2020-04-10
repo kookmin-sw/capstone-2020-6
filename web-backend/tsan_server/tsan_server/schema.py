@@ -4,6 +4,7 @@ from graphene_django.types import DjangoObjectType
 from backend import models
 from backend.schema.User import CreateAccount, LoginAccount, Message
 from backend.schema.Dataset import CreateDataset
+from backend.schema.Category import CreateCategory
 
 from rest_framework_jwt.serializers import (
   JSONWebTokenSerializer,
@@ -32,7 +33,12 @@ class Dataset(graphene.ObjectType):
 class Mutation(graphene.ObjectType):
     create_account = CreateAccount.Field()
     create_dataset = CreateDataset.Field()
+    create_category = CreateCategory.Field()
     login_account = LoginAccount.Field()
+
+class Category(DjangoObjectType):
+    class Meta:
+        model = models.Category
 
 class Query(graphene.ObjectType):
     """
