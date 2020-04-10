@@ -36,19 +36,26 @@ class Mutation(graphene.ObjectType):
     create_category = CreateCategory.Field()
     login_account = LoginAccount.Field()
 
-class Category(DjangoObjectType):
+class CategoryType(DjangoObjectType):
     class Meta:
         model = models.Category
+
+class Category(graphene.ObjectType):
+    message = graphene.Field(Message)
+    category = graphene.List(CategoryType)
 
 class Query(graphene.ObjectType):
     """
     query {
-        getAllUser {
-            id
-            password
-            username
-            email
-            phone
+        getAllUser(token:"관리자") {
+            users{
+                username
+                email
+                phone
+                point
+                reliability
+                isRequester
+            }
         }
     }
     """
@@ -65,9 +72,11 @@ class Query(graphene.ObjectType):
 
     """
     query {
-        getAllDataset {
-            idx
-            name
+        getAllDataset(token:"의뢰자, 관리자") {
+			dataset{
+                idx
+                name
+            }
         }
     }
     """
@@ -77,6 +86,28 @@ class Query(graphene.ObjectType):
     @only_requester
     def resolve_get_all_dataset(self, info, token):
         return Dataset(message=Message(status=True, message=""), dataset=models.Dataset.objects.all())
+
+    """
+    query {
+        getAllCategory(token: "의뢰자, 관리자") {
+            message {
+                status
+                message
+            }
+            category {
+                idx
+                type
+                name
+            }
+        }
+    }
+    """
+    # 모든 카테코리 반환
+    get_all_category = graphene.Field(Category, token=graphene.String())
+    @only_user
+    @only_requester
+    def resolve_get_all_category(self, info, token):
+        return Category(message=Message(status=True, message=""), category=models.Category.objects.all())
         
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
