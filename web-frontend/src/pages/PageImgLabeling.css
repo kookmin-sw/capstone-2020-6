@@ -1,0 +1,19 @@
+.img_detail{
+    width: 100px !important;
+    height: 100px !important;
+    background-size: cover;
+}
+.img_row{
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
+
+.img_col{
+    padding-right: 0px !important;
+    padding-left: 0px !important;
+    width: auto !important;
+}
+
+.img_size{
+    height: 150px !important;
+}
