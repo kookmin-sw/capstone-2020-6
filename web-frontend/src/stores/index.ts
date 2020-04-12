@@ -2,7 +2,7 @@ import NavigationStore from './NavigationStore';
 import MenuStore from './MenuStore';
 import ProjectListStore from './ProjectListStore';
 import LoginStore from './loginStore';
-import MyPageListStore from "./MyPageListStore";
+import MyPageListStore from './MyPageListStore';
 import LabelingTextButtonStore from './LabelingTextButtonStore';
 
 export default {
