@@ -16,6 +16,7 @@ from backend.utils import (
 """
 mutation {
   createAccount(
+    isRequester:false
     email:"guest@gmail.com",
     password:"guest",
     username:"guest",

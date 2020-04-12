@@ -31,7 +31,7 @@ class User(django.contrib.auth.models.AbstractUser):
 class Category(models.Model):
     idx = models.AutoField(primary_key=True) # 고유번호
     type = models.CharField(max_length=15) # 이미지/텍스트
-    name = models.CharField(max_length=50) # 카테고리 명 
+    name = models.CharField(max_length=50, unique=True) # 카테고리 명 
 
     def create(self, name, type):
         self.name = name
@@ -51,6 +51,18 @@ class Request(models.Model):
     current_cycle = models.IntegerField(default=0) # 현재 사이클
     max_cycle = models.IntegerField(default=0) # 최대 사이클
     total_point = models.IntegerField(default=0) # 총 가격
+
+    def create(self, user, category, subject, description, due_date, max_cycle, total_point):
+       self.user = user
+       self.category = category
+       self.subject = subject
+       self.description = description
+       self.due_date = due_date
+       self.max_cycle = max_cycle
+       self.total_point = total_point
+       self.save()
+       return self
+
 
 # 라벨링 참여 테이블
 class Labeling(models.Model):

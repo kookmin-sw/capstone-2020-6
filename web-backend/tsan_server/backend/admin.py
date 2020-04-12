@@ -1,7 +1,7 @@
 from django.contrib import admin
 from rangefilter.filter import DateRangeFilter, DateTimeRangeFilter
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Category
+from .models import User, Category, Request
 
 # Register your models here.
 class UserTypeFilter(admin.SimpleListFilter):
@@ -37,6 +37,7 @@ class CustomUserAdmin(UserAdmin):
     )
     list_display = (
         'username',
+        'id', # 나중에 지우기
         'email',
         'point',
         'reliability',
@@ -68,8 +69,30 @@ class CategoryAdmin(admin.ModelAdmin):
         'type'
     )
 
+class RequestAdmin(admin.ModelAdmin):
+    list_display = (
+        'subject',
+        'user',
+        'category',
+        'due_date',
+        'max_cycle',
+        'total_point',
+    )
+    list_filter = (
+        'category',
+        'due_date',
+    )
+    search_fields = (
+        'subject',
+        'user',
+        'category',
+        'due_date',
+        'total_point'
+    )
+
 admin.site.register(User, CustomUserAdmin)
-admin.site.register(Category,CategoryAdmin)
+admin.site.register(Category, CategoryAdmin)
+admin.site.register(Request, RequestAdmin)
 
 """
 DateRangeFilter 사용

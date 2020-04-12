@@ -5,6 +5,7 @@ from backend import models
 from backend.schema.User import CreateAccount, LoginAccount, Message
 from backend.schema.Dataset import CreateDataset
 from backend.schema.Category import CreateCategory
+from backend.schema.Project import CreateRequest
 
 from rest_framework_jwt.serializers import (
   JSONWebTokenSerializer,
@@ -35,6 +36,7 @@ class Mutation(graphene.ObjectType):
     create_dataset = CreateDataset.Field()
     create_category = CreateCategory.Field()
     login_account = LoginAccount.Field()
+    create_request = CreateRequest.Field()
 
 class CategoryType(DjangoObjectType):
     class Meta:
@@ -43,6 +45,14 @@ class CategoryType(DjangoObjectType):
 class Category(graphene.ObjectType):
     message = graphene.Field(Message)
     category = graphene.List(CategoryType)
+
+class RequestType(DjangoObjectType):
+    class Meta:
+        model = models.Request
+
+class Request(graphene.ObjectType):
+    message = graphene.Field(Message)
+    request = graphene.List(RequestType)
 
 class Query(graphene.ObjectType):
     """
