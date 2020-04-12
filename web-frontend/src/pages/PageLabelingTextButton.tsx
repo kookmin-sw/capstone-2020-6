@@ -60,15 +60,15 @@ class PageLabelingTextButton extends React.Component<Props> {
             <div className='subTitle'>
               1. 다음 글의 유형을 선택하시오.
             </div>
-              <LabelingTextButton 
-                category={
-                  this.props.labelingTextButtonStore!.buttonList
-                }
-                value={
-                  this.props.labelingTextButtonStore?.activeButton
-                }
-                onClick={this.props.labelingTextButtonStore?.setActiveButton}
-              />
+            <LabelingTextButton
+              category={
+                this.props.labelingTextButtonStore!.buttonList
+              }
+              value={
+                this.props.labelingTextButtonStore?.activeButton
+              }
+              onClick={this.props.labelingTextButtonStore?.setActiveButton}
+            />
           </Grid.Column>
         </Grid>
       </Container>
