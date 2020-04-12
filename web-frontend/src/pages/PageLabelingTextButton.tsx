@@ -68,7 +68,7 @@ class PageLabelingTextButton extends React.Component<Props> {
         </div>
       </Container>
     );
-}
+  }
 }
 
 export default PageLabelingTextButton;
