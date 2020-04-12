@@ -22,12 +22,12 @@ class LabelingTextButton extends React.Component<Props> {
                 className='button'
                 active={this.props.value === item.id}
                 onClick={() => {
-                  this.props.onClick(item.id)
+                  this.props.onClick(item.id);
                 }}
               >
                 {item.category}
-              </Button>    
-            )
+              </Button>
+            );
           })
         }
       </div>

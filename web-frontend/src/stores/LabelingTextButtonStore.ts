@@ -10,7 +10,7 @@ export default class LabelingTextButtonStore {
     }
 
     @action setActiveButton = (id: any) => {
-      this.activeButton = id
+      this.activeButton = id;
     }
 
     @action getButtons = () => {
