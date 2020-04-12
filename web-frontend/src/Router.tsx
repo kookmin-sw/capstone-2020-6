@@ -18,6 +18,7 @@ import PagePoints from './pages/PagePoints';
 import PageLabelingResult from './pages/PageLabelingResult';
 import PageLabeling from './pages/PageLabeling';
 import PageLabelingTextWrite from './pages/PageLabelingTextWrite';
+import PageLabelingTextButton from './pages/PageLabelingTextButton';
 
 // for Components
 import Navigation from './components/Navigation';
@@ -46,7 +47,7 @@ class App extends React.Component<Props> {
           <Route path='/about'>
             <PageAbout />
           </Route>
-          <Route path='/login'>
+          <Route path="/login">
             <PageLogin />
           </Route>
           <Route exact path='/mypage'>
@@ -60,6 +61,9 @@ class App extends React.Component<Props> {
           </Route>
           <Route path='/register'>
             <PageRegister/>
+          </Route>
+          <Route path="/labeling/txtsel">
+            <PageLabelingTextButton/>
           </Route>
           <Route path='/labeling/txtwrite'>
             <PageLabelingTextWrite/>
