@@ -118,6 +118,43 @@ class Query(graphene.ObjectType):
     @only_requester
     def resolve_get_all_category(self, info, token):
         return Category(message=Message(status=True, message=""), category=models.Category.objects.all())
+    """
+    query{
+    getAllRequest(
+        token:"의뢰자/관리자"
+    ) {
+        message{
+        status
+        message
+        }
+        request{
+        idx
+        user {
+            id
+            username
+        }
+        category{
+            name
+            type
+        }
+        subject
+        description
+        startDate
+        dueDate
+        currentCycle
+        maxCycle
+        totalPoint
+        }
+    }
+    }
+    """
+    # 모든 주제 반환
+    get_all_request = graphene.Field(Request, token=graphene.String())
+    @only_user
+    @only_requester
+    def resolve_get_all_request(self, info, token):
+        return Request(message=Message(status=True, message=""), request=models.Request.objects.all())
+
         
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
