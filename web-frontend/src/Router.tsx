@@ -12,6 +12,7 @@ import PageLogin from './pages/PageLogin';
 import PageRegister from './pages/PageRegister';
 import PageAbout from './pages/PageAbout';
 import PageMypage from './pages/PageMypage';
+import PageLabelingTextButton from './pages/PageLabelingTextButton';
 
 // for Components
 import Navigation from './components/Navigation';
@@ -36,6 +37,9 @@ class App extends React.Component<Props> {
         <Switch>
           <Route path="/about">
             <PageAbout/>
+          </Route>
+          <Route path="/labeling/txtsel">
+            <PageLabelingTextButton/>
           </Route>
           <Route path="/login">
             <PageLogin/>
