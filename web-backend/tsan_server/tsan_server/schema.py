@@ -155,6 +155,20 @@ class Query(graphene.ObjectType):
     def resolve_get_all_request(self, info, token):
         return Request(message=Message(status=True, message=""), request=models.Request.objects.all())
 
+    # 특정 의뢰자에 대한 주제 반환
+    get_requester_request = graphene.Field(Request, token=graphene.String())
+    @only_user
+    @only_requester
+    def resolve_get_requester_request(self, info, token):
+        res = jwt_decode_handler(token)
+        user = models.User.objects.get(username=res['username'])
+        request_rows = models.Request.objects.filter(user=user)
+        if request_rows:
+            return Request(message=Message(status=True, message=""), request=request_rows)
+        else:
+            return Request(message=Message(status=True, message="해당 주제 목록이 없습니다."), request=request_rows)
+        
+
         
 
 schema = graphene.Schema(query=Query, mutation=Mutation)
