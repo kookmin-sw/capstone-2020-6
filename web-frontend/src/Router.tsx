@@ -13,6 +13,7 @@ import PageRegister from './pages/PageRegister';
 import PageAbout from './pages/PageAbout';
 import PageMypage from './pages/PageMypage';
 import PageMypagePW from "./pages/PageMypagePW";
+import PageLabelingRegister from "./pages/PageLabelingRegister";
 
 // for Components
 import Navigation from './components/Navigation';
@@ -52,6 +53,9 @@ class App extends React.Component<Props> {
           </Route>
           <Route path="/register">
             <PageRegister />
+          </Route>
+          <Route path="/labelingRegister">
+            <PageLabelingRegister/>
           </Route>
           <Route path="/">
             <PageMain />
