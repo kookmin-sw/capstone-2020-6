@@ -79,7 +79,7 @@ class Labeling(models.Model):
 # 금액 지급 내역 테이블
 class PaymentLog(models.Model):
     idx = models.AutoField(primary_key=True) # 고유번호
-    type = models.IntegerField(blank=False) # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
+    type = models.TextField(blank=False) # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
     user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 사용자
     request = models.ForeignKey("Request", on_delete=models.DO_NOTHING) # 보상을 주는 의뢰
     message = models.CharField(max_length=300) # 사유
