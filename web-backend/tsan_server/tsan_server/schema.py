@@ -153,7 +153,11 @@ class Query(graphene.ObjectType):
     @only_user
     @only_requester
     def resolve_get_all_request(self, info, token):
-        return Request(message=Message(status=True, message=""), request=models.Request.objects.all())
+        requests = models.Request.objects.all()
+        for request in requests:
+            request.user.password = "*****"
+            request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
+        return Request(message=Message(status=True, message=""), request=requests)
 
     # 특정 의뢰자에 대한 주제 반환
     get_requester_request = graphene.Field(Request, token=graphene.String())
@@ -163,6 +167,9 @@ class Query(graphene.ObjectType):
         res = jwt_decode_handler(token)
         user = models.User.objects.get(username=res['username'])
         request_rows = models.Request.objects.filter(user=user)
+        for request in request_rows:
+            request.user.password = "*****"
+            request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
         if request_rows:
             return Request(message=Message(status=True, message=""), request=request_rows)
         else:
