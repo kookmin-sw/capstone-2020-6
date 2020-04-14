@@ -24,12 +24,15 @@ const list: string[][] = [['[이미지] 캡처', 'radioGroup', 'imgCap'], ['[이
 class PageLabelingRegister extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
+        this.state = {
+            value: ''
+        };
         this.handleChange = this.handleChange.bind(this);
-        this.state = {value: ''};
     }
 
-    handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        this.setState({value: e.target.value});
+    handleChange = (id: string): void => {
+        // console.log(id);
+        this.setState({value: id});
     };
 
     render() {
@@ -51,16 +54,16 @@ class PageLabelingRegister extends React.Component<Props, State> {
                     <Grid.Column>
                         <p className="subjectHeader">라벨링 유형</p>
                         <Form>
-                            {list.map((item:any)=>{
-                                return(
+                            {list.map((item: any) => {
+                                return (
                                     <Form.Field key={item}>
                                         <Radio
                                             className="subjectRadio"
                                             label={item[0]}
                                             name={item[1]}
                                             value={item[2]}
-                                            // checked={this.state.value === 'this'}
-                                            // onChange={this.handleChange}
+                                            checked={this.state.value === item[2]}
+                                            onChange={this.handleChange.bind(null, item[2])}
                                         />
                                     </Form.Field>
                                 );
@@ -96,7 +99,48 @@ class PageLabelingRegister extends React.Component<Props, State> {
                         </Grid.Column>
                         <Grid.Column>
                             <p className="subjectHeader">기한 설정</p>
-                            드롭다운으로 할련다...
+                            <Grid.Row columns={2}>
+                                <Grid>
+                                    <Grid.Column width={6}>
+                                        <JSelect
+                                            label="시작일"
+                                            placeholder="년"
+                                        />
+                                    </Grid.Column>
+                                    <Grid.Column width={5}>
+                                        <JSelect
+                                            label="&nbsp;"
+                                            placeholder="월"
+                                        />
+                                    </Grid.Column>
+                                    <Grid.Column width={5}>
+                                        <JSelect
+                                            label="&nbsp;"
+                                            placeholder="일"
+                                        />
+                                    </Grid.Column>
+                                </Grid>
+                                <Grid>
+                                    <Grid.Column width={6}>
+                                        <JSelect
+                                            label="마감일"
+                                            placeholder="년"
+                                        />
+                                    </Grid.Column>
+                                    <Grid.Column width={5}>
+                                        <JSelect
+                                            label="&nbsp;"
+                                            placeholder="월"
+                                        />
+                                    </Grid.Column>
+                                    <Grid.Column width={5}>
+                                        <JSelect
+                                            label="&nbsp;"
+                                            placeholder="일"
+                                        />
+                                    </Grid.Column>
+                                </Grid>
+                            </Grid.Row>
                         </Grid.Column>
                     </Grid.Row>
                     <Grid.Row>
@@ -114,7 +158,6 @@ class PageLabelingRegister extends React.Component<Props, State> {
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
-
             </Container>
         );
     }
