@@ -15,7 +15,7 @@ from backend.utils import (
 
 """
 mutation{
-  createCategory(type:"text", name:"문자 내용 유형 분류", token:"관리자 토큰"){
+  createCategory(type:"text", name:"텍스트 단답형 라벨링", token:"관리자 토큰"){
     message{
       status
       message
@@ -33,6 +33,7 @@ class CreateCategory(graphene.Mutation):
         type = graphene.String()
         token = graphene.String()
 
+    @only_user
     @only_admin
     def mutate(self, info, name, type, token):
         try:
