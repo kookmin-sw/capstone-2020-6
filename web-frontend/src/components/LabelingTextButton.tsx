@@ -6,16 +6,30 @@ import './LabelingTextButton.css';
 
 interface Props extends RouteComponentProps<any> {
     navigate?: any;
-    category?: string;
+    category?: any;
+    onClick?: any;
+    value?: number;
 }
 
 class LabelingTextButton extends React.Component<Props> {
   render() {
     return (
       <div className='buttonContainer'>
-        <Button className='button'>
-          {this.props.category}
-        </Button>
+        {
+          this.props.category?.map((item:any) => {
+            return (
+              <Button
+                className='button'
+                active={this.props.value === item.id}
+                onClick={() => {
+                  this.props.onClick(item.id)
+                }}
+              >
+                {item.category}
+              </Button>    
+            )
+          })
+        }
       </div>
     );
   }
