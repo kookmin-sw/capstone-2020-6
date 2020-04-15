@@ -10,7 +10,6 @@ interface Props extends RouteComponentProps<any>{
 class Footer extends React.Component<Props> {
   render() {
     return (
-      // TODO(yeohwan): Have to implement footer contents.
       <Container>
         <div className='footer1'>
           Copyright &copy; T-SAN of Kookmin University Capstone Project
