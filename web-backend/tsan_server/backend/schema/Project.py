@@ -1,6 +1,7 @@
 import graphene
 from backend.models import Dataset, User, Category, Request
 from django.contrib.auth import login
+from graphene_django.types import DjangoObjectType
 from rest_framework_jwt.serializers import (
   JSONWebTokenSerializer,
   RefreshJSONWebTokenSerializer,
@@ -12,6 +13,14 @@ from backend.utils import (
     only_requester,
     Message
 )
+
+class RequestType(DjangoObjectType):
+    class Meta:
+        model = Request
+
+class Request(graphene.ObjectType):
+    message = graphene.Field(Message)
+    request = graphene.List(RequestType)
 
 """
 mutation {
@@ -108,3 +117,61 @@ class CreateRequest(graphene.Mutation):
                         message=Message(status=True, message=message),
                         idx=request.idx
                     )
+
+class Query(graphene.ObjectType):
+    """
+    query{
+    getAllRequest(
+        token:"의뢰자/관리자"
+    ) {
+        message{
+        status
+        message
+        }
+        request{
+        idx
+        user {
+            id
+            username
+        }
+        category{
+            name
+            type
+        }
+        subject
+        description
+        startDate
+        dueDate
+        currentCycle
+        maxCycle
+        totalPoint
+        }
+    }
+    }
+    """
+    # 모든 주제 반환
+    get_all_request = graphene.Field(Request, token=graphene.String())
+    @only_user
+    @only_requester
+    def resolve_get_all_request(self, info, token):
+        requests = Request.objects.all()
+        for request in requests:
+            request.user.password = "*****"
+            request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
+        return Request(message=Message(status=True, message=""), request=requests)
+
+    # 특정 의뢰자에 대한 주제 반환
+    get_requester_request = graphene.Field(Request, token=graphene.String())
+    @only_user
+    @only_requester
+    def resolve_get_requester_request(self, info, token):
+        res = jwt_decode_handler(token)
+        user = User.objects.get(username=res['username'])
+        request_rows = Request.objects.filter(user=user)
+        for request in request_rows:
+            request.user.password = "*****"
+            request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
+        if request_rows:
+            return Request(message=Message(status=True, message=""), request=request_rows)
+        else:
+            return Request(message=Message(status=True, message="해당 주제 목록이 없습니다."), request=request_rows)

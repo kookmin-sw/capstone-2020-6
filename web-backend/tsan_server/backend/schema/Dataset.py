@@ -1,6 +1,7 @@
 import graphene
 from backend.models import Dataset, User
 from django.contrib.auth import login
+from graphene_django.types import DjangoObjectType
 from rest_framework_jwt.serializers import (
   JSONWebTokenSerializer,
   RefreshJSONWebTokenSerializer,
@@ -12,6 +13,14 @@ from backend.utils import (
     only_requester,
     Message
 )
+
+class DatasetType(DjangoObjectType):
+    class Meta:
+        model = Dataset
+
+class Dataset(graphene.ObjectType):
+    message = graphene.Field(Message)
+    dataset = graphene.List(DatasetType)
 
 """
 mutation {
@@ -46,3 +55,21 @@ class CreateDataset(graphene.Mutation):
                         message=Message(status=True, message=message),
                         idx=dataset.idx
                     )
+
+class Query(graphene.ObjectType):
+    """
+    query {
+        getAllDataset(token:"의뢰자, 관리자") {
+			dataset{
+                idx
+                name
+            }
+        }
+    }
+    """
+    # 모든 데이터셋 카테고리 반환
+    get_all_dataset = graphene.Field(Dataset, token=graphene.String())
+    @only_user
+    @only_requester
+    def resolve_get_all_dataset(self, info, token):
+        return Dataset(message=Message(status=True, message=""), dataset=Dataset.objects.all())
