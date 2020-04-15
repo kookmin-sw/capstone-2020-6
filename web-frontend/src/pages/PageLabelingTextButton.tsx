@@ -1,17 +1,19 @@
-import React, {ReactComponentElement} from 'react';
-import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Button, Container, Grid} from 'semantic-ui-react';
+import React from 'react';
+import {Container, Grid} from 'semantic-ui-react';
+import './PageLabelingTextButton.css';
+
+// Components
+import LabelingTextButton from '../components/LabelingTextButton';
+
+// for Mobx
+import {inject, observer} from 'mobx-react';
 import LabelingTextButtonStore from '../stores/LabelingTextButtonStore';
 
-import './PageLabelingTextButton.css';
-import {inject, observer} from 'mobx-react';
-
 interface Props {
-    navigate?: any,
-    labelingTextButtonStore?: LabelingTextButtonStore,
+  labelingTextButtonStore?: LabelingTextButtonStore,
 }
 
-@inject(' labelingTextButtonStore')
+@inject('labelingTextButtonStore')
 @observer
 class PageLabelingTextButton extends React.Component<Props> {
   constructor(props: any) {
@@ -20,11 +22,10 @@ class PageLabelingTextButton extends React.Component<Props> {
   }
 
   render() {
-    console.log(this.props.labelingTextButtonStore!.buttonList)
     return (
       <Container className='container'>
         <div className='labelingTitle'>
-          Labeling 주제 들어갈거
+          <h2>Labeling 주제 들어갈거</h2>
         </div>
         <div className='mainContainer'>
           <div className='left'>
@@ -60,9 +61,13 @@ class PageLabelingTextButton extends React.Component<Props> {
               1. 다음 글의 유형을 선택하시오.
             </div>
             <Grid className='buttonGroup' column={2}>
-              <Button className='button'>1</Button>
-              <Button className='button'>2</Button>
-              <Button className='button'>3</Button>
+              {this.props.labelingTextButtonStore!.buttonList.map((item: any) => {
+                return (
+                  <Grid.Column>
+                    <LabelingTextButton category={item.category}/>
+                  </Grid.Column>
+                );
+              })}
             </Grid>
           </div>
         </div>

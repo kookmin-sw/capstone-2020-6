@@ -3,10 +3,8 @@
     flex-direction: column;
 }
 
-labelingTitle {
-    margin-top: 40px;
-    font-weight: bold;
-    font-size: 50px;
+.labelingTitle {
+    margin-top: 20px;
 }
 
 .mainContainer {
@@ -33,10 +31,6 @@ labelingTitle {
 }
 
 .buttonGroup {
-
-}
-
-.button {
-    /*margin: 50px;*/
-    width: 100px;
+    display: flex;
+    justify-content: stretch;
 }
