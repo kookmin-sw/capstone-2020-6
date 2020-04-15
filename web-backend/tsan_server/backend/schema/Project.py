@@ -34,7 +34,7 @@ class CreateDataset(graphene.Mutation):
 
     @only_user
     @only_admin
-    def mutate(self, info, token, name):
+    def mutate(self, info, name, token):
         try:
             Dataset.objects.get(name=name)
             return CreateDataset(message=Message(status=False, message="이미 존재하는 데이터셋 이름입니다."))

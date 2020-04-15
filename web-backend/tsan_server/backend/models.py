@@ -33,6 +33,12 @@ class Category(models.Model):
     type = models.CharField(max_length=15) # 이미지/텍스트
     name = models.CharField(max_length=50) # 카테고리 명 
 
+    def create(self, name, type):
+        self.name = name
+        self.type = type
+        self.save()
+        return self
+
 # 의뢰 요청 테이블
 class Request(models.Model):
     idx = models.AutoField(primary_key=True) # 고유번호
