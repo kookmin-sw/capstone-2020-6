@@ -12,14 +12,12 @@ def validate_email(value):
     
     return value
 
-
 # phone 유효성 검증
 def validate_phone(value):
-    if len(value) > 15:
-        raise ValidationError("유효한 전화번호 형식이 아닙니다.")
-
-    PHONE_REGEX = r"/^[0-9]{10,14}$/"
+    PHONE_REGEX = r"(^01(?:0|1|[6-9])[0-9]{8}$)"
     if not re.match(PHONE_REGEX, value):
         raise ValidationError("유효한 전화번호 형식이 아닙니다.")
 
     return value
+
+    

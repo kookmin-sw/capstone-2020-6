@@ -18,9 +18,9 @@ class CategoryType(DjangoObjectType):
     class Meta:
         model = Category
 
-class Category(graphene.ObjectType):
+class Categorys(graphene.ObjectType):
     message = graphene.Field(Message)
-    category = graphene.List(CategoryType)
+    categorys = graphene.List(CategoryType)
 
 """
 mutation{
@@ -65,7 +65,7 @@ class Query(graphene.ObjectType):
                 status
                 message
             }
-            category {
+            categorys {
                 idx
                 type
                 name
@@ -74,8 +74,8 @@ class Query(graphene.ObjectType):
     }
     """
     # 모든 카테코리 반환
-    get_all_category = graphene.Field(Category, token=graphene.String())
+    get_all_category = graphene.Field(Categorys, token=graphene.String())
     @only_user
     @only_requester
     def resolve_get_all_category(self, info, token):
-        return Category(message=Message(status=True, message=""), category=Category.objects.all())
+        return Categorys(message=Message(status=True, message=""), categorys=Category.objects.all())
