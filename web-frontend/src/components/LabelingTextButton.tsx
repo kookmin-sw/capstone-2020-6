@@ -19,7 +19,7 @@ class LabelingTextButton extends React.Component<Props> {
           this.props.category?.map((item:any) => {
             return (
               <Button
-                className='button'
+                className='textLabelingButton'
                 active={this.props.value === item.id}
                 onClick={() => {
                   this.props.onClick(item.id);
