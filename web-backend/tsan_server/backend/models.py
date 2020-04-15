@@ -45,7 +45,7 @@ class Request(models.Model):
     user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 생성자
     category = models.ForeignKey("Category", on_delete=models.DO_NOTHING) # 데이터 라벨링 유형
     subject = models.CharField(max_length=100) # 요청 주제
-    #description = models.TextField() # 설명
+    description = models.TextField(blank=True) # 설명
     start_date = models.DateTimeField(auto_now_add=True) # 시작
     due_date = models.DateTimeField('due date') # 마감
     current_cycle = models.IntegerField(default=0) # 현재 사이클
@@ -58,12 +58,12 @@ class Labeling(models.Model):
     request = models.ForeignKey("Request", on_delete=models.DO_NOTHING) # 의뢰 번호
     user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 생성자
     start_date = models.DateTimeField(auto_now=True) # 시작 시간
-    end_date = models.DateTimeField('end date') # 종료 시간
+    end_date = models.DateTimeField(blank=False) # 종료 시간
 
 # 금액 지급 내역 테이블
 class PaymentLog(models.Model):
     idx = models.AutoField(primary_key=True) # 고유번호
-    type = models.IntegerField(default=2) # 0 = 보상, 1 = 충전, 2 = 기타 사유
+    type = models.IntegerField(blank=False) # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
     user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 사용자
     request = models.ForeignKey("Request", on_delete=models.DO_NOTHING) # 보상을 주는 의뢰
     message = models.CharField(max_length=300) # 사유

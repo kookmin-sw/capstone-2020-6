@@ -58,7 +58,6 @@ class CustomUserAdmin(UserAdmin):
 class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         'name',
-        'idx',
         'type'
     )
     list_filter = (
