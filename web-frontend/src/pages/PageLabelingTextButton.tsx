@@ -27,8 +27,8 @@ class PageLabelingTextButton extends React.Component<Props> {
         <div className='labelingTitle'>
           <h2>Labeling 주제 들어갈거</h2>
         </div>
-        <div className='mainContainer'>
-          <div className='left'>
+        <Grid columns={2}>
+          <Grid.Column>
             생생하며, 같은 바이며, 그리하였는가? 웅대한 그러므로 같이,
             하는 인생에 그들에게 것이다. 미묘한 미인을 가슴이 가치를 속잎나고,
             때문이다. 사랑의 인간의 아름답고 눈에 것이다. 기쁘며, 두기 뭇 피고,
@@ -55,22 +55,22 @@ class PageLabelingTextButton extends React.Component<Props> {
             천자만홍이 우는 만물은 피고 있다. 이는 전인 얼음에 것은 크고
             밝은 피부가 설산에서 위하여, 있는가? 이 청춘의 용기가 풍부하게
             보내는 무엇을 있는가?
-          </div>
-          <div className='right'>
+          </Grid.Column>
+          <Grid.Column>
             <div className='subTitle'>
               1. 다음 글의 유형을 선택하시오.
             </div>
-            <Grid className='buttonGroup' column={2}>
-              {this.props.labelingTextButtonStore!.buttonList.map((item: any) => {
-                return (
-                  <Grid.Column>
-                    <LabelingTextButton category={item.category}/>
-                  </Grid.Column>
-                );
-              })}
-            </Grid>
-          </div>
-        </div>
+              <LabelingTextButton 
+                category={
+                  this.props.labelingTextButtonStore!.buttonList
+                }
+                value={
+                  this.props.labelingTextButtonStore?.activeButton
+                }
+                onClick={this.props.labelingTextButtonStore?.setActiveButton}
+              />
+          </Grid.Column>
+        </Grid>
       </Container>
     );
   }
