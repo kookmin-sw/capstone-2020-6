@@ -1,24 +1,21 @@
-import React from "react";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import { Container, Grid } from "semantic-ui-react";
-import "./PageMain.css";
+import React from 'react';
+import {Container, Grid} from 'semantic-ui-react';
+import './PageMain.css';
 
 // Components
-import CardProject from "../components/CardProject";
-import Header from "../components/Header";
+import CardProject from '../components/CardProject';
+import Header from '../components/Header';
 import Footer from '../components/Footer';
 
 // for Mobx
-import { observer, inject } from "mobx-react";
-import ProjectListStore from "../stores/ProjectListStore";
+import {observer, inject} from 'mobx-react';
+import ProjectListStore from '../stores/ProjectListStore';
 
-// interface Props extends RouteComponentProps<any>{
 interface Props {
-  // navigate: any,
   projectListStore?: ProjectListStore;
 }
 
-@inject("projectListStore")
+@inject('projectListStore')
 @observer
 class App extends React.Component<Props> {
   constructor(props: any) {
@@ -27,12 +24,11 @@ class App extends React.Component<Props> {
     this.props.projectListStore!.getAvailableProject();
   }
   render() {
-    console.log(this.props.projectListStore!.list);
     return (
       <>
         <Header />
         <br />
-        <Container style={{ position: "relative" }}>
+        <Container style={{position: 'relative'}}>
           <h3>진행중인 라벨링 프로젝트</h3>
           <Grid columns={4}>
             {this.props.projectListStore!.list.map((item: any) => {
