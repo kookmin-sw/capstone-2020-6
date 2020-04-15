@@ -1,5 +1,7 @@
 from django.db import models
 import django.contrib.auth.models
+from backend.validation import validate_email, validate_phone
+from django.core.validators import MinLengthValidator
 
 # 데이터셋 테이블
 class Dataset(models.Model):
@@ -13,11 +15,12 @@ class Dataset(models.Model):
 
 # 사용자 확장 테이블
 class User(django.contrib.auth.models.AbstractUser):
-    phone = models.CharField(max_length=30) # 전화번호
+    email = models.CharField(max_length=30, validators=[validate_email])
+    phone = models.CharField(max_length=30, validators=[validate_phone]) # 전화번호
     point = models.IntegerField(default=0) # 포인트
     reliability = models.FloatField(default=0) # 신뢰도
     is_requester = models.BooleanField(default=False) # 디폴트: 의뢰자
-
+"""
     def create_user(self, username, email, password, phone, is_requester):
         new_user = self.models(username=username, email=email, password=password)
         new_user.phone = phone
@@ -26,6 +29,7 @@ class User(django.contrib.auth.models.AbstractUser):
         new_user.is_requester = is_requester
         new_user.save()
         return new_user
+"""
 
 # 데이터 라벨링 유형
 class Category(models.Model):
@@ -75,7 +79,7 @@ class Labeling(models.Model):
 # 금액 지급 내역 테이블
 class PaymentLog(models.Model):
     idx = models.AutoField(primary_key=True) # 고유번호
-    type = models.IntegerField(blank=False) # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
+    type = models.TextField(blank=False) # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
     user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 사용자
     request = models.ForeignKey("Request", on_delete=models.DO_NOTHING) # 보상을 주는 의뢰
     message = models.CharField(max_length=300) # 사유

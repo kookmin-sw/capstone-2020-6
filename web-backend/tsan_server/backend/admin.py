@@ -4,6 +4,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import User, Category, Request
 
 # Register your models here.
+# admin page filter에서 'is_required: 예/아니오'를 '사용자 구분: 의뢰자/참여자'로 표현
 class UserTypeFilter(admin.SimpleListFilter):
     title = "사용자 구분"
     parameter_name = 'usertype'
