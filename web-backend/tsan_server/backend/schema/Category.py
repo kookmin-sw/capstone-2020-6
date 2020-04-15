@@ -1,6 +1,7 @@
 import graphene
 from backend.models import Dataset, User, Category
 from django.contrib.auth import login
+from graphene_django.types import DjangoObjectType
 from rest_framework_jwt.serializers import (
   JSONWebTokenSerializer,
   RefreshJSONWebTokenSerializer,
@@ -12,6 +13,14 @@ from backend.utils import (
     only_requester,
     Message
 )
+
+class CategoryType(DjangoObjectType):
+    class Meta:
+        model = Category
+
+class Category(graphene.ObjectType):
+    message = graphene.Field(Message)
+    category = graphene.List(CategoryType)
 
 """
 mutation{
@@ -47,3 +56,26 @@ class CreateCategory(graphene.Mutation):
                 message=Message(status=True, message=message),
                 idx=category.idx
             )
+
+class Query(graphene.ObjectType):
+    """
+    query {
+        getAllCategory(token: "의뢰자, 관리자") {
+            message {
+                status
+                message
+            }
+            category {
+                idx
+                type
+                name
+            }
+        }
+    }
+    """
+    # 모든 카테코리 반환
+    get_all_category = graphene.Field(Category, token=graphene.String())
+    @only_user
+    @only_requester
+    def resolve_get_all_category(self, info, token):
+        return Category(message=Message(status=True, message=""), category=Category.objects.all())

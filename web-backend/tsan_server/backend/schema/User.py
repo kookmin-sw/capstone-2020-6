@@ -2,6 +2,7 @@ import graphene
 from backend.models import Dataset, User
 from django.contrib.auth import login
 from django.core.exceptions import ValidationError
+from graphene_django.types import DjangoObjectType
 from rest_framework_jwt.serializers import (
   JSONWebTokenSerializer,
   RefreshJSONWebTokenSerializer,
@@ -13,6 +14,14 @@ from backend.utils import (
     only_requester,
     Message
 )
+
+class UserType(DjangoObjectType):
+    class Meta:
+        model = User
+
+class Users(graphene.ObjectType):
+    message = graphene.Field(Message)
+    users = graphene.List(UserType)
 
 """
 mutation {
@@ -102,3 +111,29 @@ class RefreshToken(graphene.Mutation):
             token = serializer.object['token']
             return RefreshToken(message=Message(), jwt=token)
         return RefreshToken(message=Message(status=False, message="토큰 재발급에 실패하였습니다."))
+
+class Query(graphene.ObjectType):
+    """
+    query {
+        getAllUser(token:"관리자") {
+            users{
+                username
+                email
+                phone
+                point
+                reliability
+                isRequester
+            }
+        }
+    }
+    """
+    # 모든 사용자 반환
+    get_all_user = graphene.Field(Users, token=graphene.String())
+    @only_user
+    @only_admin
+    def resolve_get_all_user(self, info, **kwargs):
+        users = User.objects.all()
+        for user in users:
+            user.password = "*****"
+            user.email = user.email.split("@")[0][0:3] + "****" + "@" + user.email.split("@")[1]
+        return Users(message=Message(status=True, message=""), users=users)
