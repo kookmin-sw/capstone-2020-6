@@ -1,5 +1,16 @@
 /* TODO(yeohwan): Have to implement footer design. */
-.footer {
-    background: aqua;
-    height: 30px;
+.footer1 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    align-items: flex-end;
+    color: #aaaaaa;
+    height: 70px;
+}
+.footer2 {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    color: #aaaaaa;
+    margin-bottom: 20px;
 }
