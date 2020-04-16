@@ -1,0 +1,8 @@
+.buttonContainer {
+    display: flex;
+    justify-content: space-between;
+}
+.textLabelingButton {
+    width: 100px;
+    height: 50px;
+}

@@ -18,16 +18,17 @@ import PagePoints from './pages/PagePoints';
 import PageLabelingResult from './pages/PageLabelingResult';
 import PageLabeling from './pages/PageLabeling';
 import PageLabelingTextWrite from './pages/PageLabelingTextWrite';
+import PageLabelingTextButton from './pages/PageLabelingTextButton';
 
 // for Components
 import Navigation from './components/Navigation';
 
 // for Mobx
-import { inject, observer } from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 import MenuStore from './stores/MenuStore';
-import { useCookies } from 'react-cookie';
-import { instanceOf } from 'prop-types';
-import { withCookies, Cookies } from 'react-cookie';
+import {useCookies} from 'react-cookie';
+import {instanceOf} from 'prop-types';
+import {withCookies, Cookies} from 'react-cookie';
 
 export interface Props {
   menuStore?: MenuStore
@@ -46,7 +47,13 @@ class App extends React.Component<Props> {
           <Route path='/about'>
             <PageAbout />
           </Route>
-          <Route path='/login'>
+          <Route path="/labeling/txtsel">
+            <PageLabelingTextButton/>
+          </Route>
+          <Route path="/labeling/txtsel">
+            <PageLabelingTextButton/>
+          </Route>
+          <Route path="/login">
             <PageLogin />
           </Route>
           <Route exact path='/mypage'>
@@ -60,6 +67,9 @@ class App extends React.Component<Props> {
           </Route>
           <Route path='/register'>
             <PageRegister/>
+          </Route>
+          <Route path="/labeling/txtsel">
+            <PageLabelingTextButton/>
           </Route>
           <Route path='/labeling/txtwrite'>
             <PageLabelingTextWrite/>
