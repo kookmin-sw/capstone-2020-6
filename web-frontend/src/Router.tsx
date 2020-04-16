@@ -12,8 +12,12 @@ import PageLogin from './pages/PageLogin';
 import PageRegister from './pages/PageRegister';
 import PageAbout from './pages/PageAbout';
 import PageMypage from './pages/PageMypage';
-import PageMypagePW from "./pages/PageMypagePW";
-import PageLabelingRegister from "./pages/PageLabelingRegister";
+import PageMypagePW from './pages/PageMypagePW';
+import PageLabelingRegister from './pages/PageLabelingRegister';
+import PagePoints from './pages/PagePoints';
+import PageLabelingResult from './pages/PageLabelingResult';
+import PageLabeling from './pages/PageLabeling';
+import PageLabelingTextWrite from './pages/PageLabelingTextWrite';
 
 // for Components
 import Navigation from './components/Navigation';
@@ -39,25 +43,37 @@ class App extends React.Component<Props> {
       <Router>
         <Navigation />
         <Switch>
-          <Route path="/about">
+          <Route path='/about'>
             <PageAbout />
           </Route>
-          <Route path="/login">
+          <Route path='/login'>
             <PageLogin />
           </Route>
-          <Route exact path="/mypage">
+          <Route exact path='/mypage'>
             <PageMypage/>
           </Route>
-          <Route path="/mypage/pw">
+          <Route path='/mypage/points'>
+            <PagePoints/>
+          </Route>
+          <Route path='/mypage/pw'>
             <PageMypagePW/>
           </Route>
-          <Route path="/register">
-            <PageRegister />
+          <Route path='/register'>
+            <PageRegister/>
           </Route>
-          <Route path="/labelingRegister">
+          <Route path='/labeling/txtwrite'>
+            <PageLabelingTextWrite/>
+          </Route>
+          <Route path='/labeling/result'>
+            <PageLabelingResult/>
+          </Route>
+          <Route path='/labeling'>
+            <PageLabeling/>
+          </Route>
+          <Route path='/labelingRegister'>
             <PageLabelingRegister/>
           </Route>
-          <Route path="/">
+          <Route path='/'>
             <PageMain />
           </Route>
         </Switch>
