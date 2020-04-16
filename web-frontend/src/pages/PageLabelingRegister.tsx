@@ -6,6 +6,7 @@ import JInput from '../components/JInput';
 import {inject, observer} from 'mobx-react';
 import LoginStore from '../stores/loginStore';
 import JSelect from '../components/JSelect';
+import TsDropDown from '../components/TsDropDown';
 
 import './PageLabelingRegister.css'
 
@@ -17,8 +18,12 @@ interface State {
     value: string;
 }
 
-const list: string[][] = [['[이미지] 캡처', 'radioGroup', 'imgCap'], ['[이미지] 선택', 'radioGroup', 'imgSel'],
-    ['[텍스트] 선택', 'radioGroup', 'txtSel'], ['[텍스트] 단답형', 'radioGroup', 'txtWrite']];
+const labelingOptions = [
+    {key: 'imgCap', value: 'imgCap', text: '[이미지] 캡처형'},
+    {key: 'imgSel', value: 'imgSel', text: '[이미지] 선택형'},
+    {key: 'txtSel', value: 'txtSel', text: '[텍스트] 선택형'},
+    {key: 'txtWrite', value: 'txtWrite', text: '[텍스트] 단답형'}
+]
 
 // @inject("loginStore") @observer
 class PageLabelingRegister extends React.Component<Props, State> {
@@ -30,9 +35,9 @@ class PageLabelingRegister extends React.Component<Props, State> {
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange = (id: string): void => {
-        // console.log(id);
-        this.setState({value: id});
+    handleChange = (e: any, {value}: State) => {
+        console.log({value});
+        this.setState({value});
     };
 
     render() {
@@ -51,25 +56,17 @@ class PageLabelingRegister extends React.Component<Props, State> {
                             />
                         </Grid.Column>
                     </Grid.Row>
-                    <Grid.Column>
-                        <p className="subjectHeader">라벨링 유형</p>
-                        <Form>
-                            {list.map((item: any) => {
-                                return (
-                                    <Form.Field key={item}>
-                                        <Radio
-                                            className="subjectRadio"
-                                            label={item[0]}
-                                            name={item[1]}
-                                            value={item[2]}
-                                            checked={this.state.value === item[2]}
-                                            onChange={this.handleChange.bind(null, item[2])}
-                                        />
-                                    </Form.Field>
-                                );
-                            })}
-                        </Form>
-                    </Grid.Column>
+                    <Grid.Row>
+                        <Grid.Column width={4}>
+                            <p className="subjectHeader">라벨링 유형</p>
+                            <TsDropDown
+                                placeholder={'라벨링 유형을 선택해주세요.'}
+                                labelingType={labelingOptions}
+                                handleChange={this.handleChange}
+                                value={this.state.value}
+                            />
+                        </Grid.Column>
+                    </Grid.Row>
                     <Grid.Row>
                         <Grid.Column>
                             <JInput
@@ -90,12 +87,26 @@ class PageLabelingRegister extends React.Component<Props, State> {
                     </Grid.Row>
                     <Grid.Row columns={2}>
                         <Grid.Column>
-                            <JInput
-                                label="보상 설정"
-                                placeholder="보상 금액을 입력해주세요."
-                                value={''}
-                                type="text"
-                            />
+                            <Grid>
+                                <Grid.Column>
+                                    <JInput
+                                        label="보상 설정"
+                                        placeholder="보상 금액을 입력해주세요."
+                                        value={''}
+                                        type="text"
+                                    />
+                                </Grid.Column>
+                            </Grid>
+                            <Grid>
+                                <Grid.Column>
+                                    <JInput
+                                        label="사이클 횟수"
+                                        placeholder="사이클 횟수를 적어주세요."
+                                        value={''}
+                                        type="text"
+                                    />
+                                </Grid.Column>
+                            </Grid>
                         </Grid.Column>
                         <Grid.Column>
                             <p className="subjectHeader">기한 설정</p>
@@ -148,7 +159,7 @@ class PageLabelingRegister extends React.Component<Props, State> {
                             <p className="subjectHeader">데이터 셋 업로드(.zip)</p>
                             {/*TODO: 파일 업로드*/}
                             <Form>
-                                <TextArea placeholder='파일을 드래그하거나 가져와주세요.' style={{minHeight: 200}}/>
+                                <TextArea placeholder='파일을 가져와주세요.' style={{minHeight: 200}}/>
                             </Form>
                         </Grid.Column>
                     </Grid.Row>
