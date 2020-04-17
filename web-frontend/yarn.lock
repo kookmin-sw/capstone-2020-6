@@ -1536,10 +1536,6 @@
   resolved "https://registry.yarnpkg.com/@types/q/-/q-1.5.2.tgz#690a1475b84f2a884fd07cd797c00f5f31356ea8"
   integrity sha512-ce5d3q03Ex0sy4R14722Rmt6MT07Ua+k4FwDfdcToYJcMKNtRVQvJ6JCAPdAmAnbRb6CsX6aYb9m96NGod9uTw==
 
-"@types/react-cookie@https://github.com/S64/types-react-cookie.git#v2.1.2-2":
-  version "2.1.2-2"
-  resolved "https://github.com/S64/types-react-cookie.git#6fde71e4eab011a434d9f6607daf227bd166d6c4"
-
 "@types/react-datepicker@2.11.0":
   version "2.11.0"
   resolved "https://registry.yarnpkg.com/@types/react-datepicker/-/react-datepicker-2.11.0.tgz#aa6faa66de17b0ff96bc0af9d5d2506d5dd99703"
@@ -1608,14 +1604,6 @@
     "@types/react-dom" "*"
     "@types/testing-library__dom" "*"
     pretty-format "^25.1.0"
-
-"@types/universal-cookie-express@https://github.com/S64/types-universal-cookie-express.git#v2.1.2-2":
-  version "2.1.2-2"
-  resolved "https://github.com/S64/types-universal-cookie-express.git#cde27b5756fb9125f6f6194e13b50c1490fab018"
-
-"@types/universal-cookie@https://github.com/S64/types-universal-cookie.git#v2.1.2-2":
-  version "2.1.2-2"
-  resolved "https://github.com/S64/types-universal-cookie.git#94d1b4813879268d335f8751e1a07b6d2fd2aa6a"
 
 "@types/yargs-parser@*":
   version "15.0.0"
