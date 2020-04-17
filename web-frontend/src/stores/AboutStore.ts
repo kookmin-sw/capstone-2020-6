@@ -41,6 +41,11 @@ export default class AboutStore {
     @action setMember() {
         this.members = [
             {
+                img: 'https://github.com/kookmin-sw/capstone-2020-6/raw/web-frontend_pageAbout/img/%EC%B5%9C%EC%9D%80%EB%AF%B8.png',
+                name: "최은미",
+                role: "지도교수"
+            },
+            {
                 img: 'https://github.com/kookmin-sw/capstone-2020-6/raw/web-frontend_pageAbout/img/%EC%9D%B4%EC%A0%95%ED%95%98.png',
                 name: '이정하',
                 role: 'Front-end developer'

@@ -1,0 +1,40 @@
+.about-daemon {
+    width: 320px;
+    margin: 80px auto;
+    display: block;
+}
+
+.about-youtube {
+    width: 100%;
+    height: 100%;
+    max-height: 415px;
+}
+
+.about_memberCard {
+    text-align: center;
+}
+
+.about_memberImage {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 300px;
+    margin-bottom: 10px;
+}
+
+.about_memberName {
+    font-size: 20px;
+    color: #555;
+    font-weight: bold;
+}
+
+.about_memberRole {
+    font-size: 13px;
+    margin-top: 5px;
+    color: #888;
+}
+
+.about_h2 {
+    border-left: 5px solid #0d6cbf !important;
+    padding-left: 10px !important;
+}
