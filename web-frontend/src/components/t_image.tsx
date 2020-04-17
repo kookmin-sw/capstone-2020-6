@@ -1,26 +1,13 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Image} from 'semantic-ui-react'
-import {observer} from 'mobx-react';
-import PropTypes from 'prop-types';
 
 interface Props extends RouteComponentProps<any> {
-    src: any;
-    isSelected: any;
+    src: string;
+    isSelected: boolean;
     onImageClick: any;
 }
 
-const img1 = "https://www.petmd.com/sites/default/files/small-kitten-walking-towards_127900829_0.jpg";
-// const ImageStyle = (width: number, height: number) => {
-//     return {
-//         width,
-//         height,
-//         objectFit: "cover"
-//     }
-// }
-
-@observer
-class T_image extends React.Component<Props> {
+class Image extends React.Component<Props> {
     constructor(props: Props) {
         super(props);
     }
@@ -44,10 +31,5 @@ class T_image extends React.Component<Props> {
     }
 }
 
-Image.propTypes = {
-    src: PropTypes.string,
-    isSelected: PropTypes.bool
-}
-
-export default withRouter(T_image);
+export default withRouter(Image);
 
