@@ -1,0 +1,24 @@
+.labelingPageTitle {
+    margin-top: 20px;
+}
+
+.labelingPageMain {
+    display: grid;
+    justify-content: stretch;
+}
+
+.labelingPageThumbnailBox {
+    height: 350px;
+}
+
+.labelingPageThumbnail {
+    width: 100%;
+    height: 350px;
+    background-size: cover;
+    background-position: center center;
+    text-align: center;
+}
+
+.labelingPageDescription {
+    line-height: 25px;
+}

@@ -1,8 +1,8 @@
-import React from "react";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import { Card, Container, Grid, Icon, Image } from "semantic-ui-react";
-import "./CardProject.css";
-import ProgressBar from "./ProgressBar";
+import React from 'react';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {Card, Image} from 'semantic-ui-react';
+import './CardProject.css';
+import ProgressBar from './ProgressBar';
 
 interface Props extends RouteComponentProps<any> {
   navigate?: any;
@@ -20,21 +20,21 @@ interface Props extends RouteComponentProps<any> {
 }
 
 function calcAgo(timestamp:number) {
-  let ago = ""
-  timestamp /= 1000
-  const sec = timestamp % 60
-  const min = Math.floor(timestamp / 60) % 60
-  const hour= Math.floor(timestamp / 60 / 60) % 24
-  const date= Math.floor(timestamp / 60 / 60 / 24) % 365
-  const month= Math.floor(timestamp / 60 / 60 / 24 / 365)
-  const year= Math.floor(timestamp / 60 / 60 / 24 / 365)
-  ago += parseInt(''+year) ? year + "년 " : ""
-  ago += parseInt(''+month) ? month + "개월 " : ""
-  ago += parseInt(''+date) ? date + "일 " : ""
-  ago += parseInt(''+hour) ? hour + "시간 " : ""
-  ago += parseInt(''+min) ? min + "분 " : ""
-  ago += parseInt(''+sec) ? sec + "초 " : ""
-  return ago
+  let ago = '';
+  timestamp /= 1000;
+  const sec = timestamp % 60;
+  const min = Math.floor(timestamp / 60) % 60;
+  const hour= Math.floor(timestamp / 60 / 60) % 24;
+  const date= Math.floor(timestamp / 60 / 60 / 24) % 365;
+  const month= Math.floor(timestamp / 60 / 60 / 24 / 365);
+  const year= Math.floor(timestamp / 60 / 60 / 24 / 365);
+  ago += parseInt(''+year) ? year + '년 ' : '';
+  ago += parseInt(''+month) ? month + '개월 ' : '';
+  ago += parseInt(''+date) ? date + '일 ' : '';
+  ago += parseInt(''+hour) ? hour + '시간 ' : '';
+  ago += parseInt(''+min) ? min + '분 ' : '';
+  ago += parseInt(''+sec) ? sec + '초 ' : '';
+  return ago;
 }
 
 class CardProject extends React.Component<Props> {

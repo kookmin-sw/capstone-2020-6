@@ -16,8 +16,7 @@ def only_user(func):
         try:
             jwt_decode_handler(kwargs['token'])
             return func(*args, **kwargs)
-        except Exception as e:
-            print(e)
+        except Exception:
             return {"message": Message(status=False, message="로그인이 필요합니다.")}
     return func_wrapper
 

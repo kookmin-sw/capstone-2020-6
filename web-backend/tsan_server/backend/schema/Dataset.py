@@ -18,9 +18,9 @@ class DatasetType(DjangoObjectType):
     class Meta:
         model = Dataset
 
-class Dataset(graphene.ObjectType):
+class Datasets(graphene.ObjectType):
     message = graphene.Field(Message)
-    dataset = graphene.List(DatasetType)
+    datasets = graphene.List(DatasetType)
 
 """
 mutation {
@@ -60,7 +60,7 @@ class Query(graphene.ObjectType):
     """
     query {
         getAllDataset(token:"의뢰자, 관리자") {
-			dataset{
+			datasets{
                 idx
                 name
             }
@@ -68,8 +68,8 @@ class Query(graphene.ObjectType):
     }
     """
     # 모든 데이터셋 카테고리 반환
-    get_all_dataset = graphene.Field(Dataset, token=graphene.String())
+    get_all_dataset = graphene.Field(Datasets, token=graphene.String())
     @only_user
     @only_requester
     def resolve_get_all_dataset(self, info, token):
-        return Dataset(message=Message(status=True, message=""), dataset=Dataset.objects.all())
+        return Datasets(message=Message(status=True, message=""), datasets=Dataset.objects.all())

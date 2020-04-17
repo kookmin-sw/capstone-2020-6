@@ -3,6 +3,8 @@ import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {Header, Grid, Container, Button} from 'semantic-ui-react';
 import "./PageMypagePW.css";
 
+import Confirm from '../components/TSANConfirm';
+
 // for Mobx
 import {observer, inject} from "mobx-react";
 import JInput from "../components/JInput";
@@ -14,8 +16,15 @@ interface Props extends RouteComponentProps<any> {
 }
 
 class PageMypagePW extends React.Component<Props> {
+    state = {open: false}
+    show = () => this.setState({open: true})
+    // TODO: 사용시, 그 상황에 맞는 함수 작성해야할 것
+    handleConfirm = () => this.setState({open: false})
+    handleCancel = () => this.setState({open: false})
 
     render() {
+        const {open} = this.state;
+
         return (
             <Container textAlign="center" className="mypage_pw">
                 <Header as='h3'>비밀번호 변경</Header>
@@ -44,11 +53,29 @@ class PageMypagePW extends React.Component<Props> {
                         />
                     </Grid.Column>
                     <Grid.Column>
-                        <Button className="mp_btn" color="blue"> 확인 </Button>
+                        <Button
+                            className="mp_btn"
+                            color="blue"
+                            onClick={this.show}>
+                            확인
+                        </Button>
                     </Grid.Column>
+
                     <Grid.Column>
-                        <Button className="mp_btn"> 취소 </Button>
+                        <Button
+                            className="mp_btn"
+                            onClick={this.show}>
+                            취소
+                        </Button>
+                        <Confirm
+                            header={'변경을 취소하시겠습니까?'}
+                            contents={[]}
+                            open={open}
+                            handleConfirm={this.handleConfirm}
+                            handleCancel={this.handleCancel}
+                        />
                     </Grid.Column>
+
                 </Grid>
             </Container>
 
