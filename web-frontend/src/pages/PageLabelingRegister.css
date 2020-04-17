@@ -1,0 +1,17 @@
+.subjectContainer{
+    margin-top: 50px;
+}
+
+.subjectRadio{
+    width: 150px;
+}
+
+.subjectHeader{
+    font-size: 13px;
+    width: 200px;
+    color: #555;
+}
+
+.subjectBtn{
+    width: 150px;
+}

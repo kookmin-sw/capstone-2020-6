@@ -16,8 +16,7 @@ def only_user(func):
         try:
             jwt_decode_handler(kwargs['token'])
             return func(*args, **kwargs)
-        except Exception as e:
-            print(e)
+        except Exception:
             return {"message": Message(status=False, message="로그인이 필요합니다.")}
     return func_wrapper
 
@@ -25,19 +24,19 @@ def only_admin(func):
     def func_wrapper(*args, **kwargs):
         res = jwt_decode_handler(kwargs['token'])
         user = models.User.objects.get(username=res['username'])
-        if user.is_staff:
+        if user.is_staff or user.is_superuser:
             return func(*args, **kwargs)
         else:
-            return {"message": Message(status=False, message="권한이 없습니다.")}
+            return {"message": Message(status=False, message="관리자만 접근할 수 있습니다.")}
     return func_wrapper
 
 def only_requester(func):
     def func_wrapper(*args, **kwargs):
         res = jwt_decode_handler(kwargs['token'])
         user = models.User.objects.get(username=res['username'])
-        if user.is_requester:
+        if user.is_requester or user.is_staff or user.is_superuser:
             return func(*args, **kwargs)
         else:
-            return {"message": Message(status=False, message="의뢰자만 접근 할 수 있습니다.")}
+            return {"message": Message(status=False, message="의뢰자와 관리자만 접근 할 수 있습니다.")}
     return func_wrapper
 

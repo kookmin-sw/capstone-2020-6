@@ -1,0 +1,41 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.labelingTitle {
+    margin: 20px 0px 20px 0px;
+}
+
+.textLabelingContents {
+    text-align: justify;
+    line-height: 25px;
+}
+
+.mainContainer {
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+}
+
+.left {
+    border: 1px solid black;
+    margin: 20px;
+    padding: 20px;
+    width: 300px;
+}
+
+.right {
+    border: 1px solid black;
+    margin: 20px;
+    padding: 20px;
+}
+
+.subTitle {
+    margin-bottom: 20px;
+}
+
+.buttonGroup {
+    display: flex;
+    justify-content: stretch;
+}

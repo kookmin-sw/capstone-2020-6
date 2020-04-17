@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'command_center',
     'backend',
     'corsheaders'
+    'rangefilter'
 ]
 
 GRAPHENE = {
@@ -66,6 +67,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'tsan_server.urls'
