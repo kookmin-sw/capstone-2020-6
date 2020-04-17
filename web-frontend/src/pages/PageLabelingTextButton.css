@@ -7,6 +7,11 @@
     margin: 20px 0px 20px 0px;
 }
 
+.textLabelingContents {
+    text-align: justify;
+    line-height: 25px;
+}
+
 .mainContainer {
     display: flex;
     justify-content: center;
