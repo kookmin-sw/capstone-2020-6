@@ -10,7 +10,7 @@ def model():
     
     return model
 
-def feature_extraction(path):
+def feature_extract(model, path):
     
     img_feature_list = []
     
