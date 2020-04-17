@@ -82,6 +82,7 @@ class PageLabeling extends React.Component<Props> {
               progress={this.props.labelingPageStore?.progress}
               all={this.props.labelingPageStore?.totalProgress}
               progress_rate={this.props.labelingPageStore?.progressRate}
+              size={"medium"}
             />
             {/*  TODO : have to make start button */}
           </Grid.Row>
