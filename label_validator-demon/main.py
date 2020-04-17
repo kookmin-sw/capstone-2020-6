@@ -1,4 +1,4 @@
-import model
+import cnn_model 
 import clustering
 
 import pandas as pd
@@ -7,7 +7,7 @@ import operator
 
 def make_dataframe() :
     
-    
+    df = pd.read_csv("sample_furniture-images.csv", index_col = 0)
     
     return df
 
@@ -46,16 +46,31 @@ def temp_labeling(df):
 
 
 def label_validate(df):
-        
+    model = cnn_model.model()
+    paths = df.path.tolist()
     
-    return new_df
+    label_num = len(set(df.label_temp.tolist()))
+    
+    img_feature = cnn_model.feature_extract(model, paths)
+    
+    kmeans_labels = clustering.kmeans_clustering(img_feature, label_num)
+    
+    return kmeans_labels
 
 
 def main():
     
+    df = make_dataframe()
+    df_temp_label = temp_labeling(df)
     
+    df_temp_label['kmeans_label'] = label_validate(df_temp_label)
     
+    print(df_temp_label)
+      
     return
 
-if '__name__' == '__main__' :
+
+if __name__ == '__main__' :
     main()
+
+
