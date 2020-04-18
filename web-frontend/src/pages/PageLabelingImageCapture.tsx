@@ -5,7 +5,6 @@ import 'react-image-crop/dist/ReactCrop.css';
 import {Container, Button, Grid} from 'semantic-ui-react';
 import './PageLabelingImageCapture.css';
 
-
 interface Props extends RouteComponentProps<any> {
 
 }
