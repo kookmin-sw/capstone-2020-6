@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Grid} from 'semantic-ui-react';
+import {Button, Container, Grid} from 'semantic-ui-react';
 import './PageLabeling.css';
 
 // Components
@@ -83,7 +83,6 @@ class PageLabeling extends React.Component<Props> {
                 <br/>
                 <Grid.Row>
                   <h3>한 줄 설명</h3>
-                  
                 </Grid.Row>
                 <br/>
                 <Grid.Row>
@@ -102,6 +101,7 @@ class PageLabeling extends React.Component<Props> {
                 progress={this.props.labelingPageStore?.progress}
                 all={this.props.labelingPageStore?.totalProgress}
                 progress_rate={this.props.labelingPageStore?.progressRate}
+                size={'tiny'}
               />
               {/*  TODO : have to make start button */}
             </Grid.Row>

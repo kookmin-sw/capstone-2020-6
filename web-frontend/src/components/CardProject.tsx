@@ -60,6 +60,7 @@ class CardProject extends React.Component<Props> {
               progress={this.props.progress}
               all={this.props.all}
               progress_rate={this.props.progress_rate}
+              size={"small"}
             />
           </Card.Content>
         </Card>
