@@ -41,14 +41,6 @@ class App extends React.Component<Props> {
                                 allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
                                 allowFullScreen
                             />
-                        <Header as='h2' className="about_h2">소개영상</Header>
-                        <iframe
-                            className="about-youtube"
-                            src="https://www.youtube.com/embed/zOQfu3Gawzw"
-                            frameBorder="0"
-                            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                        />
                         </Grid.Column>
                         <Grid.Column>
                             <Header as='h2' className="about_h2">프로젝트 개요</Header>
