@@ -49,12 +49,6 @@ class App extends React.Component<Props> {
           <Route path='/about'>
             <PageAbout />
           </Route>
-          <Route path="/labeling/txtsel">
-            <PageLabelingTextButton/>
-          </Route>
-          <Route path="/labeling/txtsel">
-            <PageLabelingTextButton/>
-          </Route>
           <Route path="/login">
             <PageLogin />
           </Route>
