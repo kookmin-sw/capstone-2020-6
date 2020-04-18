@@ -20,6 +20,7 @@ import PageLabelingResult from './pages/PageLabelingResult';
 import PageLabeling from './pages/PageLabeling';
 import PageLabelingTextWrite from './pages/PageLabelingTextWrite';
 import PageLabelingTextButton from './pages/PageLabelingTextButton';
+import PageLabelingImageCapture from './pages/PageLabelingImageCapture';
 
 // for Components
 import Navigation from './components/Navigation';
@@ -63,6 +64,9 @@ class App extends React.Component<Props> {
           </Route>
           <Route path='/register'>
             <PageRegister/>
+          </Route>
+          <Route path='/labeling/imgcap'>
+            <PageLabelingImageCapture/>
           </Route>
           <Route path="/labeling/img:postId">
             <PageImgLabeling/>
