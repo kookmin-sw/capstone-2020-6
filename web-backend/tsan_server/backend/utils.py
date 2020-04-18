@@ -15,9 +15,11 @@ def only_user(func):
     def func_wrapper(*args, **kwargs):
         try:
             res = jwt_decode_handler(kwargs['token'])
-            return func(*args, **kwargs)
         except Exception:
             return {"message": Message(status=False, message="로그인이 필요합니다.")}
+        else:
+            # 에러 확인용으로 else문으로 뺐음
+            return func(*args, **kwargs)
     return func_wrapper
 
 def only_admin(func):

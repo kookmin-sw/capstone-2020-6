@@ -6,7 +6,7 @@ from backend import schema
 from backend.schema.User import CreateAccount, LoginAccount, Message, UpdateAccount
 from backend.schema.Dataset import CreateDataset
 from backend.schema.Category import CreateCategory, UpdateCategory
-from backend.schema.Project import CreateRequest
+from backend.schema.Project import CreateRequest, UpdateRequest
 
 from rest_framework_jwt.serializers import (
   JSONWebTokenSerializer,
@@ -24,6 +24,7 @@ class Mutation(graphene.ObjectType):
     create_request = CreateRequest.Field()
     update_category = UpdateCategory.Field()
     update_account = UpdateAccount.Field()
+    update_request = UpdateRequest.Field()
 
 
 class Query(
