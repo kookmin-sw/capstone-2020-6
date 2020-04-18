@@ -24,3 +24,29 @@ class ImageDataType(graphene.ObjectType):
     image = graphene.String()
     date = graphene.DateTime()
 
+
+class InsertTextDataset(graphene.Mutation):
+    message = graphene.Field(Message)
+
+    class Arguments:
+        name = graphene.String()
+        token= graphene.String()
+        text = graphene.List(TextDataType)
+
+    @only_user
+    @only_admin
+    def mutate(self, info, token, text):
+        return
+
+class InsertImageDataset(graphene.Mutation):
+    message = graphene.Field(Message)
+
+    class Arguments:
+        name = graphene.String()
+        token= graphene.String()
+        images= graphene.List(ImageDataType)
+
+    @only_user
+    @only_admin
+    def mutate(self, info, token, images):
+        return
