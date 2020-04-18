@@ -22,3 +22,16 @@
 .labelingPageDescription {
     line-height: 25px;
 }
+
+.labelingPageBottomGrid {
+    flex-direction: row;
+    margin-bottom: 30px;
+}
+
+.labelingStartButtonGrid {
+
+}
+
+.labelingStartButton {
+    width: 200px;
+}

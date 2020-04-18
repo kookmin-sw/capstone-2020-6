@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container, Grid} from 'semantic-ui-react';
+import {Button, Container, Grid} from 'semantic-ui-react';
 import './PageLabeling.css';
 
 // Components
@@ -76,15 +76,20 @@ class PageLabeling extends React.Component<Props> {
             <h3 style={{marginBottom: '10px'}}>상세 설명</h3>
             {this.props.labelingPageStore?.detailDescription}
           </Grid.Row>
-          <Grid.Row>
-            {/* TODO : have to fix bug. Now progressbar ui does not appear */}
-            <ProgressBar
-              progress={this.props.labelingPageStore?.progress}
-              all={this.props.labelingPageStore?.totalProgress}
-              progress_rate={this.props.labelingPageStore?.progressRate}
-              size={"medium"}
-            />
-            {/*  TODO : have to make start button */}
+          <Grid.Row className='labelingPageBottomGrid'>
+            <Grid.Column width={13}>
+              <ProgressBar
+                progress={this.props.labelingPageStore?.progress}
+                all={this.props.labelingPageStore?.totalProgress}
+                progress_rate={this.props.labelingPageStore?.progressRate}
+                size={'small'}
+              />
+            </Grid.Column>
+            <Grid.Column width={3} className='labelingStartButtonGrid'>
+              <Button className='labelingStartButton'>
+                연습하고 시작하기
+              </Button>
+            </Grid.Column>
           </Grid.Row>
         </Grid>
       </Container>
