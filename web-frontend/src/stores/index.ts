@@ -4,7 +4,6 @@ import ProjectListStore from './ProjectListStore';
 import LoginStore from './loginStore';
 import MyPageListStore from './MyPageListStore';
 import LabelingTextButtonStore from './LabelingTextButtonStore';
-import AboutStore from './AboutStore';
 
 export default {
   navigationStore: new NavigationStore(),
@@ -13,5 +12,4 @@ export default {
   loginStore: new LoginStore(),
   myPageListStore: new MyPageListStore(),
   labelingTextButtonStore: new LabelingTextButtonStore(),
-  aboutStore: new AboutStore(),
 };
