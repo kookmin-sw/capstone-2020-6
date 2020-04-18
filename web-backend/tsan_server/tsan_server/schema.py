@@ -3,6 +3,7 @@ from graphene_django.types import DjangoObjectType
 
 from backend import models
 from backend import schema
+import command_center.schema as c_schema
 from backend.schema.User import CreateAccount, LoginAccount, Message
 from backend.schema.Dataset import CreateDataset
 from backend.schema.Category import CreateCategory
@@ -28,6 +29,8 @@ class Query(
     schema.Category.Query,
     schema.Project.Query,
     schema.Dataset.Query,
+
+    c_schema.Query
 ):
     pass
 
