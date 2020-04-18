@@ -100,7 +100,7 @@ class UpdateCategory(graphene.Mutation):
                 category.save()
                 message = "'%s'카테고리가 정상적으로 수정되었습니다."%(category.name)
                 return UpdateCategory(
-                    message=Message(status=False, message=message),
+                    message=Message(status=True, message=message),
                     idx=category.idx
                 )
         except:

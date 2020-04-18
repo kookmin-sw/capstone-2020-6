@@ -20,7 +20,7 @@ class User(django.contrib.auth.models.AbstractUser):
     point = models.IntegerField(default=0) # 포인트
     reliability = models.FloatField(default=0) # 신뢰도
     is_requester = models.BooleanField(default=False) # 디폴트: 의뢰자
-"""
+    """
     def create_user(self, username, email, password, phone, is_requester):
         new_user = self.models(username=username, email=email, password=password)
         new_user.phone = phone
@@ -29,7 +29,15 @@ class User(django.contrib.auth.models.AbstractUser):
         new_user.is_requester = is_requester
         new_user.save()
         return new_user
-"""
+    """
+    def clean(self):
+        if validate_email(self.email):
+            pass
+        if validate_phone(self.phone):
+            pass
+        # if validate_password(self.password):
+        #     pass
+        return self
 
 # 데이터 라벨링 유형
 class Category(models.Model):

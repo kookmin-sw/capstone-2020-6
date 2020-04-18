@@ -3,7 +3,7 @@ from graphene_django.types import DjangoObjectType
 
 from backend import models
 from backend import schema
-from backend.schema.User import CreateAccount, LoginAccount, Message
+from backend.schema.User import CreateAccount, LoginAccount, Message, UpdateAccount
 from backend.schema.Dataset import CreateDataset
 from backend.schema.Category import CreateCategory, UpdateCategory
 from backend.schema.Project import CreateRequest
@@ -23,6 +23,7 @@ class Mutation(graphene.ObjectType):
     login_account = LoginAccount.Field()
     create_request = CreateRequest.Field()
     update_category = UpdateCategory.Field()
+    update_account = UpdateAccount.Field()
 
 
 class Query(

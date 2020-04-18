@@ -14,7 +14,7 @@ class Message(graphene.ObjectType):
 def only_user(func):
     def func_wrapper(*args, **kwargs):
         try:
-            jwt_decode_handler(kwargs['token'])
+            res = jwt_decode_handler(kwargs['token'])
             return func(*args, **kwargs)
         except Exception:
             return {"message": Message(status=False, message="로그인이 필요합니다.")}
