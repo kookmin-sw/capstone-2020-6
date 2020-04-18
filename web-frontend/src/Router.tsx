@@ -1,9 +1,9 @@
 import React from 'react';
 import './Router.css';
 import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
+    BrowserRouter as Router,
+    Switch,
+    Route,
 } from 'react-router-dom';
 
 // for Pages
@@ -12,6 +12,7 @@ import PageLogin from './pages/PageLogin';
 import PageRegister from './pages/PageRegister';
 import PageAbout from './pages/PageAbout';
 import PageMypage from './pages/PageMypage';
+import PageImgLabeling from './pages/PageImgLabeling';
 import PageMypagePW from './pages/PageMypagePW';
 import PageLabelingRegister from './pages/PageLabelingRegister';
 import PagePoints from './pages/PagePoints';
@@ -31,11 +32,12 @@ import {instanceOf} from 'prop-types';
 import {withCookies, Cookies} from 'react-cookie';
 
 export interface Props {
-  menuStore?: MenuStore
+    menuStore?: MenuStore
 }
 
 @inject('menuStore') @observer
 class App extends React.Component<Props> {
+
   constructor(props: any) {
     super(props);
   }
@@ -46,12 +48,6 @@ class App extends React.Component<Props> {
         <Switch>
           <Route path='/about'>
             <PageAbout />
-          </Route>
-          <Route path="/labeling/txtsel">
-            <PageLabelingTextButton/>
-          </Route>
-          <Route path="/labeling/txtsel">
-            <PageLabelingTextButton/>
           </Route>
           <Route path="/login">
             <PageLogin />
@@ -67,6 +63,9 @@ class App extends React.Component<Props> {
           </Route>
           <Route path='/register'>
             <PageRegister/>
+          </Route>
+          <Route path="/labeling/img:postId">
+            <PageImgLabeling/>
           </Route>
           <Route path="/labeling/txtsel">
             <PageLabelingTextButton/>

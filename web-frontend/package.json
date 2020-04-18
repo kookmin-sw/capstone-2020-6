@@ -17,6 +17,7 @@
     "apollo-boost": "0.4.7",
     "graphql": "15.0.0",
     "husky": "4.2.3",
+    "immutable": "^4.0.0-rc.12",
     "lint-staged": "10.0.8",
     "mobx": "5.15.4",
     "mobx-react": "6.1.8",

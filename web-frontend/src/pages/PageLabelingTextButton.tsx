@@ -30,7 +30,7 @@ class PageLabelingTextButton extends React.Component<Props> {
           <h2>{this.props.labelingTextButtonStore?.labelingSubject}</h2>
         </div>
         <Grid columns={2}>
-          <Grid.Column>
+          <Grid.Column className='textLabelingContents'>
             {this.props.labelingTextButtonStore?.textLabelingContents}
           </Grid.Column>
           <Grid.Column>

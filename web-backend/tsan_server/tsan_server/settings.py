@@ -26,8 +26,17 @@ SECRET_KEY = 'l(-gpuaz6^yvme=*x-f*gyz)deg2d1^xhye5)+9)4=d9+-fx^v'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+	"13.209.70.145",
+	"127.0.0.1:8000",
+	"127.0.0.1"
+]
 
+CORS_ORIGIN_WHITELIST = [
+    "http://localhost:3000",
+    "http://localhost:8000",
+    "http://localhost"
+]
 
 # Application definition
 
@@ -40,8 +49,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles', # Required for GraphiQL
     'graphene_django',
     'command_center',
-    'corsheaders',
     'backend',
+    'corsheaders'
     'rangefilter'
 ]
 
@@ -53,7 +62,8 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
+#    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
