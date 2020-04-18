@@ -1,6 +1,6 @@
 from django.db import models
 import django.contrib.auth.models
-from backend.validation import validate_email, validate_phone, validate_category_type
+from backend.validation import validate_email, validate_phone, validate_category_type, validate_date
 from django.core.validators import MinLengthValidator
 
 # 데이터셋 테이블
@@ -64,12 +64,13 @@ class Request(models.Model):
     category = models.ForeignKey("Category", on_delete=models.DO_NOTHING) # 데이터 라벨링 유형
     subject = models.CharField(max_length=100) # 요청 주제
     description = models.TextField(blank=True) # 설명
-    start_date = models.DateTimeField(auto_now_add=True) # 시작
-    due_date = models.DateTimeField('due date') # 마감
+    start_date = models.DateTimeField(auto_now_add=True, validators=[validate_date]) # 시작
+    due_date = models.DateTimeField('due date', validators=[validate_date]) # 마감
     current_cycle = models.IntegerField(default=0) # 현재 사이클
     max_cycle = models.IntegerField(default=0) # 최대 사이클
     total_point = models.IntegerField(default=0) # 총 가격
 
+    
     def create(self, user, category, subject, description, due_date, max_cycle, total_point):
        self.user = user
        self.category = category
@@ -80,6 +81,11 @@ class Request(models.Model):
        self.total_point = total_point
        self.save()
        return self
+    
+    def clean(self):
+        if validate_category_type(self.type):
+            pass
+        return self
 
 
 # 라벨링 참여 테이블

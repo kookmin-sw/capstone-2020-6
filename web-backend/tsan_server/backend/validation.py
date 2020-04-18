@@ -37,3 +37,12 @@ def validate_category_type(value):
         raise ValidationError("카테고리 타입이 image/text 형식이 아닙니다.")
 
     return value
+
+# date 유효성 검증
+def validate_date(value):
+    # YYYY/MM/DD, YYYY.MM.DD, YYYY-MM-DD, YYMMDD
+    print("aaaaaaaaaaaa")
+    DATE_REGEX = r"(^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]))"
+    if not re.match(DATE_REGEX, value):
+        raise ValidationError("유효한 날짜 형식이 아닙니다.")
+    return value
