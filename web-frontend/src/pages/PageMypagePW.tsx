@@ -5,6 +5,8 @@ import "./PageMypagePW.css";
 
 import Confirm from '../components/TSANConfirm';
 
+import Footer from '../components/Footer';
+
 // for Mobx
 import {observer, inject} from "mobx-react";
 import JInput from "../components/JInput";
@@ -26,59 +28,59 @@ class PageMypagePW extends React.Component<Props> {
         const {open} = this.state;
 
         return (
-            <Container textAlign="center" className="mypage_pw">
+            <Container className="mypage_pw">
+                <div className="page-title">마이페이지</div>
                 <Header as='h3'>비밀번호 변경</Header>
                 <p>안전한 비밀번호로 내 정보를 보호하세요.</p>
-                <p className="mp_content">* <em>다른 아이디/사이트에서 사용한 적 없는 비밀번호</em></p>
-                <p className="mp_content">* <em>이전에 사용한 적 없는 비밀번호</em>가 안전합니다.</p>
-                <Grid columns={1}>
-                    <Grid.Column>
-                        <JInput
-                            label="새 비밀번호"
-                            placeholder="비밀번호를 입력해주세요."
-                            value={this.props.loginStore?.password}
-                            onChange={this.props.loginStore?.setPassword}
-                            type="password"
-                            style={{marginTop: 15}}
-                        />
-                    </Grid.Column>
-                    <Grid.Column>
-                        <JInput
-                            label="새 비밀번호 확인"
-                            placeholder="입력하신 비밀번호를 다시 입력해주세요."
-                            value={this.props.loginStore?.password}
-                            onChange={this.props.loginStore?.setPassword}
-                            type="password"
-                            style={{marginTop: 15}}
-                        />
-                    </Grid.Column>
-                    <Grid.Column>
-                        <Button
-                            className="mp_btn"
-                            color="blue"
-                            onClick={this.show}>
-                            확인
-                        </Button>
-                    </Grid.Column>
-
-                    <Grid.Column>
-                        <Button
-                            className="mp_btn"
-                            onClick={this.show}>
-                            취소
-                        </Button>
-                        <Confirm
-                            header={'변경을 취소하시겠습니까?'}
-                            contents={[]}
-                            open={open}
-                            handleConfirm={this.handleConfirm}
-                            handleCancel={this.handleCancel}
-                        />
-                    </Grid.Column>
-
-                </Grid>
+                <p className="mp_content">* <span>다른 아이디/사이트에서 사용한 적 없는 비밀번호</span></p>
+                <p className="mp_content">* <span>이전에 사용한 적 없는 비밀번호</span>가 안전합니다.</p>
+                <JInput
+                    label="기존 비밀번호"
+                    placeholder="기존 비밀번호를 입력해주세요."
+                    value={this.props.loginStore?.password}
+                    onChange={this.props.loginStore?.setPassword}
+                    type="password"
+                    style={{marginTop: 30}}
+                />
+                <JInput
+                    label="새 비밀번호"
+                    placeholder="비밀번호를 입력해주세요."
+                    value={this.props.loginStore?.password}
+                    onChange={this.props.loginStore?.setPassword}
+                    type="password"
+                    style={{marginTop: 30}}
+                />
+                <JInput
+                    label="새 비밀번호 확인"
+                    placeholder="입력하신 비밀번호를 다시 입력해주세요."
+                    value={this.props.loginStore?.password}
+                    onChange={this.props.loginStore?.setPassword}
+                    type="password"
+                    style={{marginTop: 15, marginBottom: 30}}
+                />
+                <div className="btn_group">
+                    <Button
+                        className="mp_btn"
+                        onClick={this.show}>
+                        뒤로가기
+                    </Button>
+                    <Button
+                        className="mp_btn"
+                        color="blue"
+                        style={{marginBottom: 10}}
+                        onClick={this.show}>
+                        비밀번호 변경
+                    </Button>
+                </div>
+                <Confirm
+                    header={'변경을 취소하시겠습니까?'}
+                    contents={[]}
+                    open={open}
+                    handleConfirm={this.handleConfirm}
+                    handleCancel={this.handleCancel}
+                />
+                <Footer/>
             </Container>
-
         );
     }
 }

@@ -1,16 +1,28 @@
 .mypage_pw{
-    padding: 40px;
-    border: 1px solid #ddd;
-    width: 500px !important;
+    /* padding: 40px; */
+    padding-top: 0px;
+    /* border: 1px solid #ddd; */
+    /* width: 500px !important; */
     margin: auto;
     margin-top: 60px;
 }
 
-.mp_content > em{
+.mp_content > span{
     color: orangered;
     letter-spacing: -1px;
 }
 
 .mp_btn{
-    width: 130px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 0px !important;
+}
+
+.mypage_pw_back {
+    text-align: right;
+    margin-top: 10px;
+}
+
+.btn_group {
+    text-align: right;
 }
