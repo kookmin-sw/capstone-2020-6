@@ -20,6 +20,7 @@ class User(django.contrib.auth.models.AbstractUser):
     point = models.IntegerField(default=0) # 포인트
     reliability = models.FloatField(default=0) # 신뢰도
     is_requester = models.BooleanField(default=False) # 디폴트: 의뢰자
+    is_robot = models.BooleanField(default=False)
     """
     def create_user(self, username, email, password, phone, is_requester):
         new_user = self.models(username=username, email=email, password=password)
