@@ -20,4 +20,20 @@ def validate_phone(value):
 
     return value
 
-    
+# password 유효성 검증
+"""
+# test 전
+def validate_password(value):
+    PASSWORD_REGEX = r"(^.*(?=.{8,10})(?=.*[a-zA-Z])(?=.*?[A-Z])(?=.*\d)(?=.+?[\W|_])[a-zA-Z0-9!@#$%^&*()-_+={}\|\\\/]+$)"
+    if not re.match(PASSWORD_REGEX, value):
+        raise ValidationError("대/소문자,숫자,특수문자 포함하여 8글자 이상 입력해주세요.")
+
+    return value
+"""
+
+# Category type 유효성 검증
+def validate_category_type(value):
+    if not (value == "text" or value == "image"):
+        raise ValidationError("카테고리 타입이 image/text 형식이 아닙니다.")
+
+    return value

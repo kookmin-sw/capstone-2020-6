@@ -1,6 +1,6 @@
 from django.db import models
 import django.contrib.auth.models
-from backend.validation import validate_email, validate_phone
+from backend.validation import validate_email, validate_phone, validate_category_type
 from django.core.validators import MinLengthValidator
 
 # 데이터셋 테이블
@@ -34,14 +34,20 @@ class User(django.contrib.auth.models.AbstractUser):
 # 데이터 라벨링 유형
 class Category(models.Model):
     idx = models.AutoField(primary_key=True) # 고유번호
-    type = models.CharField(max_length=15) # 이미지/텍스트
-    name = models.CharField(max_length=50, unique=True) # 카테고리 명 
+    type = models.CharField(max_length=15, validators=[validate_category_type]) # 이미지/텍스트
+    name = models.CharField(max_length=50) # 카테고리 명 
 
     def create(self, name, type):
         self.name = name
         self.type = type
         self.save()
         return self
+
+    def clean(self):
+        if validate_category_type(self.type):
+            pass
+        return self
+
 
 # 의뢰 요청 테이블
 class Request(models.Model):
