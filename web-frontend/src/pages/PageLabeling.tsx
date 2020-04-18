@@ -83,7 +83,6 @@ class PageLabeling extends React.Component<Props> {
                 <br/>
                 <Grid.Row>
                   <h3>한 줄 설명</h3>
-                  
                 </Grid.Row>
                 <br/>
                 <Grid.Row>
@@ -97,6 +96,14 @@ class PageLabeling extends React.Component<Props> {
               {this.props.labelingPageStore?.detailDescription}
             </Grid.Row>
             <Grid.Row>
+              {/* TODO : have to fix bug. Now progressbar ui does not appear */}
+              <ProgressBar
+                progress={this.props.labelingPageStore?.progress}
+                all={this.props.labelingPageStore?.totalProgress}
+                progress_rate={this.props.labelingPageStore?.progressRate}
+                size={'tiny'}
+              />
+              {/*  TODO : have to make start button */}
             </Grid.Row>
           </Grid>
         </Container>
