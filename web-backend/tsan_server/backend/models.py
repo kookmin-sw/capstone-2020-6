@@ -1,7 +1,7 @@
 from django.db import models
 import django.contrib.auth.models
 from backend.validation import validate_email, validate_phone, validate_category_type, validate_date
-from django.core.validators import MinLengthValidator
+from django.core.exceptions import ValidationError
 
 # 데이터셋 테이블
 class Dataset(models.Model):
@@ -83,8 +83,16 @@ class Request(models.Model):
        return self
     
     def clean(self):
-        if validate_category_type(self.type):
+        if validate_category_type(self.category.type):
             pass
+        if validate_date(self.start_date):
+            pass
+        if validate_date(self.due_date):
+            pass
+        if self.due_date < self.start_date:
+            raise ValidationError("마감일은 시작일 보다 이후여야 합니다.")
+        # TODO: min len 유효성 검사
+
         return self
 
 

@@ -1,4 +1,5 @@
 from django.core.exceptions import ValidationError
+from django.core.validators import MinLengthValidator
 import re
 
 # email 유효성 검증
@@ -41,8 +42,14 @@ def validate_category_type(value):
 # date 유효성 검증
 def validate_date(value):
     # YYYY/MM/DD, YYYY.MM.DD, YYYY-MM-DD, YYMMDD
-    print("aaaaaaaaaaaa")
-    DATE_REGEX = r"(^(19|20)\d\d[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01]))"
+    DATE_REGEX = r"(^(19|20)\d{2}[- /.](0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[0-1])$)"
     if not re.match(DATE_REGEX, value):
         raise ValidationError("유효한 날짜 형식이 아닙니다.")
     return value
+
+"""
+# 최소 글자 수 유효성 검증
+def validate_min_len(min_len, value):
+    MinLengthValidator(min_len, "길이가 너무 짧습니다.")
+    return value
+"""
