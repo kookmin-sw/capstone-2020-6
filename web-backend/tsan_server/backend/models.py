@@ -113,3 +113,9 @@ class PaymentLog(models.Model):
     user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 사용자
     request = models.ForeignKey("Request", on_delete=models.DO_NOTHING) # 보상을 주는 의뢰
     message = models.CharField(max_length=300) # 사유
+
+    def clean(self):
+        if validate_paymentlog_type(self.type):
+            pass
+
+        return self
