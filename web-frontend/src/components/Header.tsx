@@ -17,12 +17,10 @@ class Header extends React.Component<Props> {
         <div>
           <span>T-SAN, 티끌모아 태산</span>
           <Container className="main_body_text">
-            T-SAN은 Ex dolore veniam fugiat quis adipisicing esse sunt
-            ea enim eu consectetur ea sunt ad.Quideserunt fugiat id
-            aliquip esse laboris irure in adipisicing occaecat sint
-            est. Lorem exercitation duis adipisicing veniam ullamco
-            minim nostrud. Amet sint cillum enim dolore consectetur
-            veniam enim id consequat commodo commodo nostrud.
+            <br/>
+            <div>티끌 모아 태산 T-SAN에서 데이터 라벨링을 통한 보상을 얻어보세요.</div>
+            저희 T-SAN 플랫폼은 일반적인 데이터 레이블링 의뢰뿐만 아니라 자체적으로 데이터셋을 확보하여<br/>
+            레이블링을 진행해서 레이블링된 데이터를 공공 데이터로 공개하여 인공지능 사업 발전에 기여할 수 있습니다.
           </Container>
         </div>
       </div>
