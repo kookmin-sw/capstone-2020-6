@@ -14,10 +14,12 @@ class Message(graphene.ObjectType):
 def only_user(func):
     def func_wrapper(*args, **kwargs):
         try:
-            jwt_decode_handler(kwargs['token'])
-            return func(*args, **kwargs)
+            res = jwt_decode_handler(kwargs['token'])
         except Exception:
             return {"message": Message(status=False, message="로그인이 필요합니다.")}
+        else:
+            # 에러 확인용으로 else문으로 뺐음
+            return func(*args, **kwargs)
     return func_wrapper
 
 def only_admin(func):
@@ -38,5 +40,15 @@ def only_requester(func):
             return func(*args, **kwargs)
         else:
             return {"message": Message(status=False, message="의뢰자와 관리자만 접근 할 수 있습니다.")}
+    return func_wrapper
+
+def only_robot(func):
+    def func_wrapper(*args, **kwargs):
+        res = jwt_decode_handler(kwargs['token'])
+        user = models.User.objects.get(username=res['username'])
+        if user.is_robot or user.is_staff or user.is_superuser:
+            return func(*args, **kwargs)
+        else:
+            return {"message": Message(status=False, message="로봇과 관리자만 접근 할 수 있습니다.")}
     return func_wrapper
 
