@@ -53,3 +53,11 @@ def validate_min_len(min_len, value):
     MinLengthValidator(min_len, "길이가 너무 짧습니다.")
     return value
 """
+
+# Payment type 유효성 검증
+def validate_paymentlog_type(value):
+    # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
+    TYPE_REGEX = r"(^[0-4]{1}$)"
+    if not re.match(TYPE_REGEX, value):
+        raise ValidationError("유효한 PaymentLog type형식이 아닙니다.")
+    return value

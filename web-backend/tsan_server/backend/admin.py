@@ -1,7 +1,7 @@
 from django.contrib import admin
 from rangefilter.filter import DateRangeFilter, DateTimeRangeFilter
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Category, Request
+from .models import User, Category, Request, PaymentLog
 
 # Register your models here.
 # admin page filter에서 'is_required: 예/아니오'를 '사용자 구분: 의뢰자/참여자'로 표현
@@ -20,6 +20,33 @@ class UserTypeFilter(admin.SimpleListFilter):
             return User.objects.filter(is_requester=True)
         if self.value() == '참여자':
             return User.objects.filter(is_requester=False)
+
+# admin page filter에서 'payment.type: 0/1/2/3/4'를 
+# '내역 구분: 0: 보상/1: 충전/2: 환급/3: 소비/4: 기타사유'로 표현
+class PaymentTypeFilter(admin.SimpleListFilter):
+    title = "내역 구분"
+    parameter_name = 'paymenttype'
+
+    def lookups(self, request, model_admin):
+        return (
+            ('0: 보상', '0: 보상'),
+            ('1: 충전', '1: 충전'),
+            ('2: 환급', '2: 환급'),
+            ('3: 소비', '3: 소비'),
+            ('4: 기타사유', '4: 기타사유'),
+        )
+
+    def queryset(self, request, model_admin):
+        if self.value() == '0: 보상':
+            return PaymentLog.objects.filter(type=0)
+        if self.value() == '1: 충전':
+            return PaymentLog.objects.filter(type=1)
+        if self.value() == '2: 환급':
+            return PaymentLog.objects.filter(type=2)
+        if self.value() == '3: 소비':
+            return PaymentLog.objects.filter(type=3)
+        if self.value() == '4: 기타사유':
+            return PaymentLog.objects.filter(type=4)
 
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
@@ -93,9 +120,27 @@ class RequestAdmin(admin.ModelAdmin):
         'total_point'
     )
 
+class PaymentLogAdmin(admin.ModelAdmin):
+    list_display = (
+        'type',
+        'user',
+        'request',
+        'note',
+    )
+    list_filter = (
+        (PaymentTypeFilter),
+    )
+    search_fields = (
+        'type',
+        'user',
+        'request',
+        'note',
+    )
+
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Request, RequestAdmin)
+admin.site.register(PaymentLog, PaymentLogAdmin)
 
 """
 DateRangeFilter 사용

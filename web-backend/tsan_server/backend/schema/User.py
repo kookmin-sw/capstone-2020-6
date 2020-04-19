@@ -188,6 +188,10 @@ class Query(graphene.ObjectType):
                 reliability
                 isRequester
             }
+            message{
+              status
+              message
+            }
         }
     }
     """
