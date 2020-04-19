@@ -5,6 +5,7 @@ import LoginStore from './loginStore';
 import LabelingTextButtonStore from './LabelingTextButtonStore';
 import LabelingImgStore from "./LabelingImgStore";
 import LabelingPageStore from './LabelingPageStore';
+import MyPageListStore from './MyPageListStore';
 
 export default {
   navigationStore: new NavigationStore(),
@@ -14,4 +15,5 @@ export default {
   labelingTextButtonStore: new LabelingTextButtonStore(),
   labelingImgStore: new LabelingImgStore(),
   labelingPageStore: new LabelingPageStore(),
+  mypageListStore: new MyPageListStore(),
 };
