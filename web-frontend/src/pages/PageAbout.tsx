@@ -1,7 +1,6 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {Container, Header, Grid} from "semantic-ui-react"
-import Footer from '../components/Footer';
 
 import "./PageAbout.css"
 
@@ -72,7 +71,6 @@ class App extends React.Component<Props> {
                         }
                     </Grid>
                 </Container>
-                <Footer/>
             </>
         )
     }

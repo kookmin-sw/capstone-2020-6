@@ -5,7 +5,6 @@ import './PageMain.css';
 // Components
 import CardProject from '../components/CardProject';
 import Header from '../components/Header';
-import Footer from '../components/Footer';
 
 // for Mobx
 import {observer, inject} from 'mobx-react';
@@ -74,7 +73,6 @@ class App extends React.Component<Props> {
             })}
           </Grid>
         </Container>
-        <Footer />
       </>
     );
   }
