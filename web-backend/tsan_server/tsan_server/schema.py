@@ -9,6 +9,8 @@ from backend.schema.Dataset import CreateDataset
 from backend.schema.Category import CreateCategory
 from backend.schema.Project import CreateRequest
 
+from command_center.schema import Dataset
+
 from rest_framework_jwt.serializers import (
   JSONWebTokenSerializer,
   RefreshJSONWebTokenSerializer,
@@ -30,7 +32,7 @@ class Query(
     schema.Project.Query,
     schema.Dataset.Query,
 
-    c_schema.Query
+    Dataset.Query
 ):
     pass
 
