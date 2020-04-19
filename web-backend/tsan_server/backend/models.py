@@ -1,7 +1,6 @@
 from django.db import models
 import django.contrib.auth.models
-from backend.validation import validate_email, validate_phone, validate_category_type, 
-validate_date, validate_paymentlog_type
+from backend.validation import validate_email, validate_phone, validate_category_type, validate_date, validate_paymentlog_type
 from django.core.exceptions import ValidationError
 
 # 데이터셋 테이블
@@ -112,7 +111,7 @@ class PaymentLog(models.Model):
     type = models.TextField(blank=False, validators=[validate_paymentlog_type]) # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
     user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 사용자
     request = models.ForeignKey("Request", on_delete=models.DO_NOTHING) # 보상을 주는 의뢰
-    message = models.CharField(max_length=300) # 사유
+    note = models.CharField(max_length=300) # 사유
 
     def clean(self):
         if validate_paymentlog_type(self.type):

@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'graphene_django',
     'command_center',
     'backend',
-    'corsheaders'
     'rangefilter'
 ]
 
