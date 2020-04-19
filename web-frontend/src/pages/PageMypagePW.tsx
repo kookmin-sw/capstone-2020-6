@@ -5,8 +5,6 @@ import "./PageMypagePW.css";
 
 import Confirm from '../components/TSANConfirm';
 
-import Footer from '../components/Footer';
-
 // for Mobx
 import {observer, inject} from "mobx-react";
 import JInput from "../components/JInput";
@@ -79,7 +77,6 @@ class PageMypagePW extends React.Component<Props> {
                     handleConfirm={this.handleConfirm}
                     handleCancel={this.handleCancel}
                 />
-                <Footer/>
             </Container>
         );
     }
