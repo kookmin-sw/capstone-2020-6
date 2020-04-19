@@ -58,6 +58,7 @@ class CreatePaymentLog(graphene.Mutation):
         try:
             res = Labeling.objects.get(user=user, request=request)
         except:
+            # 라벨링 참여 테이블을 사용하여 참여 기록 check
             message = "'%s'님은 '%s'프로젝트를 참여한 기록이 없습니다."%(user.username, request.subject)
             return CreatePaymentLog(message=Message(status=False, message=message))
         else:
