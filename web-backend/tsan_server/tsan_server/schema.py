@@ -9,6 +9,8 @@ from backend.schema.Category import CreateCategory, UpdateCategory
 from backend.schema.Project import CreateRequest, UpdateRequest
 from backend.schema.Payment import CreatePaymentLog
 
+from command_center.schema import Dataset
+
 from rest_framework_jwt.serializers import (
   JSONWebTokenSerializer,
   RefreshJSONWebTokenSerializer,
@@ -34,6 +36,8 @@ class Query(
     schema.Category.Query,
     schema.Project.Query,
     schema.Dataset.Query,
+
+    Dataset.Query
 ):
     pass
 

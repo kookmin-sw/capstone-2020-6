@@ -11,7 +11,7 @@ export default class ProjectListStore {
   constructor() {
     this.list = [];
   }
-  @action getAvailableProject() {
+  @action getAvailableProject = () => {
     this.list = [
       {
         thumbnail:
