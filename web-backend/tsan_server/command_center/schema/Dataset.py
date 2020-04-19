@@ -29,7 +29,7 @@ class TextDataList(graphene.ObjectType):
     message = Message(),
     data = graphene.List(TextDataType)
 
-class ImageDataType(graphene.ObjectType):
+class ImageDataList(graphene.ObjectType):
     message = Message(),
     data = graphene.List(ImageDataType)
 
@@ -61,11 +61,11 @@ class InsertImageDataset(graphene.Mutation):
 
 class Query(graphene.ObjectType):
 
-    get_text_dataset = graphene.Field(TextDataType)
+    get_text_dataset = graphene.Field(TextDataList)
     def resolve_get_text_dataset(self, info, skip=0, limit=100, **kwargs):
         pass
 
-    get_image_dataset = graphene.Field(ImageDataType)
+    get_image_dataset = graphene.Field(ImageDataList)
     def resolve_get_image_dataset(self, info, **kwargs):
         pass
     
