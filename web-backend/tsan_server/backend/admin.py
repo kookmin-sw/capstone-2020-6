@@ -43,10 +43,12 @@ class CustomUserAdmin(UserAdmin):
         'point',
         'reliability',
         'is_requester',
+        'is_robot',
         'is_staff'
     )
     list_filter = (
         (UserTypeFilter),
+        'is_robot',
         'is_staff',
         # TODO: 포인트 양으로 필터링 
         # TODO: 신뢰도로 필터링
