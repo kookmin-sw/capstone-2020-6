@@ -70,9 +70,10 @@ class Request(models.Model):
     current_cycle = models.IntegerField(default=0) # 현재 사이클
     max_cycle = models.IntegerField(default=0) # 최대 사이클
     total_point = models.IntegerField(default=0) # 총 가격
+    is_captcha = models.BooleanField(default=False) # 디폴트 reCAPTCHA 비허용
 
     
-    def create(self, user, category, subject, description, due_date, max_cycle, total_point):
+    def create(self, user, category, subject, description, due_date, max_cycle, is_captcha, total_point):
        self.user = user
        self.category = category
        self.subject = subject
@@ -80,6 +81,7 @@ class Request(models.Model):
        self.due_date = due_date
        self.max_cycle = max_cycle
        self.total_point = total_point
+       self.is_captcha = is_captcha
        self.save()
        return self
     
@@ -92,6 +94,8 @@ class Request(models.Model):
             pass
         if self.due_date < self.start_date:
             raise ValidationError("마감일은 시작일 보다 이후여야 합니다.")
+        if (self.is_captcha == True and self.category.idx != 4):
+            raise ValidationError("해당 라벨링 유형은 CAPTCHA를 허용할 수 없는 유형입니다. (이미지 선택 라벨링 유형만 가능)")
         # TODO: min len 유효성 검사
 
         return self
