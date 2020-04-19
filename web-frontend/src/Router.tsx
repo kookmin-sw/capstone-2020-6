@@ -12,7 +12,7 @@ import PageLogin from './pages/PageLogin';
 import PageRegister from './pages/PageRegister';
 import PageAbout from './pages/PageAbout';
 import PageMypage from './pages/PageMypage';
-
+import PageImgLabeling from "./pages/PageImgLabeling";
 import PageMypagePW from './pages/PageMypagePW';
 import PageLabelingRegister from './pages/PageLabelingRegister';
 import PagePoints from './pages/PagePoints';
