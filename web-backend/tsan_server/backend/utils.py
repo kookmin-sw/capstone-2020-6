@@ -42,3 +42,13 @@ def only_requester(func):
             return {"message": Message(status=False, message="의뢰자와 관리자만 접근 할 수 있습니다.")}
     return func_wrapper
 
+def only_robot(func):
+    def func_wrapper(*args, **kwargs):
+        res = jwt_decode_handler(kwargs['token'])
+        user = models.User.objects.get(username=res['username'])
+        if user.is_robot or user.is_staff or user.is_superuser:
+            return func(*args, **kwargs)
+        else:
+            return {"message": Message(status=False, message="로봇과 관리자만 접근 할 수 있습니다.")}
+    return func_wrapper
+
