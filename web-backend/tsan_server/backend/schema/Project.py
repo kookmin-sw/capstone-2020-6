@@ -1,6 +1,8 @@
 import graphene
+import datetime
 from backend.models import Dataset, User, Category, Request
 from django.contrib.auth import login
+from django.core.exceptions import ValidationError
 from graphene_django.types import DjangoObjectType
 from rest_framework_jwt.serializers import (
   JSONWebTokenSerializer,
@@ -86,6 +88,7 @@ class CreateRequest(graphene.Mutation):
         max_cycle = graphene.Int()
         total_point = graphene.Int()
         token = graphene.String()
+
     @only_user
     @only_requester
     def mutate(self, info, category, subject, description, due_date, max_cycle, total_point, token):
@@ -117,6 +120,53 @@ class CreateRequest(graphene.Mutation):
                         message=Message(status=True, message=message),
                         idx=request.idx
                     )
+
+class UpdateRequest(graphene.Mutation):
+    message = graphene.Field(Message)
+    idx = graphene.Int()
+
+    class Arguments:
+        idx = graphene.Int()
+        category = graphene.String()
+        subject = graphene.String()
+        description = graphene.String()
+        start_date = graphene.Date()
+        due_date = graphene.Date()
+        max_cycle = graphene.Int()
+        total_point = graphene.Int()
+        token = graphene.String()
+
+    @only_user
+    @only_requester
+    def mutate(self, info, idx, category, subject, description, start_date, due_date, max_cycle, total_point, token):
+        res = jwt_decode_handler(token)
+        user = User.objects.get(username=res['username'])
+        category = Category.objects.get(name=category)
+        try:
+            request = Request.objects.get(idx=idx)
+            update = Request(user=user, category=category, subject=subject, description=description, 
+                            start_date=str(start_date), due_date=str(due_date), 
+                            max_cycle=max_cycle, total_point=total_point)
+            try:
+                update.clean()
+            except ValidationError as e:
+                return UpdateRequest(message=Message(status=False, message=str(e)))
+            else:
+                request.category = category
+                request.subject = subject
+                request.description = description
+                request.start_date = start_date
+                request.due_date = due_date
+                request.max_cycle = max_cycle
+                request.total_point = total_point
+                request.save()
+                message = "'%s'주제가 정상적으로 수정되었습니다."%(request.subject)
+                return UpdateRequest(
+                    message=Message(status=True, message=message),
+                    idx=category.idx
+                )
+        except Exception as ex:
+            return UpdateRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다."+str(ex)))
 
 class Query(graphene.ObjectType):
     """
