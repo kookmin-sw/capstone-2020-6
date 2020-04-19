@@ -24,6 +24,7 @@ import PageLabelingImageCapture from './pages/PageLabelingImageCapture';
 
 // for Components
 import Navigation from './components/Navigation';
+import Footer from './components/Footer';
 
 // for Mobx
 import {inject, observer} from 'mobx-react';
@@ -90,6 +91,7 @@ class App extends React.Component<Props> {
             <PageMain />
           </Route>
         </Switch>
+        <Footer/>
       </Router>
     );
   }
