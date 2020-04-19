@@ -24,7 +24,6 @@ class ImageDataType(graphene.ObjectType):
     image = graphene.String()
     date = graphene.DateTime()
 
-
 class InsertTextDataset(graphene.Mutation):
     message = graphene.Field(Message)
 
@@ -50,3 +49,14 @@ class InsertImageDataset(graphene.Mutation):
     @only_admin
     def mutate(self, info, token, images):
         return
+
+class Query(graphene.ObjectType):
+
+    get_text_dataset = graphene.Field(TextDataType)
+    def resolve_get_text_dataset(self, info, **kwargs):
+        pass
+
+    get_image_dataset = graphene.Field(ImageDataType)
+    def resolve_get_image_dataset(self, info, **kwargs):
+        pass
+    
