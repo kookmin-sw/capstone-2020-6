@@ -2,7 +2,9 @@ import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 import ReactCrop from 'react-image-crop';
 import 'react-image-crop/dist/ReactCrop.css';
-import {Container} from 'semantic-ui-react';
+import {Container, Button, Grid} from 'semantic-ui-react';
+import './PageLabelingImageCapture.css';
+
 
 interface Props extends RouteComponentProps<any> {
 
@@ -19,17 +21,17 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
     this.state = {
       src: '',
       crop: {
-        x: 10,
-        y: 10,
-        width: 20,
-        height: 20,
+        x: 205,
+        y: 111,
+        width: 120,
+        height: 120,
       },
     };
   }
 
   // eslint-disable-next-line camelcase
   UNSAFE_componentWillMount(): void {
-    this.setState({src: '/images/body.jpg'});
+    this.setState({src: 'https://www.futurekorea.co.kr/news/photo/201910/121674_123146_2638.jpg'});
   }
 
   onCropComplete = (crop: any) => {
@@ -42,13 +44,34 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
 
   render() {
     return (
-      <Container className="App">
-        <ReactCrop
-          src={this.state.src}
-          crop={this.state.crop}
-          onComplete={this.onCropComplete}
-          onChange={this.onCropChange}
-        />
+      <Container>
+        <div className='labelingTitle'>
+          <h2>비문 인식을 위한 강아지 코 labeling</h2>
+        </div>
+        <Grid columns={2}>
+          <Grid.Column className='labelingImageCapture'>
+            <ReactCrop
+              src={this.state.src}
+              crop={this.state.crop}
+              onComplete={this.onCropComplete}
+              onChange={this.onCropChange}
+            />
+          </Grid.Column>
+          <Grid.Column className='labelingCaptureResult'>
+            <div className='subTitle'>
+              1. 강아지 코를 찾아서 캡쳐해주세요.
+            </div>
+            <Grid className='imagePreviewCanvas'>
+
+            </Grid>
+            <br/><br/>
+            <Grid className='captureButtonGrid'>
+              <Button color={'blue'} className='captureButton'>
+                캡쳐
+              </Button>
+            </Grid>
+          </Grid.Column>
+        </Grid>
       </Container>
     );
   }
