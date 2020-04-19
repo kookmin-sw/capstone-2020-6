@@ -15,5 +15,5 @@ export default {
   labelingTextButtonStore: new LabelingTextButtonStore(),
   labelingImgStore: new LabelingImgStore(),
   labelingPageStore: new LabelingPageStore(),
-  mypageListStore: new MyPageListStore(),
+  myPageListStore: new MyPageListStore(),
 };
