@@ -1,4 +1,5 @@
 import graphene
+from mongodb import db
 from backend.models import Dataset, User
 from django.contrib.auth import login
 from graphene_django.types import DjangoObjectType
@@ -23,6 +24,14 @@ class ImageDataType(graphene.ObjectType):
     category = graphene.String()
     image = graphene.String()
     date = graphene.DateTime()
+
+class TextDataList(graphene.ObjectType):
+    message = Message(),
+    data = graphene.List(TextDataType)
+
+class ImageDataType(graphene.ObjectType):
+    message = Message(),
+    data = graphene.List(ImageDataType)
 
 class InsertTextDataset(graphene.Mutation):
     message = graphene.Field(Message)
@@ -53,7 +62,7 @@ class InsertImageDataset(graphene.Mutation):
 class Query(graphene.ObjectType):
 
     get_text_dataset = graphene.Field(TextDataType)
-    def resolve_get_text_dataset(self, info, **kwargs):
+    def resolve_get_text_dataset(self, info, skip=0, limit=100, **kwargs):
         pass
 
     get_image_dataset = graphene.Field(ImageDataType)
