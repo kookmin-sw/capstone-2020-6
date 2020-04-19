@@ -11,13 +11,18 @@
     height: 100%;
     color: #fff;
     font-size: 40px;
-    font-weight: bold;
     padding-top: 100px;
 }
 
-.main_body_text {
+.main_body_text{
     font-size: 20px;
-    line-height: 20px;
-    font-weight: 100;
+    line-height: 25px;
     margin-top: 50px;
+    text-align: center;
+}
+
+.main_body_text > div {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 10px;
 }

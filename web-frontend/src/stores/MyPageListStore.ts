@@ -10,7 +10,7 @@ export default class MyPageListStore {
         this.list = [];
     }
 
-    @action getAvailableMyPageList() {
+    @action getAvailableMyPageList = () => {
         this.list = [
             {
                 userType: "client",

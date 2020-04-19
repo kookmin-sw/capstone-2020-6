@@ -1,0 +1,47 @@
+.labelingTitle {
+    margin: 20px 0px 20px 0px;
+}
+
+.labelingImageCapture {
+
+}
+
+.labelingCaptureResult {
+
+}
+
+.subTitle {
+    margin-bottom: 20px;
+}
+
+.imagePreviewCanvas {
+    background: #f7f7f7;
+    height: 80%;
+}
+
+.captureButtonGrid {
+    display: flex;
+    justify-content: center;
+}
+
+.captureButton {
+    width: 100px;
+}
+
+.subTitle {
+    margin-bottom: 20px;
+}
+
+.imagePreviewCanvas {
+    background: #f7f7f7;
+    height: 80%;
+}
+
+.captureButtonGrid {
+    display: flex;
+    justify-content: center;
+}
+
+.captureButton {
+    width: 100px;
+}

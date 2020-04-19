@@ -6,10 +6,10 @@ import './PageMyPage.css'
 // Components
 import MypageCard from "../components/MypageCard";
 import Confirm from "../components/TSANConfirm";
+
 // for Mobx
 import { observer, inject } from "mobx-react";
 import MyPageListStore from "../stores/MyPageListStore";
-import Footer from '../components/Footer';
 
 interface Props extends RouteComponentProps<any> {
     navigate?: any
@@ -115,7 +115,6 @@ class Mypage extends React.Component<Props> {
                         </Grid.Column>
                     </Grid>
                 </Container>
-                <Footer/>
             </div>
         );
     }
