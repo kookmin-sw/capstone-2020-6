@@ -1,15 +1,19 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {Header, Grid, Image, Container, Button} from 'semantic-ui-react';
+import ImagePicker from "../components/image_picker";
 
 // for Mobx
 import {observer, inject} from "mobx-react";
-
-import ImagePicker from "../components/image_picker";
+import LabelingImgStore from '../stores/LabelingImgStore';
 
 interface Props extends RouteComponentProps<any> {
     navigate?: any
     type?: string;
+}
+
+interface Props {
+    labelingImgStore?: LabelingImgStore;
 }
 
 interface State {
@@ -21,14 +25,15 @@ interface MatchParams {
     postId: string;
 }
 
-const img1 = "https://www.topstarnews.net/news/photo/202001/721626_434936_4849.jpg";
+@inject('labelingImgStore')
+@observer
 
-const imageList = [img1, img1, img1, img1, img1, img1, img1, img1, img1];
-
-class Mypage extends React.Component<Props, State, RouteComponentProps<MatchParams>> {
+class PageImgLabeling extends React.Component<Props, State, RouteComponentProps<MatchParams>> {
 
     constructor(props: any) {
         super(props);
+        this.props.labelingImgStore!.getImgList();
+        this.props.labelingImgStore!.setSelectList([]);
         this.state = {
             image: null,
             images: []
@@ -40,26 +45,26 @@ class Mypage extends React.Component<Props, State, RouteComponentProps<MatchPara
     }
     onPickImages = (images: any) => {
         this.setState({images});
+        this.props.labelingImgStore!.setSelectList(this.state.images)
     }
 
     render() {
         return (
             <Container style={{marginTop: 50}}>
                 <Header as='h2'>라벨링 주제명</Header>
-                <Header as='h4'>#1. 남자를 선택하시오.</Header>
+                <Header as='h4'>#1. 강아지를 선택하시오.</Header>
                 <Grid>
                     <Grid.Row columns={3}>
                         <ImagePicker
-                            images={imageList.map((image, i) => ({src: image, value: i}))}
+                            images={this.props.labelingImgStore!.imgList.map((image, i) => ({src: image, value: i}))}
                             onPick={this.onPickImages.bind(this)}
                             multiple
                         />
                     </Grid.Row>
                 </Grid>
-                {console.log(this.state.images)}
             </Container>
         );
     }
 }
 
-export default withRouter(Mypage);
+export default withRouter(PageImgLabeling);

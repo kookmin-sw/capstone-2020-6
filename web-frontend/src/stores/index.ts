@@ -3,6 +3,7 @@ import MenuStore from './MenuStore';
 import ProjectListStore from './ProjectListStore';
 import LoginStore from './loginStore';
 import LabelingTextButtonStore from './LabelingTextButtonStore';
+import LabelingImgStore from "./LabelingImgStore";
 import LabelingPageStore from './LabelingPageStore';
 
 export default {
@@ -11,5 +12,6 @@ export default {
   projectListStore: new ProjectListStore(),
   loginStore: new LoginStore(),
   labelingTextButtonStore: new LabelingTextButtonStore(),
+  labelingImgStore: new LabelingImgStore(),
   labelingPageStore: new LabelingPageStore(),
 };
