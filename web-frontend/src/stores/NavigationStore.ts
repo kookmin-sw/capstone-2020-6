@@ -7,10 +7,10 @@ export default class NavigationStore {
       this.thumbnail = '';
       this.userId = '';
     }
-    @action getAvatarThumbnail() {
+    @action getAvatarThumbnail = () => {
       this.thumbnail = '/images/defaultAvatar.png';
     }
-    @action getUserId() {
+    @action getUserId = () => {
       this.userId = '1234';
     }
 }

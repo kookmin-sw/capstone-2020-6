@@ -11,7 +11,7 @@ export default class MenuStore {
     constructor() {
       this.active = 'main';
     }
-    @action setActive(active: string) {
+    @action setActive = (active: string) => {
       this.active = active;
     }
 }
