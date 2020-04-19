@@ -8,16 +8,17 @@ interface Props extends RouteComponentProps<any> {
     progress?: string,
     all?:string,
     progress_rate?:string,
+    size: any,
 }
 
 class ProgressBar extends React.Component<Props> {
     render() {
         return (
-            <div>
+            <div className="progress_container">
                 <Progress
                     percent={this.props.progress_rate}
                     label={this.props.progress + '/' + this.props.all}
-                    size='small'
+                    size={this.props.size}
                 />
             </div>
         )

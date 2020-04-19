@@ -4,6 +4,17 @@
     height: 100vh;
 }
 
-._grid{
-    margin-top: 100px;
+.mycard_content{
+    height: 320px;
+}
+
+.mycard_description {
+    height: 50px;
+}
+
+.mycard_icon {
+    font-size: 80px !important;
+    text-align: center;
+    margin-top: 90px;
+    margin-bottom: 30px;
 }
