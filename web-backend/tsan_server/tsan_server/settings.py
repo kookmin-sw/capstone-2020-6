@@ -29,7 +29,9 @@ DEBUG = True
 ALLOWED_HOSTS = [
 	"13.209.70.145",
 	"127.0.0.1:8000",
-	"127.0.0.1"
+	"127.0.0.1",
+    "localhost",
+    "localhost:8000",
 ]
 
 CORS_ORIGIN_WHITELIST = [
@@ -50,7 +52,7 @@ INSTALLED_APPS = [
     'graphene_django',
     'command_center',
     'backend',
-    'corsheaders'
+    # 'corsheaders'
     'rangefilter'
 ]
 
