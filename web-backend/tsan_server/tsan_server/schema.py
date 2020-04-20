@@ -36,6 +36,7 @@ class Query(
     schema.Category.Query,
     schema.Project.Query,
     schema.Dataset.Query,
+    schema.Payment.Query,
 
     Dataset.Query
 ):
