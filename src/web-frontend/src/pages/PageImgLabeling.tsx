@@ -28,7 +28,7 @@ interface MatchParams {
 @inject('labelingImgStore')
 @observer
 
-class PageImgLabeling extends React.Component<Props, State, RouteComponentProps<MatchParams>> {
+class PageLabelingImgSel extends React.Component<Props, State, RouteComponentProps<MatchParams>> {
 
     constructor(props: any) {
         super(props);
@@ -67,4 +67,4 @@ class PageImgLabeling extends React.Component<Props, State, RouteComponentProps<
     }
 }
 
-export default withRouter(PageImgLabeling);
+export default withRouter(PageLabelingImgSel);
