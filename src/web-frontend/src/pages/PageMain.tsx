@@ -34,6 +34,7 @@ class App extends React.Component<Props> {
               return (
                 <Grid.Column key={key}>
                   <CardProject
+                    id={item.id}
                     thumbnail={item.thumbnail}
                     title={item.title}
                     author={item.author}
@@ -56,6 +57,7 @@ class App extends React.Component<Props> {
               return (
                 <Grid.Column key={key}>
                   <CardProject
+                    id={item.id}
                     thumbnail={item.thumbnail}
                     title={item.title}
                     author={item.author}
