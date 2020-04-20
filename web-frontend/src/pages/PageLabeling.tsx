@@ -2,9 +2,6 @@ import React from 'react';
 import {Button, Container, Grid} from 'semantic-ui-react';
 import './PageLabeling.css';
 
-// Components
-import ProgressBar from '../components/ProgressBar';
-
 // for mobx
 import LabelingPageStore from '../stores/LabelingPageStore';
 import {inject, observer} from 'mobx-react';
@@ -68,42 +65,39 @@ class PageLabeling extends React.Component<Props> {
                   <h3>의뢰자</h3>
                   {this.props.labelingPageStore?.author}
                 </Grid.Row>
-                <br/>
+                {/*<br/>*/}
                 <Grid.Row>
                   {/* TODO : have to make labeling types */}
                   <h3>라벨링 유형</h3>
                   이미지 선택 / 이미지 캡쳐 / 텍스트 선택 / 텍스트 단답형
                 </Grid.Row>
-                <br/>
+                {/*<br/>*/}
                 <Grid.Row>
                   {/* TODO : have to make date type */}
                   <h3>기간</h3>
+                  2020.01.01 - 2020.05.05
                   {/*{this.props.labelingPageStore?.startDate} - {this.props.labelingPageStore?.endDate}*/}
                 </Grid.Row>
-                <br/>
+                {/*<br/>*/}
                 <Grid.Row>
                   <h3>한 줄 설명</h3>
+                  {this.props.labelingPageStore?.oneLineDescription}
                 </Grid.Row>
-                <br/>
+                {/*<br/>*/}
                 <Grid.Row>
                   <h3>보상 금액</h3>
                   {this.props.labelingPageStore?.rewardPoints}P
                 </Grid.Row>
               </Grid.Column>
             </Grid.Row>
-            <Grid.Row style={{lineHeight: '25px', textAlign: 'justify'}}>
-              <h3 style={{marginBottom: '10px'}}>상세 설명</h3>
+            <Grid.Row className='detailDescriptionBox'>
+              <h3>상세 설명</h3>
               {this.props.labelingPageStore?.detailDescription}
             </Grid.Row>
-            <Grid.Row>
-              {/* TODO : have to fix bug. Now progressbar ui does not appear */}
-              <ProgressBar
-                progress={this.props.labelingPageStore?.progress}
-                all={this.props.labelingPageStore?.totalProgress}
-                progress_rate={this.props.labelingPageStore?.progressRate}
-                size={'tiny'}
-              />
-              {/*  TODO : have to make start button */}
+            <Grid.Row style={{justifyContent: 'flex-end'}}>
+              <Button color={'blue'}>
+                연습하고 시작하기
+              </Button>
             </Grid.Row>
           </Grid>
         </Container>
