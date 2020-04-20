@@ -12,7 +12,7 @@ import PageLogin from './pages/PageLogin';
 import PageRegister from './pages/PageRegister';
 import PageAbout from './pages/PageAbout';
 import PageMypage from './pages/PageMypage';
-import PageImgLabeling from "./pages/PageImgLabeling";
+import PageLabelingImgSel from './pages/PageLabelingImgSel';
 import PageMypagePW from './pages/PageMypagePW';
 import PageLabelingRegister from './pages/PageLabelingRegister';
 import PagePoints from './pages/PagePoints';
@@ -69,8 +69,8 @@ class App extends React.Component<Props> {
           <Route path='/labeling/imgcap'>
             <PageLabelingImageCapture/>
           </Route>
-          <Route path="/labeling/img:postId">
-            <PageImgLabeling/>
+          <Route path="/labeling/:postid/imgsel">
+            <PageLabelingImgSel/>
           </Route>
           <Route path="/labeling/txtsel">
             <PageLabelingTextButton/>
@@ -81,7 +81,7 @@ class App extends React.Component<Props> {
           <Route path='/labeling/result'>
             <PageLabelingResult/>
           </Route>
-          <Route path='/labeling'>
+          <Route path='/labeling/:postid'>
             <PageLabeling/>
           </Route>
           <Route path='/labelingRegister'>
