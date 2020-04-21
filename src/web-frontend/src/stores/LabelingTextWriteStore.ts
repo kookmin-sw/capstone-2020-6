@@ -1,68 +1,20 @@
 import {action, observable} from 'mobx';
 
-export default class LabelingPageStore {
-    @observable labelingSubject: string = '';
-    @observable thumbnailURL: string = '';
-    @observable author: string = '';
-    @observable startDate: any = '';
-    @observable endDate: any = '';
-    @observable labelingType: string = '';
-    @observable oneLineDescription: string = '';
-    @observable rewardPoints: number = 0;
-    @observable detailDescription: string = '';
-    @observable progress: string = '';
-    @observable totalProgress: string = '';
-    @observable progressRate: string = '';
+export default class LabelingTextButtonStore {
+    @observable textLabelingContents: any = '';
+    @observable labelingSubject: any = '';
 
     constructor() {
+      this.textLabelingContents = '';
       this.labelingSubject = '';
-      this.thumbnailURL = '';
-      this.author = '';
-      this.startDate = '';
-      this.endDate = '';
-      this.labelingType = '';
-      this.oneLineDescription = '';
-      this.rewardPoints = 0;
-      this.detailDescription = '';
-      this.progress = '';
-      this.totalProgress = '';
-      this.progressRate = '';
     }
 
     @action getLabelingSubject = () => {
       this.labelingSubject = '광고 문자 필터링을 위한 Labeling';
     }
 
-    @action getThumbnailURL = () => {
-      this.thumbnailURL = 'https://images.squarespace-cdn.com/content/v1/5a4b9a60f14aa1b80ee8b4bf/1526824060626-MOP6Q0GBCFGBZL6X0XAS/ke17ZwdGBToddI8pDm48kG1ZR-Z7vMRbaPSptufERj8UqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYy7Mythp_T-mtop-vrsUOmeInPi9iDjx9w8K4ZfjXt2doJvWtw2DlpnSbrWMhLSNCfSlrVXXzrJqrJxEymxGao2P7cJNZlDXbgJNE9ef52e8w/pangolinSquare_banner_disneyFanatic-wallpapers.jpg?format=1500w';
-    }
-
-    @action getAuthor = () => {
-      this.author = '윤여환';
-    }
-
-    @action getStartDate = () => {
-      this.startDate = new Date();
-    }
-
-    @action getEndDate = () => {
-      this.endDate = new Date(new Date().setUTCMinutes(59, 59));
-    }
-
-    @action getLabelingType = () => {
-        this.labelingType = 'imgSel';
-    }
-
-    @action getOneLineDescription = () => {
-      this.oneLineDescription = '이 프로젝트를 통해 수집한 데이터로 광고 문자를 자동으로 차단할 수 있습니다.';
-    }
-
-    @action getRewardPoints = () => {
-      this.rewardPoints = 100;
-    }
-
-    @action getDetailDescroption = () => {
-      this.detailDescription =
+    @action getTextLabelingContents = () => {
+      this.textLabelingContents =
           '생생하며, 같은 바이며, 그리하였는가? 웅대한 그러므로 같이, ' +
           '하는 인생에 그들에게 것이다. 미묘한 미인을 가슴이 가치를 속잎나고, ' +
           '때문이다. 사랑의 인간의 아름답고 눈에 것이다. 기쁘며, 두기 뭇 피고 ,' +
@@ -87,17 +39,5 @@ export default class LabelingPageStore {
           '천자만홍이 우는 만물은 피고 있다. 이는 전인 얼음에 것은 크고 ' +
           '밝은 피부가 설산에서 위하여, 있는가? 이 청춘의 용기가 풍부하게 ' +
           '보내는 무엇을 있는가?';
-    }
-
-    @action getProgress = () => {
-      this.progress = '65';
-    }
-
-    @action getTotalProgress = () => {
-      this.totalProgress = '100';
-    }
-
-    @action getProgressRate = () => {
-      this.progressRate = '65';
     }
 }

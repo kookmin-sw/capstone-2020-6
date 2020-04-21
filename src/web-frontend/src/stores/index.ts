@@ -6,6 +6,7 @@ import LabelingTextButtonStore from './LabelingTextButtonStore';
 import LabelingImgStore from './LabelingImgStore';
 import LabelingPageStore from './LabelingPageStore';
 import MyPageListStore from './MyPageListStore';
+import LabelingPageTextWrite from './LabelingTextWriteStore';
 
 export default {
   navigationStore: new NavigationStore(),
@@ -16,4 +17,5 @@ export default {
   labelingImgStore: new LabelingImgStore(),
   labelingPageStore: new LabelingPageStore(),
   myPageListStore: new MyPageListStore(),
+  labelingTextWriteStore: new LabelingPageTextWrite(),
 };
