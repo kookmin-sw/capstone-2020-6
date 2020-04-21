@@ -3,10 +3,24 @@ pragma solidity >=0.4.22 <0.7.0;
 import "./Point.sol";
 
 contract StandardPoint is Point {
+  function transferFrom(string _from, string _to, uint256 _value) returns (bool success) {
+       require(balances[_from] >= _value);
+       require(_value > 0);
+
+       balances[_from] -= _value;
+       balances[_to] += _value;
+       Transfer(_from, _to, _value);
+       return true;
+
     }
 
     function extinct (string _from, uint256 _value) returns (bool success) {
+        require(balances[_from] >= _value);
+        require(_value > 0);
 
+        balances[_from] -= _value;
+        totalSupply -= _value;
+        return true;
     }
 
     function supply(uint256 _value) returns (bool success) {
