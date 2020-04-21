@@ -46,7 +46,7 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
         return (
             <>
                 <img
-                    src="https://images.squarespace-cdn.com/content/v1/5a4b9a60f14aa1b80ee8b4bf/1526824060626-MOP6Q0GBCFGBZL6X0XAS/ke17ZwdGBToddI8pDm48kG1ZR-Z7vMRbaPSptufERj8UqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYy7Mythp_T-mtop-vrsUOmeInPi9iDjx9w8K4ZfjXt2doJvWtw2DlpnSbrWMhLSNCfSlrVXXzrJqrJxEymxGao2P7cJNZlDXbgJNE9ef52e8w/pangolinSquare_banner_disneyFanatic-wallpapers.jpg?format=1500w"
+                    src={this.props.labelingPageStore?.thumbnailURL}
                     className="project-top-image"
                 />
                 <div className="project-paper">
