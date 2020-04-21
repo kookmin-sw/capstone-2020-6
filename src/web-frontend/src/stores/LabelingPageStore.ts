@@ -6,6 +6,7 @@ export default class LabelingPageStore {
     @observable author: string = '';
     @observable startDate: any = '';
     @observable endDate: any = '';
+    @observable labelingType: string = '';
     @observable oneLineDescription: string = '';
     @observable rewardPoints: number = 0;
     @observable detailDescription: string = '';
@@ -19,6 +20,7 @@ export default class LabelingPageStore {
       this.author = '';
       this.startDate = '';
       this.endDate = '';
+      this.labelingType = '';
       this.oneLineDescription = '';
       this.rewardPoints = 0;
       this.detailDescription = '';
@@ -45,6 +47,10 @@ export default class LabelingPageStore {
 
     @action getEndDate = () => {
       this.endDate = new Date(new Date().setUTCMinutes(59, 59));
+    }
+
+    @action getLabelingType = () => {
+        this.labelingType = 'imgSel';
     }
 
     @action getOneLineDescription = () => {

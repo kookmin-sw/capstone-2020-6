@@ -6,6 +6,7 @@ import ProgressBar from './ProgressBar';
 
 interface Props extends RouteComponentProps<any> {
   navigate?: any;
+  id?: string,
   title?: string;
   thumbnail?: string;
   author?: string;
@@ -42,7 +43,7 @@ class CardProject extends React.Component<Props> {
     console.log(this.props.navigate);
     return (
       <div className="card_project">
-        <Card className="card_image">
+        <Card className="card_image" href={`/labeling/${this.props.id}`}>
           <Image src={this.props.thumbnail} wrapped ui={false}/>
           <Card.Content className="card_content">
             <Card.Header className="card_project_title">
