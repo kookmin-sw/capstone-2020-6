@@ -7,6 +7,10 @@ from keras.callbacks import ModelCheckpoint, EarlyStopping
 from keras.optimizers import Adam
 from keras.layers import Dense, GlobalAveragePooling2D, Dropout
 
+conv_base = DenseNet201(include_top = False, weights='imagenet', input_shape=(224,224,3))
+
+early_stopping = EarlyStopping(monitor='val_loss', patience=10)
+
 # +
 num_epochs = 300
 batch_size = 64
@@ -23,15 +27,16 @@ num_classes = len(labels)
 
 def model():
     
-    conv_base = DenseNet201(include_top = False, weights='imagenet', input_shape=(224,224,3))
-    
     model = Sequential()
-
-    model.add(Dropout(dropout_rate))
 
     model.add(GlobalAveragePooling2D(input_shape=conv_base.output[0].shape))
 
     model.add(Dense(num_classes, activation='softmax'))
+    
+    #모델 컴파일
+    model.compile(optimizer=Adam(learning_rate),  # Optimization
+                  loss='categorical_crossentropy',  # Loss Function 
+                  metrics=['accuracy'])  # Metrics / Accuracy
     
     return model
 
@@ -58,3 +63,15 @@ def extract_features(df, sample_count, num_classes):
         if i * batch_size >= sample_count:
             break
     return features, labels
+
+
+def train_model():
+    
+    history = model.fit_generator(
+        train_generator,
+        steps_per_epoch=len(train_generator),
+        epochs=num_epochs,
+        validation_data=validation_generator,
+        validation_steps=len(validation_generator),
+        callbacks = [early_stopping]
+)

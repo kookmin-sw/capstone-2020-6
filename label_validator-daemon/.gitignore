@@ -1,8 +1,0 @@
-*.ipynb
-/.ipynb_checkpoints
-
-*.json
-*.h5
-*.hdf5
-*.csv
-*.jpg
