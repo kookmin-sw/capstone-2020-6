@@ -7,6 +7,7 @@ import {inject, observer} from 'mobx-react';
 import LoginStore from '../stores/loginStore';
 import JSelect from '../components/JSelect';
 import TsDropDown from '../components/TsDropDown';
+import TsTag from '../components/TsTag';
 
 import './PageLabelingRegister.css'
 
@@ -89,6 +90,7 @@ class PageLabelingRegister extends React.Component<Props, State> {
                         <Grid.Column>
                             <Grid>
                                 <Grid.Column>
+                                    <br/><br/>
                                     <JInput
                                         label="보상 설정"
                                         placeholder="보상 금액을 입력해주세요."
@@ -100,8 +102,8 @@ class PageLabelingRegister extends React.Component<Props, State> {
                             <Grid>
                                 <Grid.Column>
                                     <JInput
-                                        label="사이클 횟수"
-                                        placeholder="사이클 횟수를 적어주세요."
+                                        label="총 횟수"
+                                        placeholder="총 횟수를 적어주세요."
                                         value={''}
                                         type="text"
                                     />
@@ -156,6 +158,16 @@ class PageLabelingRegister extends React.Component<Props, State> {
                     </Grid.Row>
                     <Grid.Row>
                         <Grid.Column>
+                            <JInput
+                                label="키워드"
+                                placeholder="라벨링 키워드를 입력해주세요."
+                                value={''}
+                                type="text"
+                            />
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row>
+                        <Grid.Column>
                             <p className="subjectHeader">데이터 셋 업로드(.zip)</p>
                             {/*TODO: 파일 업로드*/}
                             <Form>
@@ -168,6 +180,7 @@ class PageLabelingRegister extends React.Component<Props, State> {
                             <Button className="subjectBtn" primary size="medium">제출</Button>
                         </Grid.Column>
                     </Grid.Row>
+
                 </Grid>
             </Container>
         );
