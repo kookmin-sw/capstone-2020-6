@@ -29,7 +29,7 @@ mutation{
     type:"3",
     requestIdx:25,
     note:"베스킨라빈스 쿼터 구매",
-    token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmlnX2lhdCI6MTU4NzE0NzkyMCwidXNlcm5hbWUiOiJhZG1pbiIsImV4cCI6MTU4Nzc1MjcyMCwiZW1haWwiOiJhZG1pbkB0c2FuLnRlY2giLCJ1c2VyX2lkIjoxfQ.yJyU5rhg5-vWVnVSQkDQNvQXlE43l4pDCD2ZazMnTDE"
+    token:"참여자/의뢰자/관리자"
   ){
     message{
       status
@@ -53,25 +53,89 @@ class CreatePaymentLog(graphene.Mutation):
     def mutate(self, info, type, request_idx, note, token):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
-        request = Request.objects.get(idx=request_idx)
-        new_payment = PaymentLog(type=type, user=user, request=request, note=note)
         try:
-            res = Labeling.objects.get(user=user, request=request)
+            request = Request.objects.get(idx=request_idx)
         except:
-            # 라벨링 참여 테이블을 사용하여 참여 기록 check
-            message = "'%s'님은 '%s'프로젝트를 참여한 기록이 없습니다."%(user.username, request.subject)
+            message = "해당하는 프로젝트가 존재하지 않습니다."
+            return CreatePaymentLog(message=Message(status=False, message=message))
+        else:
+            new_payment = PaymentLog(type=type, user=user, request=request, note=note)
+            try:
+                res = Labeling.objects.get(user=user, request=request)
+            except:
+                # 라벨링 참여 테이블을 사용하여 참여 기록 check
+                message = "'%s'님은 '%s'프로젝트를 참여한 기록이 없습니다."%(user.username, request.subject)
+                return CreatePaymentLog(message=Message(status=False, message=message))
+            else:
+                try:
+                    new_payment.clean()
+                except ValidationError as e:
+                    return CreatePaymentLog(message=Message(status=False, message=str(e)))
+                else:
+                    new_payment.save()
+                    message = "포인트 지급내역이 정상적으로 작성되었습니다."
+                    return CreatePaymentLog(
+                        message=Message(status=True, message=message),
+                        idx=new_payment.idx)
+
+"""
+mutation{
+  updatePaymentlog(
+    idx: 1
+    type:"3",
+    requestIdx:25,
+    note:"CJ 1만원 상품권 구매",
+    token:"관리자"
+  ){
+    message{
+      status
+      message
+    }
+    idx
+  }
+}
+"""
+class UpdatePaymentLog(graphene.Mutation):
+    message = graphene.Field(Message)
+    idx = graphene.Int()
+
+    class Arguments:
+        idx = graphene.Int() 
+        type = graphene.String() # 수정 가능
+        request_idx = graphene.Int() # 수정 불가능
+        note = graphene.String() # 수정 가능
+        token = graphene.String()
+
+    @only_user
+    @only_admin
+    def mutate(self, info, idx, type, request_idx, note, token):
+        res = jwt_decode_handler(token)
+        user = User.objects.get(username=res['username'])
+        try:
+            request = Request.objects.get(idx=request_idx)
+        except:
+            message = "해당하는 프로젝트가 존재하지 않습니다."
             return CreatePaymentLog(message=Message(status=False, message=message))
         else:
             try:
-                new_payment.clean()
-            except ValidationError as e:
-                return CreatePaymentLog(message=Message(status=False, message=str(e)))
-            else:
-                new_payment.save()
-                message = "포인트 지급내역이 정상적으로 작성되었습니다."
-                return CreatePaymentLog(
-                    message=Message(status=True, message=message),
-                    idx=new_payment.idx)
+                paymentlog = PaymentLog.objects.get(idx=idx)
+                update = PaymentLog(type=type, user=user, request=request, note=note)
+                try:
+                    update.clean()
+                except ValidationError as e:
+                    return UpdatePaymentLog(message=Message(status=False, message=str(e)))
+                else:
+                    paymentlog.type = type
+                    paymentlog.note = note
+                    paymentlog.save()
+                    message = "지급 내역이 정상적으로 수정되었습니다."
+                    return UpdatePaymentLog(
+                        message=Message(status=True, message=message),
+                        idx=paymentlog.idx
+                    )
+            except:
+                return UpdatePaymentLog(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다."))
+
 
 class Query(graphene.ObjectType):
     """
