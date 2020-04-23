@@ -1,7 +1,7 @@
 from django.contrib import admin
 from rangefilter.filter import DateRangeFilter, DateTimeRangeFilter
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Category, Request, PaymentLog
+from .models import User, Category, Request, PaymentLog, Labeling
 
 # Register your models here.
 # admin page filter에서 'is_required: 예/아니오'를 '사용자 구분: 의뢰자/참여자'로 표현
@@ -107,6 +107,7 @@ class RequestAdmin(admin.ModelAdmin):
         'due_date',
         'max_cycle',
         'total_point',
+        'state',
     )
     list_filter = (
         'category',
@@ -137,10 +138,30 @@ class PaymentLogAdmin(admin.ModelAdmin):
         'note',
     )
 
+class LabelingAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'request',
+        'start_date',
+        'end_date',
+    )
+    list_filter = (
+        'start_date',
+        'end_date',
+    )
+    search_fields = (
+        'user',
+        'request',
+        'start_date',
+        'end_date',
+    )
+
+
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(Request, RequestAdmin)
 admin.site.register(PaymentLog, PaymentLogAdmin)
+admin.site.register(Labeling, LabelingAdmin)
 
 """
 DateRangeFilter 사용

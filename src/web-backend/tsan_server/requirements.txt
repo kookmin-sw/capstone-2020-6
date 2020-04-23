@@ -5,3 +5,4 @@ djangorestframework-jwt
 django-cors-headers
 django-admin-rangefilter
 pymongo
+django-jet

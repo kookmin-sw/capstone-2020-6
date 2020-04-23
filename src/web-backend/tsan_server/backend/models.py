@@ -71,6 +71,12 @@ class Request(models.Model):
     max_cycle = models.IntegerField(default=0) # 최대 사이클
     total_point = models.IntegerField(default=0) # 총 가격
     is_captcha = models.BooleanField(default=False) # 디폴트 reCAPTCHA 비허용
+    STATE_CHOICES = (
+		('RED', 'before_permission'),
+        ('RUN', 'running'),
+        ('END', 'end'),
+    )
+    state = models.CharField(max_length=3, choices=STATE_CHOICES, default='RED')
 
     
     def create(self, user, category, subject, description, due_date, max_cycle, is_captcha, total_point):
@@ -97,6 +103,7 @@ class Request(models.Model):
         if (self.is_captcha == True and self.category.idx != 4):
             raise ValidationError("해당 라벨링 유형은 CAPTCHA를 허용할 수 없는 유형입니다. (이미지 선택 라벨링 유형만 가능)")
         # TODO: min len 유효성 검사
+        # TODO: state 유효성 검사
 
         return self
 
@@ -107,7 +114,7 @@ class Labeling(models.Model):
     request = models.ForeignKey("Request", on_delete=models.DO_NOTHING) # 의뢰 번호
     user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 생성자
     start_date = models.DateTimeField(auto_now=True) # 시작 시간
-    end_date = models.DateTimeField(blank=False) # 종료 시간
+    end_date = models.DateTimeField(blank=False) # 종료 시간 = 해당 프로젝트 종료시간
 
 # 금액 지급 내역 테이블
 class PaymentLog(models.Model):

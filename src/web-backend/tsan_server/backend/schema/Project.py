@@ -1,6 +1,6 @@
 import graphene
 import datetime
-from backend.models import Dataset, User, Category, Request
+from backend.models import Dataset, User, Category, Request, Labeling
 from django.contrib.auth import login
 from django.core.exceptions import ValidationError
 from graphene_django.types import DjangoObjectType
@@ -134,7 +134,8 @@ mutation{
     maxCycle:10
     token:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMCwiZXhwIjoxNTg3NTYzMTM5LCJvcmlnX2lhdCI6MTU4Njk1ODMzOSwiZW1haWwiOiJyZXF1ZXN0ZXIyQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoicmVxdWVzdGVyMiJ9.G7HOd7s1rANvNUCHpSBrsf5zzduy33YOq7gR-LBG8D4"
     category:"이미지 캡쳐 라벨링"
-    isCaptcha:true
+    state:"RUN"
+    isCaptcha:false
   ) {
     message{
       status
@@ -158,11 +159,12 @@ class UpdateRequest(graphene.Mutation):
         max_cycle = graphene.Int()
         total_point = graphene.Int()
         is_captcha = graphene.Boolean()
+        state = graphene.String()
         token = graphene.String()
 
     @only_user
     @only_requester
-    def mutate(self, info, idx, category, subject, description, start_date, due_date, max_cycle, total_point, is_captcha, token):
+    def mutate(self, info, idx, category, subject, description, start_date, due_date, max_cycle, total_point, is_captcha, state, token):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
         category = Category.objects.get(name=category)
@@ -170,7 +172,7 @@ class UpdateRequest(graphene.Mutation):
             request = Request.objects.get(idx=idx)
             update = Request(user=user, category=category, subject=subject, description=description, 
                             start_date=str(start_date), due_date=str(due_date), 
-                            max_cycle=max_cycle, total_point=total_point, is_captcha=is_captcha)
+                            max_cycle=max_cycle, total_point=total_point, is_captcha=is_captcha, state=state)
             try:
                 update.clean()
             except ValidationError as e:
@@ -184,6 +186,7 @@ class UpdateRequest(graphene.Mutation):
                 request.max_cycle = max_cycle
                 request.total_point = total_point
                 request.is_captcha = is_captcha
+                request.state = state
                 request.save()
                 message = "'%s'주제가 정상적으로 수정되었습니다."%(request.subject)
                 return UpdateRequest(
@@ -192,6 +195,57 @@ class UpdateRequest(graphene.Mutation):
                 )
         except Exception as ex:
             return UpdateRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다."+str(ex)))
+
+"""
+mutation{
+  takeProject(
+    requestIdx:25
+    token:"사용자/관리자"
+  ){
+    message{
+      status
+      message
+    }
+    idx
+  }
+}
+"""
+class TakeProject(graphene.Mutation):
+    message = graphene.Field(Message)
+    idx = graphene.Int()
+
+    class Arguments:
+        request_idx = graphene.Int()
+        token = graphene.String()
+
+    @only_user
+    def mutate(self, info, request_idx, token):
+        res = jwt_decode_handler(token)
+        user = User.objects.get(username=res['username'])
+        try:
+            request = Request.objects.get(idx=request_idx)
+        except:
+            message = "해당하는 프로젝트가 존재하지 않습니다."
+            return TakeProject(message=Message(status=False, message=message))
+        else:
+            try:
+                res = Labeling.objects.exclude().get(user=user, request=request)
+                message = "이미 등록하신 프로젝트입니다."
+                return TakeProject(message=Message(status=False, message=message))
+            except:
+                if request.state != 'RUN':
+                    message = "승인전/마감된 프로젝트 입니다."
+                    return TakeProject(message=Message(status=False, message=message))
+                new_labeling = Labeling(request=request, user=user, end_date=request.due_date)
+                try:
+                    new_labeling.clean()
+                except ValidationError as e:
+                    return TakeProject(message=Message(status=False, message=str(e)))
+                else:
+                    new_labeling.save()
+                    message = "'%s'님 '%%s' 주제가 정상적으로 등록되었습니다."%(user.username)%(request.subject)
+                    return TakeProject(message=Message(status=True, message=message))
+
 
 class Query(graphene.ObjectType):
     """
@@ -279,3 +333,5 @@ class Query(graphene.ObjectType):
             return Requests(message=Message(status=True, message=""), requests=request_rows)
         else:
             return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
+
+    # TODO: get_labeler_taken_project = grapehene.Field(Request, token=grapehene.Stirng())
