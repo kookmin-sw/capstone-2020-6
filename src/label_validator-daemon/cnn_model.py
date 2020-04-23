@@ -65,13 +65,11 @@ def extract_features(df, sample_count, num_classes):
     return features, labels
 
 
-def train_model():
-    
-    history = model.fit_generator(
-        train_generator,
-        steps_per_epoch=len(train_generator),
-        epochs=num_epochs,
-        validation_data=validation_generator,
-        validation_steps=len(validation_generator),
-        callbacks = [early_stopping]
-)
+def train_model(train_set, valid_set):
+
+    history = model.fit(train_features, train_labels,
+                        epochs=num_epochs,
+                        batch_size=batch_size, 
+                        validation_data=(valid_features, valid_labels),
+                        callbacks = [early_stopping]
+                       )
