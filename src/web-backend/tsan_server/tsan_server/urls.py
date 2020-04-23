@@ -19,8 +19,11 @@ from django.contrib import admin
 # GraphQL 페이지
 from graphene_django.views import GraphQLView
 from django.urls import path
+from django.conf.urls import url, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('v1/graphql', GraphQLView.as_view(graphiql=True)),    
+    path('v1/graphql', GraphQLView.as_view(graphiql=True)),  
+    url(r'^jet/', include('jet.urls', 'jet')),
+    url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard'))
 ]

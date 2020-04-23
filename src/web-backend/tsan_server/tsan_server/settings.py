@@ -43,6 +43,8 @@ CORS_ORIGIN_WHITELIST = [
 # Application definition
 
 INSTALLED_APPS = [
+    'jet',
+    'jet.dashboard',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -53,7 +55,8 @@ INSTALLED_APPS = [
     'command_center',
     'backend',
     # 'corsheaders'
-    'rangefilter'
+    'rangefilter',
+    'captcha'
 ]
 
 GRAPHENE = {
