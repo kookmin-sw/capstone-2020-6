@@ -51,7 +51,7 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                 />
                 <div className="project-paper">
                     <Container>
-                        <div className="project-title">광고 문자 필터링을 위한 Labeling</div>
+                        <div className="project-title">{this.props.labelingPageStore?.labelingSubject}</div>
                         <div className="project-oneline-desc">{this.props.labelingPageStore?.oneLineDescription}</div>
                         <div className="project-line-info">
                             <div>이미지 유형: {this.props.labelingPageStore?.labelingType}</div>

@@ -51,7 +51,7 @@ class PageLabelingImgSel extends React.Component<Props, State, RouteComponentPro
     render() {
         return (
             <Container style={{marginTop: 50}}>
-                <Header as='h2'>라벨링 주제명</Header>
+                <Header as='h2'>강아지 이미지 데이터를 통한 이미지 학습 모델 구현</Header>
                 <Header as='h4'>#1. 강아지를 선택하시오.</Header>
                 <Grid>
                     <Grid.Row columns={3}>

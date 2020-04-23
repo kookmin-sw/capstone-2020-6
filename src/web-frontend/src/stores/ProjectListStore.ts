@@ -16,14 +16,14 @@ export default class ProjectListStore {
       {
         id: '1',
         thumbnail:
-          "https://image.dongascience.com/Photo/2018/01/15159739972169[1].jpg",
+          "http://www.v3wall.com/wallpaper/1920_1080/1001/1920_1080_20100126125400313419.jpg",
         title: "강아지 비문 데이터 라벨링",
-        author: "장태진",
+        author: "윤여환",
         start_date: new Date(),
         end_date: new Date(new Date().setDate(30)),
         type: "이미지",
         point: "100",
-        description: "꽃 피고 새우는 봄날의 천지는 얼마나 기쁘며 얼마나 이쁠까?",
+        description: "강아지 사진을 선택해주세요!",
         progress: "65",
         all: "100",
         progress_rate: "65"

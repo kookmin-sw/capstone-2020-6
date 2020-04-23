@@ -30,11 +30,11 @@ export default class LabelingPageStore {
     }
 
     @action getLabelingSubject = () => {
-      this.labelingSubject = '광고 문자 필터링을 위한 Labeling';
+      this.labelingSubject = '강아지 이미지 데이터를 통한 이미지 학습 모델 구현';
     }
 
     @action getThumbnailURL = () => {
-      this.thumbnailURL = 'https://images.squarespace-cdn.com/content/v1/5a4b9a60f14aa1b80ee8b4bf/1526824060626-MOP6Q0GBCFGBZL6X0XAS/ke17ZwdGBToddI8pDm48kG1ZR-Z7vMRbaPSptufERj8UqsxRUqqbr1mOJYKfIPR7LoDQ9mXPOjoJoqy81S2I8N_N4V1vUb5AoIIIbLZhVYy7Mythp_T-mtop-vrsUOmeInPi9iDjx9w8K4ZfjXt2doJvWtw2DlpnSbrWMhLSNCfSlrVXXzrJqrJxEymxGao2P7cJNZlDXbgJNE9ef52e8w/pangolinSquare_banner_disneyFanatic-wallpapers.jpg?format=1500w';
+      this.thumbnailURL = 'http://www.v3wall.com/wallpaper/1920_1080/1001/1920_1080_20100126125400313419.jpg';
     }
 
     @action getAuthor = () => {
@@ -50,11 +50,11 @@ export default class LabelingPageStore {
     }
 
     @action getLabelingType = () => {
-        this.labelingType = 'imgSel';
+      this.labelingType = 'imgSel';
     }
 
     @action getOneLineDescription = () => {
-      this.oneLineDescription = '이 프로젝트를 통해 수집한 데이터로 광고 문자를 자동으로 차단할 수 있습니다.';
+      this.oneLineDescription = '이 프로젝트를 통해 수집한 데이터로 강아지 이미지를 분류할 수 있습니다.';
     }
 
     @action getRewardPoints = () => {
