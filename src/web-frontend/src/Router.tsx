@@ -21,7 +21,7 @@ import PageLabeling from './pages/PageLabeling';
 import PageLabelingTextWrite from './pages/PageLabelingTextWrite';
 import PageLabelingTextButton from './pages/PageLabelingTextButton';
 import PageLabelingImageCapture from './pages/PageLabelingImageCapture';
-
+import PageMypageProject from './pages/PageMypageProject';
 // for Components
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
@@ -59,6 +59,9 @@ class App extends React.Component<Props> {
           </Route>
           <Route path='/mypage/points'>
             <PagePoints/>
+          </Route>
+          <Route path='/mypage/projects'>
+            <PageMypageProject/>
           </Route>
           <Route path='/mypage/pw'>
             <PageMypagePW/>
