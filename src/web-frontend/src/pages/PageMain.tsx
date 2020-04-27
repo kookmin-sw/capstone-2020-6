@@ -46,6 +46,7 @@ class App extends React.Component<Props> {
                     progress={item.progress}
                     all={item.all}
                     progress_rate={item.progress_rate}
+                    status={'main'}
                   />
                 </Grid.Column>
               );
@@ -69,6 +70,7 @@ class App extends React.Component<Props> {
                     progress={item.progress}
                     all={item.all}
                     progress_rate={item.progress_rate}
+                    status={'main'}
                   />
                 </Grid.Column>
               );
