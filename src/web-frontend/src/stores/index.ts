@@ -7,6 +7,7 @@ import LabelingImgStore from './LabelingImgStore';
 import LabelingPageStore from './LabelingPageStore';
 import MyPageListStore from './MyPageListStore';
 import LabelingPageTextWrite from './LabelingTextWriteStore';
+import MyPageProjectStore from './MyPageProjectStore';
 
 export default {
   navigationStore: new NavigationStore(),
@@ -18,4 +19,5 @@ export default {
   labelingPageStore: new LabelingPageStore(),
   myPageListStore: new MyPageListStore(),
   labelingTextWriteStore: new LabelingPageTextWrite(),
+  myPageProjectStore: new MyPageProjectStore(),
 };
