@@ -71,8 +71,8 @@ class PageMypagePW extends React.Component<Props> {
                     </Button>
                 </div>
                 <Confirm
-                    header={'변경을 취소하시겠습니까?'}
-                    contents={[]}
+                    header={'안내'}
+                    contents={['비밀번호 변경을 취소하시겠습니까?']}
                     open={open}
                     handleConfirm={this.handleConfirm}
                     handleCancel={this.handleCancel}
