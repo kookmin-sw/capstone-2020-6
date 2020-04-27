@@ -1,6 +1,6 @@
 import React from 'react';
-import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Card, Image} from 'semantic-ui-react';
+import {Link, RouteComponentProps, withRouter} from 'react-router-dom';
+import {Card, Image, Icon} from 'semantic-ui-react';
 import './CardProject.css';
 import ProgressBar from './ProgressBar';
 
@@ -23,7 +23,6 @@ interface Props extends RouteComponentProps<any> {
 function calcAgo(timestamp:number) {
   let ago = '';
   timestamp /= 1000;
-  const sec = timestamp % 60;
   const min = Math.floor(timestamp / 60) % 60;
   const hour= Math.floor(timestamp / 60 / 60) % 24;
   const date= Math.floor(timestamp / 60 / 60 / 24) % 365;
@@ -34,7 +33,6 @@ function calcAgo(timestamp:number) {
   ago += parseInt(''+date) ? date + '일 ' : '';
   ago += parseInt(''+hour) ? hour + '시간 ' : '';
   ago += parseInt(''+min) ? min + '분 ' : '';
-  ago += parseInt(''+sec) ? sec + '초 ' : '';
   return ago;
 }
 
@@ -56,6 +54,8 @@ class CardProject extends React.Component<Props> {
               &nbsp;|&nbsp;
               {calcAgo(this.props.end_date - this.props.start_date).trim()} 뒤 종료
             </Card.Meta>
+            <Icon link name="trash alternate"/>
+            <Icon link name="pencil"/>
             <Card.Description className="card_description">{this.props.description}</Card.Description>
             <ProgressBar
               progress={this.props.progress}
