@@ -180,7 +180,7 @@ class RefreshToken(graphene.Mutation):
 mutation{
   deleteUser(
     password:"requester"
-  	token:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMCwib3JpZ19pYXQiOjE1ODgxNjk0MjQsImVtYWlsIjoicmVxdWVzdGVyQGdtYWlsLmNvbSIsImV4cCI6MTU4ODc3NDIyNCwidXNlcm5hbWUiOiJyZXF1ZXN0ZXIifQ.Ejn2VbkCsEu02L_slci5D1ZPq-SqPXlItJShRo22NFU"
+  	token:""
   ){
     message{
       status
@@ -190,7 +190,7 @@ mutation{
 }
 """
 # DeleteUser는 회원계정을 삭제하는 함수이다.
-# user가 foreign key로 쓰이는 models는 값이 null로 변경됨.
+# user가 foreign key로 쓰이는 해당 record 값이 null로 변경됨.
 class DeleteUser(graphene.Mutation):
     message = graphene.Field(Message)
     

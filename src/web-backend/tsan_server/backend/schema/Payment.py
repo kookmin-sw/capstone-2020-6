@@ -102,7 +102,7 @@ class UpdatePaymentLog(graphene.Mutation):
     class Arguments:
         idx = graphene.Int() 
         type = graphene.String() # 수정 가능
-        request_idx = graphene.Int() # 수정 불가능
+        request_idx = graphene.Int() # 수정 가능
         note = graphene.String() # 수정 가능
         token = graphene.String()
 
@@ -127,6 +127,7 @@ class UpdatePaymentLog(graphene.Mutation):
                 else:
                     paymentlog.type = type
                     paymentlog.note = note
+                    paymentlog.request = request
                     paymentlog.save()
                     message = "지급 내역이 정상적으로 수정되었습니다."
                     return UpdatePaymentLog(
@@ -135,6 +136,44 @@ class UpdatePaymentLog(graphene.Mutation):
                     )
             except:
                 return UpdatePaymentLog(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다."))
+
+"""
+mutation{
+  deletePaymentlog(
+    idx:1
+    token:"관리자"
+  ){
+    message{
+      status
+      message
+    }
+  }
+}
+"""
+# DeletePaymentLog는 지급 내역을 삭제하는 함수이다.
+class DeletePaymentLog(graphene.Mutation):
+    message = graphene.Field(Message)
+    
+    class Arguments:
+        idx = graphene.Int()
+        token = graphene.String()
+
+    @only_user
+    @only_admin
+    def mutate(self, info, idx, token):
+        try:
+            paymentlog = PaymentLog.objects.get(idx=idx)
+        except:
+            message = "해당하는 인스턴스가 존재하지 않습니다."
+            return DeletePaymentLog(
+                message=Message(status=False, message=message)
+                )
+        else:
+            paymentlog.delete()
+            message = "지급 내역이 정상적으로 삭제되었습니다."
+            return DeletePaymentLog(
+                message=Message(status=True, message=message)
+            )
 
 
 class Query(graphene.ObjectType):
