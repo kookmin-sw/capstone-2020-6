@@ -3,7 +3,7 @@ from graphene_django.types import DjangoObjectType
 
 from backend import models
 from backend import schema
-from backend.schema.User import CreateAccount, LoginAccount, Message, UpdateAccount
+from backend.schema.User import CreateAccount, LoginAccount, Message, UpdateAccount, DeleteUser
 from backend.schema.Dataset import CreateDataset
 from backend.schema.Category import CreateCategory, UpdateCategory
 from backend.schema.Project import CreateRequest, UpdateRequest, StartRequest, EndRequest, TakeProject
@@ -33,6 +33,7 @@ class Mutation(graphene.ObjectType):
     take_project = TakeProject.Field()
     start_request = StartRequest.Field()
     end_request = EndRequest.Field()
+    delete_user = DeleteUser.Field()
 
 
 class Query(

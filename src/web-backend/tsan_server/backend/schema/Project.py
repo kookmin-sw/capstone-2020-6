@@ -68,6 +68,7 @@ mutation{
     maxCycle:10
     token:""
     category:"이미지 캡쳐 라벨링"
+    isCaptcha:false
   ) {
   	message{
       status
@@ -385,8 +386,9 @@ class Query(graphene.ObjectType):
     def resolve_get_all_request(self, info, token):
         requests = Request.objects.all()
         for request in requests:
-            request.user.password = "*****"
-            request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
+            if request.user is not None:
+                request.user.password = "*****"
+                request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
         return Requests(message=Message(status=True, message=""), requests=requests)
     """
     query {
@@ -427,8 +429,9 @@ class Query(graphene.ObjectType):
         users = User.objects.get(username=res['username'])
         request_rows = Request.objects.filter(user=users)
         for request in request_rows:
-            request.user.password = "*****"
-            request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
+            if request.user is not None:
+                request.user.password = "*****"
+                request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
         if request_rows:
             return Requests(message=Message(status=True, message=""), requests=request_rows)
         else:
