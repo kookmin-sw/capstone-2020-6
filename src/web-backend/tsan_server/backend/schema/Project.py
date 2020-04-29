@@ -1,5 +1,6 @@
 import graphene
 import datetime
+from django.utils import timezone
 from backend.models import Dataset, User, Category, Request, Labeling
 from django.contrib.auth import login
 from django.core.exceptions import ValidationError
@@ -132,9 +133,8 @@ mutation{
     startDate:"2020-04-30"
     totalPoint:100
     maxCycle:10
-    token:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyMCwiZXhwIjoxNTg3NTYzMTM5LCJvcmlnX2lhdCI6MTU4Njk1ODMzOSwiZW1haWwiOiJyZXF1ZXN0ZXIyQGdtYWlsLmNvbSIsInVzZXJuYW1lIjoicmVxdWVzdGVyMiJ9.G7HOd7s1rANvNUCHpSBrsf5zzduy33YOq7gR-LBG8D4"
+    token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmlnX2lhdCI6MTU4ODE2MTU2MCwiZXhwIjoxNTg4NzY2MzYwLCJ1c2VyX2lkIjoyMCwidXNlcm5hbWUiOiJyZXF1ZXN0ZXIyIiwiZW1haWwiOiJyZXF1ZXN0ZXIyQGdtYWlsLmNvbSJ9.i3TONRAFTzLGyv3JpnbaLSxXuXpMuAkhiym7KyBQRR0"
     category:"이미지 캡쳐 라벨링"
-    state:"RUN"
     isCaptcha:false
   ) {
     message{
@@ -159,12 +159,11 @@ class UpdateRequest(graphene.Mutation):
         max_cycle = graphene.Int()
         total_point = graphene.Int()
         is_captcha = graphene.Boolean()
-        state = graphene.String()
         token = graphene.String()
 
     @only_user
     @only_requester
-    def mutate(self, info, idx, category, subject, description, start_date, due_date, max_cycle, total_point, is_captcha, state, token):
+    def mutate(self, info, idx, category, subject, description, start_date, due_date, max_cycle, total_point, is_captcha, token):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
         category = Category.objects.get(name=category)
@@ -172,7 +171,7 @@ class UpdateRequest(graphene.Mutation):
             request = Request.objects.get(idx=idx)
             update = Request(user=user, category=category, subject=subject, description=description, 
                             start_date=str(start_date), due_date=str(due_date), 
-                            max_cycle=max_cycle, total_point=total_point, is_captcha=is_captcha, state=state)
+                            max_cycle=max_cycle, total_point=total_point, is_captcha=is_captcha, state=request.state)
             try:
                 update.clean()
             except ValidationError as e:
@@ -186,15 +185,67 @@ class UpdateRequest(graphene.Mutation):
                 request.max_cycle = max_cycle
                 request.total_point = total_point
                 request.is_captcha = is_captcha
-                request.state = state
                 request.save()
                 message = "'%s'주제가 정상적으로 수정되었습니다."%(request.subject)
                 return UpdateRequest(
                     message=Message(status=True, message=message),
-                    idx=category.idx
+                    idx=request.idx
                 )
         except Exception as ex:
             return UpdateRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다."+str(ex)))
+
+"""
+mutation{
+  startRequest(
+    idx:25
+    token:"의뢰자, 관리자"
+  ) {
+    message{
+      status
+      message
+    }
+    idx
+  }
+}
+"""
+# StartRequest는 프로젝트를 임의적으로 시작시키는 함수이다.
+# start_date = 현재 날짜, state = 'RUN'으로 변경됨.
+class StartRequest(graphene.Mutation):
+    message = graphene.Field(Message)
+    idx = graphene.Int()
+
+    class Arguments:
+        idx = graphene.Int()
+        token = graphene.String()
+
+    @only_user
+    @only_requester
+    def mutate(self, info, idx, token):
+        res = jwt_decode_handler(token)
+        user = User.objects.get(username=res['username'])
+        try:
+            request = Request.objects.get(idx=idx)
+            now = str(timezone.localtime())
+            now_date = now.split()[0]
+            print(request.due_date)
+            update = Request(user=user, category=request.category, subject=request.subject, description=request.description, 
+                            start_date=now_date, due_date=str(request.due_date), 
+                            max_cycle=request.max_cycle, total_point=request.total_point, is_captcha=request.is_captcha, state='RUN')
+            try:
+                update.clean()
+            except ValidationError as e:
+                return StartRequest(message=Message(status=False, message=str(e)))
+            else:
+                request.start_date = now
+                request.state = 'RUN'
+                request.save()
+                message = "'%s'주제가 정상적으로 시작되었습니다."%(request.subject)
+                return StartRequest(
+                    message=Message(status=True, message=message),
+                    idx=request.idx
+                )
+        except Exception as ex:
+            return StartRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다."+str(ex)))
 
 """
 mutation{
