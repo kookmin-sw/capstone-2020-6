@@ -104,6 +104,7 @@ class Request(models.Model):
             raise ValidationError("해당 라벨링 유형은 CAPTCHA를 허용할 수 없는 유형입니다. (이미지 선택 라벨링 유형만 가능)")
         # TODO: min len 유효성 검사
         # TODO: state 유효성 검사
+        # TODO: start_date날짜 오늘 이후
 
         return self
 
