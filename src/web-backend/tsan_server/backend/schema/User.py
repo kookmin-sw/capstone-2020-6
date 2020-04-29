@@ -176,6 +176,46 @@ class RefreshToken(graphene.Mutation):
             return RefreshToken(message=Message(), jwt=token)
         return RefreshToken(message=Message(status=False, message="토큰 재발급에 실패하였습니다."))
 
+"""
+mutation{
+  deleteUser(
+    password:"requester"
+  	token:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxMCwib3JpZ19pYXQiOjE1ODgxNjk0MjQsImVtYWlsIjoicmVxdWVzdGVyQGdtYWlsLmNvbSIsImV4cCI6MTU4ODc3NDIyNCwidXNlcm5hbWUiOiJyZXF1ZXN0ZXIifQ.Ejn2VbkCsEu02L_slci5D1ZPq-SqPXlItJShRo22NFU"
+  ){
+    message{
+      status
+      message
+    }
+  }
+}
+"""
+# DeleteUser는 회원계정을 삭제하는 함수이다.
+# user가 foreign key로 쓰이는 models는 값이 null로 변경됨.
+class DeleteUser(graphene.Mutation):
+    message = graphene.Field(Message)
+    
+    class Arguments:
+        password = graphene.String()
+        token = graphene.String()
+
+    @only_user
+    def mutate(self, info, password, token):
+        res = jwt_decode_handler(token)
+        user = User.objects.get(username=res['username'])
+        if check_password(password, user.password):
+            username = user.username
+            user.delete()
+            message="'%s'님 정상적으로 탈퇴되었습니다."%(username)
+            return DeleteUser(
+                message=Message(status=True, message=message)
+            )
+        else:
+            message = "비밀번호가 일치하지 않습니다."
+            return DeleteUser(
+                message=Message(status=False, message=message)
+                )
+        
+
 class Query(graphene.ObjectType):
     """
     query {

@@ -61,8 +61,8 @@ class Category(models.Model):
 # 의뢰 요청 테이블
 class Request(models.Model):
     idx = models.AutoField(primary_key=True) # 고유번호
-    user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 생성자
-    category = models.ForeignKey("Category", on_delete=models.DO_NOTHING) # 데이터 라벨링 유형
+    user = models.ForeignKey("User", on_delete=models.DO_NOTHING, null=True, blank=True) # 생성자
+    category = models.ForeignKey("Category", on_delete=models.DO_NOTHING, null=True, blank=True) # 데이터 라벨링 유형
     subject = models.CharField(max_length=100) # 요청 주제
     description = models.TextField(blank=True) # 설명
     start_date = models.DateTimeField(auto_now_add=True, validators=[validate_date]) # 시작
@@ -112,8 +112,8 @@ class Request(models.Model):
 # 라벨링 참여 테이블
 class Labeling(models.Model):
     idx = models.AutoField(primary_key=True) # 고유번호
-    request = models.ForeignKey("Request", on_delete=models.DO_NOTHING) # 의뢰 번호
-    user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 생성자
+    request = models.ForeignKey("Request", on_delete=models.DO_NOTHING, null=True, blank=True) # 의뢰 번호
+    user = models.ForeignKey("User", on_delete=models.DO_NOTHING, null=True, blank=True) # 생성자
     start_date = models.DateTimeField(auto_now=True) # 시작 시간
     end_date = models.DateTimeField(blank=False) # 종료 시간 = 해당 프로젝트 종료시간
 
@@ -121,8 +121,8 @@ class Labeling(models.Model):
 class PaymentLog(models.Model):
     idx = models.AutoField(primary_key=True) # 고유번호
     type = models.TextField(blank=False, validators=[validate_paymentlog_type]) # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
-    user = models.ForeignKey("User", on_delete=models.DO_NOTHING) # 사용자
-    request = models.ForeignKey("Request", on_delete=models.DO_NOTHING) # 보상을 주는 의뢰
+    user = models.ForeignKey("User", on_delete=models.DO_NOTHING, null=True, blank=True) # 사용자
+    request = models.ForeignKey("Request", on_delete=models.DO_NOTHING, null=True, blank=True) # 보상을 주는 의뢰
     note = models.CharField(max_length=300) # 사유
 
     def clean(self):
