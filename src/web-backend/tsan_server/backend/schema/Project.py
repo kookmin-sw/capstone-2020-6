@@ -226,10 +226,8 @@ class StartRequest(graphene.Mutation):
         try:
             request = Request.objects.get(idx=idx)
             now = str(timezone.localtime())
-            now_date = now.split()[0]
-            print(request.due_date)
             update = Request(user=user, category=request.category, subject=request.subject, description=request.description, 
-                            start_date=now_date, due_date=str(request.due_date), 
+                            start_date=now, due_date=str(request.due_date), 
                             max_cycle=request.max_cycle, total_point=request.total_point, is_captcha=request.is_captcha, state='RUN')
             try:
                 update.clean()
@@ -246,6 +244,57 @@ class StartRequest(graphene.Mutation):
                 )
         except Exception as ex:
             return StartRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다."+str(ex)))
+
+"""
+mutation{
+  endRequest(
+    idx:25
+    token:"의뢰자/관리자"
+  ) {
+    message{
+      status
+      message
+    }
+    idx
+  }
+}
+"""
+# EndRequest는 프로젝트를 임의적으로 종료(end, not stop)시키는 함수이다.
+# due_date = 현재 날짜, state = 'END'으로 변경됨.
+class EndRequest(graphene.Mutation):
+    message = graphene.Field(Message)
+    idx = graphene.Int()
+
+    class Arguments:
+        idx = graphene.Int()
+        token = graphene.String()
+
+    @only_user
+    @only_requester
+    def mutate(self, info, idx, token):
+        res = jwt_decode_handler(token)
+        user = User.objects.get(username=res['username'])
+        try:
+            request = Request.objects.get(idx=idx)
+            now = str(timezone.localtime())
+            update = Request(user=user, category=request.category, subject=request.subject, description=request.description, 
+                            start_date=str(request.start_date), due_date=now, 
+                            max_cycle=request.max_cycle, total_point=request.total_point, is_captcha=request.is_captcha, state='END')
+            try:
+                update.clean()
+            except ValidationError as e:
+                return EndRequest(message=Message(status=False, message=str(e)))
+            else:
+                request.start_date = now
+                request.state = 'END'
+                request.save()
+                message = "'%s'주제가 정상적으로 종료되었습니다."%(request.subject)
+                return EndRequest(
+                    message=Message(status=True, message=message),
+                    idx=request.idx
+                )
+        except Exception as ex:
+            return EndRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다."+str(ex)))
 
 """
 mutation{

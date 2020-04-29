@@ -6,7 +6,7 @@ from backend import schema
 from backend.schema.User import CreateAccount, LoginAccount, Message, UpdateAccount
 from backend.schema.Dataset import CreateDataset
 from backend.schema.Category import CreateCategory, UpdateCategory
-from backend.schema.Project import CreateRequest, UpdateRequest, StartRequest, TakeProject
+from backend.schema.Project import CreateRequest, UpdateRequest, StartRequest, EndRequest, TakeProject
 from backend.schema.Payment import CreatePaymentLog, UpdatePaymentLog
 
 from command_center.schema import Dataset
@@ -32,6 +32,7 @@ class Mutation(graphene.ObjectType):
     update_paymentlog = UpdatePaymentLog.Field()
     take_project = TakeProject.Field()
     start_request = StartRequest.Field()
+    end_request = EndRequest.Field()
 
 
 class Query(
