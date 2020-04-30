@@ -25,6 +25,14 @@ class Requests(graphene.ObjectType):
     message = graphene.Field(Message)
     requests = graphene.List(RequestType)
 
+class LabelingType(DjangoObjectType):
+    class Meta:
+        model = Labeling
+
+class Labelings(graphene.ObjectType):
+    message = graphene.Field(Message)
+    labelings = graphene.List(LabelingType)
+
 """
 mutation {
 	createDataset(name: "네이버 뉴스기사 댓글") {
@@ -347,6 +355,45 @@ class TakeProject(graphene.Mutation):
                     message = "'%s'님 '%%s' 주제가 정상적으로 등록되었습니다."%(user.username)%(request.subject)
                     return TakeProject(message=Message(status=True, message=message))
 
+"""
+mutation{
+  deleteLabelerTakenProject(
+    idx:5
+    token:"관리자"
+  ){
+    message{
+      status
+      message
+    }
+  }
+}
+"""
+# DeleteLabelerTakenProject는 참여자가 신청한 특정 프로젝트를 삭제하는 함수이다.
+class DeleteLabelerTakenProject(graphene.Mutation):
+    message = graphene.Field(Message)
+    
+    class Arguments:
+        idx = graphene.Int()
+        token = graphene.String()
+
+    @only_user
+    @only_admin
+    def mutate(self, info, idx, token):
+        try:
+            labeling = Labeling.objects.get(idx=idx)
+        except:
+            message = "해당하는 인스턴스가 존재하지 않습니다."
+            return DeleteLabelerTakenProject(
+                message=Message(status=False, message=message)
+                )
+        else:
+            deleted_labeling = labeling
+            labeling.delete()
+            message = "'%s' 참여 프로젝트 목록이 정상적으로 삭제되었습니다."%(deleted_labeling.request.subject)
+            return DeleteLabelerTakenProject(
+                message=Message(status=True, message=message)
+            )
+
 
 class Query(graphene.ObjectType):
     """
@@ -437,4 +484,59 @@ class Query(graphene.ObjectType):
         else:
             return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
 
+    """
+    query{
+    getLabelerTakenProject(
+        token:"참여자/관리자"
+    ) {
+        message {
+            status
+            message
+            }
+                labelings{
+            idx
+            user {
+                id
+                username
+                password
+                email
+                }
+            request {
+            idx
+            category {
+                name
+                type
+            }
+            subject
+            description
+            startDate
+            dueDate
+            currentCycle
+            maxCycle
+            totalPoint
+            }
+            }  
+    }
+    }
+    """
     # TODO: get_labeler_taken_project = grapehene.Field(Request, token=grapehene.Stirng())
+    # GetLabelerTakenProject는 참여자가 신청한 특정 라벨링 프로젝트를 조회하는 함수이다.
+    # 프로젝트 목록과 해당 프로젝트의 세부사항까지 선택적으로 조회할 수 있다.
+    get_labeler_taken_project = graphene.Field(Labelings, token=graphene.String())
+    @only_user
+    def resolve_get_labeler_taken_project(self, info, token):
+        res = jwt_decode_handler(token)
+        users = User.objects.get(username=res['username'])
+        labelings = Labeling.objects.filter(user=users)
+        for labeling in labelings:
+            if labeling.user is not None:
+                labeling.user.password = "*****"
+                labeling.user.email = labeling.user.email.split("@")[0][0:3] + "****" +\
+                 "@" + labeling.user.email.split("@")[1]
+            if labeling.request.user is not None:
+                labeling.request.user.password = "*****"
+                labeling.request.user.email = labeling.request.user.email.split("@")[0][0:3] + "****" + "@" + labeling.request.user.email.split("@")[1]
+        if labelings:
+            return Labelings(message=Message(status=True, message=""), labelings=labelings)
+        else:
+            return Labelings(message=Message(status=True, message="해당 주제 목록이 없습니다."), labelings=labelings)
