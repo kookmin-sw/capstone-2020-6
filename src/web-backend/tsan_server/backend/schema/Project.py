@@ -355,6 +355,45 @@ class TakeProject(graphene.Mutation):
                     message = "'%s'님 '%%s' 주제가 정상적으로 등록되었습니다."%(user.username)%(request.subject)
                     return TakeProject(message=Message(status=True, message=message))
 
+"""
+mutation{
+  deleteLabelerTakenProject(
+    idx:5
+    token:"관리자"
+  ){
+    message{
+      status
+      message
+    }
+  }
+}
+"""
+# DeleteLabelerTakenProject는 참여자가 신청한 특정 프로젝트를 삭제하는 함수이다.
+class DeleteLabelerTakenProject(graphene.Mutation):
+    message = graphene.Field(Message)
+    
+    class Arguments:
+        idx = graphene.Int()
+        token = graphene.String()
+
+    @only_user
+    @only_admin
+    def mutate(self, info, idx, token):
+        try:
+            labeling = Labeling.objects.get(idx=idx)
+        except:
+            message = "해당하는 인스턴스가 존재하지 않습니다."
+            return DeleteLabelerTakenProject(
+                message=Message(status=False, message=message)
+                )
+        else:
+            deleted_labeling = labeling
+            labeling.delete()
+            message = "'%s' 참여 프로젝트 목록이 정상적으로 삭제되었습니다."%(deleted_labeling.request.subject)
+            return DeleteLabelerTakenProject(
+                message=Message(status=True, message=message)
+            )
+
 
 class Query(graphene.ObjectType):
     """
