@@ -223,8 +223,9 @@ class Query(graphene.ObjectType):
                 paymentlog.user.password = "*****"
                 paymentlog.user.email = paymentlog.user.email.split("@")[0][0:3] + "****" +\
                      "@" + paymentlog.user.email.split("@")[1]
-            # paymentlog.request의 user 개인 정보 마스킹 처리
-            paymentlog.request.user.password = "*****"
-            paymentlog.request.user.email = paymentlog.request.user.email.split("@")[0][0:3] + "****" +\
-                 "@" + paymentlog.request.user.email.split("@")[1]
+            if paymentlog.request.user is not None:
+                # paymentlog.request의 user 개인 정보 마스킹 처리
+                paymentlog.request.user.password = "*****"
+                paymentlog.request.user.email = paymentlog.request.user.email.split("@")[0][0:3] + "****" +\
+                     "@" + paymentlog.request.user.email.split("@")[1]
         return PaymentLogs(message=Message(status=True, message=""), paymentlogs=paymentlogs)
