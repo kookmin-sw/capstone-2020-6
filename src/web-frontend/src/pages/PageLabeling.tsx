@@ -42,11 +42,11 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
     }
 
     render() {
-        // console.log(this.props.match.url);
         return (
             <>
                 <img
                     src={this.props.labelingPageStore?.thumbnailURL}
+                    alt='thumbnail'
                     className="project-top-image"
                 />
                 <div className="project-paper">
@@ -82,25 +82,20 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                                     <h3>의뢰자</h3>
                                     {this.props.labelingPageStore?.author}
                                 </Grid.Row>
-                                {/*<br/>*/}
                                 <Grid.Row>
                                     {/* TODO : have to make labeling types */}
                                     <h3>라벨링 유형</h3>
                                     {this.props.labelingPageStore?.labelingType}
                                 </Grid.Row>
-                                {/*<br/>*/}
                                 <Grid.Row>
                                     {/* TODO : have to make date type */}
                                     <h3>기간</h3>
                                     2020.01.01 - 2020.05.05
-                                    {/*{this.props.labelingPageStore?.startDate} - {this.props.labelingPageStore?.endDate}*/}
                                 </Grid.Row>
-                                {/*<br/>*/}
                                 <Grid.Row>
                                     <h3>한 줄 설명</h3>
                                     {this.props.labelingPageStore?.oneLineDescription}
                                 </Grid.Row>
-                                {/*<br/>*/}
                                 <Grid.Row>
                                     <h3>보상 금액</h3>
                                     {this.props.labelingPageStore?.rewardPoints}P

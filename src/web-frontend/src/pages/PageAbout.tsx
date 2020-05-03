@@ -61,17 +61,13 @@ const description = [
     '생성해주는 플랫폼 역할을 수행할 수 있다.'
 ]
 class App extends React.Component<Props> {
-    constructor(props: any) {
-        super(props);
-    }
     render() {
-        console.log(this.props.navigate)
 
         return (
             <>
                 <Container style={{marginTop: 30}}>
 
-                    <img className="about-daemon" src="https://github.com/kookmin-sw/capstone-2020-6/blob/master/img/logo.png?raw=true"/>
+                    <img alt='logo' className="about-daemon" src="https://github.com/kookmin-sw/capstone-2020-6/blob/master/img/logo.png?raw=true"/>
 
                     <Grid columns={2}>
                         <Grid.Column>
@@ -103,6 +99,7 @@ class App extends React.Component<Props> {
                                         <Grid.Column className="about_memberCard">
                                             <img
                                                 src={item.img}
+                                                alt={item.name}
                                                 className="about_memberImage"
                                             />
                                             <div className="about_memberName">{item.name}</div>
