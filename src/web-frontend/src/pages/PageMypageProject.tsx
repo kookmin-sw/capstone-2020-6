@@ -1,7 +1,7 @@
 import React from 'react';
-import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Container, Grid, Header} from 'semantic-ui-react';
-import './PageMypageProject.css'
+import {withRouter} from 'react-router-dom';
+import {Container, Grid} from 'semantic-ui-react';
+import './PageMypageProject.css';
 
 import CardProject from '../components/CardProject';
 import {observer, inject} from 'mobx-react';

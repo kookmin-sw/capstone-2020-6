@@ -1,6 +1,6 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Container, Input, Button} from 'semantic-ui-react';
+import {Container} from 'semantic-ui-react';
 import "./PageLogin.css"
 import JInput from '../components/JInput';
 import { inject, observer } from 'mobx-react';
@@ -36,7 +36,7 @@ class App extends React.Component<Props> {
       <Container>
         <div className="box">
           <div className="login_form_logo">
-            <img src="/images/logo.png"/>
+            <img src="/images/logo.png" alt='logo'/>
           </div>
           <JInput
             label="아이디"

@@ -58,8 +58,6 @@ class CardProject extends React.Component<Props> {
 
   render() {
     const {open} = this.state;
-
-    console.log(this.props.navigate);
     return (
       <div className="card_project">
         <Card className="card_image" onClick={()=>this.handleLink(this.props.status)}>

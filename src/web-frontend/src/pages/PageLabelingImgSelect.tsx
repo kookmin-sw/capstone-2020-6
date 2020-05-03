@@ -1,6 +1,6 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Header, Grid, Image, Container, Button} from 'semantic-ui-react';
+import {Header, Grid, Container} from 'semantic-ui-react';
 import ImagePicker from "../components/image_picker";
 
 // for Mobx

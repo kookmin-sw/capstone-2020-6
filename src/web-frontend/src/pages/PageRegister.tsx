@@ -1,9 +1,9 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Container, Input, Button, Grid} from 'semantic-ui-react';
-import "./PageLogin.css"
+import {Container, Button, Grid} from 'semantic-ui-react';
+import './PageLogin.css';
 import JInput from '../components/JInput';
-import { inject, observer } from 'mobx-react';
+import {inject, observer} from 'mobx-react';
 import LoginStore from '../stores/loginStore';
 import JSelect from '../components/JSelect';
 
@@ -12,7 +12,7 @@ interface Props extends RouteComponentProps<any>{
   loginStore?: LoginStore
 }
 
-@inject("loginStore") @observer
+@inject('loginStore') @observer
 class App extends React.Component<Props> {
   render() {
     console.log(this.props.navigate)
@@ -20,7 +20,7 @@ class App extends React.Component<Props> {
       <Container>
         <div className="box" style={{width: 800}}>
           <div className="login_form_logo">
-            <img src="/images/logo.png"/>
+            <img src="/images/logo.png" alt='logo'/>
           </div>
           <Grid columns={2}>
             <Grid.Column>

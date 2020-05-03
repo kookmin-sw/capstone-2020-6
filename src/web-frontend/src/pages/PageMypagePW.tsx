@@ -1,14 +1,14 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Header, Grid, Container, Button} from 'semantic-ui-react';
-import "./PageMypagePW.css";
+import {Header, Container, Button} from 'semantic-ui-react';
+import './PageMypagePW.css';
 
 import Confirm from '../components/TSANConfirm';
 
 // for Mobx
-import {observer, inject} from "mobx-react";
-import JInput from "../components/JInput";
-import LoginStore from "../stores/loginStore";
+// import {observer, inject} from "mobx-react";
+import JInput from '../components/JInput';
+import LoginStore from '../stores/loginStore';
 
 interface Props extends RouteComponentProps<any> {
     navigate?: any
