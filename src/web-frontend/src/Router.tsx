@@ -1,9 +1,9 @@
 import React from 'react';
 import './Router.css';
 import {
-    BrowserRouter as Router,
-    Switch,
-    Route,
+  BrowserRouter as Router,
+  Switch,
+  Route,
 } from 'react-router-dom';
 
 // for Pages
@@ -22,6 +22,8 @@ import PageLabelingTextWrite from './pages/PageLabelingTextWrite';
 import PageLabelingTextButton from './pages/PageLabelingTextButton';
 import PageLabelingImageCapture from './pages/PageLabelingImageCapture';
 import PageMypageProject from './pages/PageMypageProject';
+import PageCaptcha from './pages/PageCaptcha';
+
 // for Components
 import Navigation from './components/Navigation';
 import Footer from './components/Footer';
@@ -50,6 +52,9 @@ class App extends React.Component<Props> {
         <Switch>
           <Route path='/about'>
             <PageAbout />
+          </Route>
+          <Route path='/captcha'>
+            <PageCaptcha/>
           </Route>
           <Route path="/login">
             <PageLogin />
