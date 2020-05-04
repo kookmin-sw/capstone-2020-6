@@ -53,3 +53,7 @@
     color: black;
 }
 
+.text:hover{
+    cursor: pointer;
+    color: #2b63f0;
+}

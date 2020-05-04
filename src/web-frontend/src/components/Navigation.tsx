@@ -43,7 +43,7 @@ class Navigation extends React.Component<Props> {
                     <Link className='text' to="/mypage">마이페이지</Link>
                   </div>
                   <div className='menu_item'>
-                    <Link className='text' to="/logout">로그아웃</Link>
+                    <div className='text' onClick={this.props.loginStore?.logout}>로그아웃</div>
                   </div>
                 </>
               ) : (

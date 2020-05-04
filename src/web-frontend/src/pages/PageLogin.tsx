@@ -24,7 +24,7 @@ class App extends React.Component<Props> {
       }
       localStorage.setItem("token", data.loginAccount.jwt)
       this.props.loginStore?.setJwt(data.loginAccount.jwt)
-      this.props.history.push("/")
+      window.location.href = '/'
     })
     .catch((err:any) => {
       console.error(err)
