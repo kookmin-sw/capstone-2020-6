@@ -1,6 +1,6 @@
 import React from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
-import {Button, Confirm} from 'semantic-ui-react'
+import {Confirm} from 'semantic-ui-react'
 
 interface Props extends RouteComponentProps<any> {
     open?: any;

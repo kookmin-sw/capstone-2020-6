@@ -2,7 +2,6 @@ import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import './JInput.css';
-import { Container } from "semantic-ui-react";
 
 interface Props extends RouteComponentProps<any> {
   navigator?: any,

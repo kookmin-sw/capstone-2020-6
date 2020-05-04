@@ -1,6 +1,6 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Image, Dropdown} from 'semantic-ui-react';
+import {Dropdown} from 'semantic-ui-react';
 
 import {observer} from 'mobx-react';
 

@@ -1,22 +1,18 @@
 import React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { Header, Grid, Container, Button, Card, Icon } from 'semantic-ui-react';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {Grid, Container, Button, Card, Icon} from 'semantic-ui-react';
 import './PageMyPage.css'
 
-// Components
-import MypageCard from "../components/MypageCard";
-import Confirm from "../components/TSANConfirm";
-
 // for Mobx
-import { observer, inject } from "mobx-react";
-import MyPageListStore from "../stores/MyPageListStore";
+import {observer, inject} from 'mobx-react';
+import MyPageListStore from '../stores/MyPageListStore';
 
 interface Props extends RouteComponentProps<any> {
     navigate?: any
     myPageListStore?: MyPageListStore;
 }
 
-@inject("myPageListStore")
+@inject('myPageListStore')
 @observer
 class Mypage extends React.Component<Props> {
 
@@ -40,7 +36,7 @@ class Mypage extends React.Component<Props> {
     render() {
         console.log(this.props.myPageListStore!.list);
         // Popup test
-        const { open } = this.state;
+        // const { open } = this.state;
 
         return (
 

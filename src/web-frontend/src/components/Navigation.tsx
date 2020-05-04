@@ -1,10 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Container } from "semantic-ui-react";
+import {Link} from 'react-router-dom';
+import {Container} from 'semantic-ui-react';
 import './Navigation.css';
 
 // for Mobx
-import { observer, inject } from 'mobx-react';
+import {observer, inject} from 'mobx-react';
 import NavigationStore from '../stores/NavigationStore';
 import LoginStore from '../stores/loginStore';
 
@@ -29,7 +29,7 @@ class Navigation extends React.Component<Props> {
         <Container>
           <div className='logo'>
             <Link to='/'>
-              <img className='logo' src='/images/logo.png' />
+              <img className='logo' src='/images/logo.png' alt='logo'/>
             </Link>
           </div>
           <div className='menu'>
@@ -57,15 +57,6 @@ class Navigation extends React.Component<Props> {
                 </>
               )
             }
-            {/* <div className='avatar'>
-            <Link to={{
-              pathname: '/mypage',
-              search: `userId=${this.props.navigationStore!.userId}`,
-            }}>
-              <Avatar userId={this.props.navigationStore!.userId}
-                thumbnail={this.props.navigationStore!.thumbnail}/>
-            </Link>d
-          </div> */}
           </div>
         </Container>
       </div>
