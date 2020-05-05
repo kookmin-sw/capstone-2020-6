@@ -20,7 +20,7 @@ class JSelect extends React.Component<Props> {
     onChange: () => { },
     type: "text",
     style: {
-      textAlign: "right"
+      textAlign: "left"
     }
   }
   render() {
@@ -35,6 +35,8 @@ class JSelect extends React.Component<Props> {
         }
         <Dropdown
           fluid
+          selection
+          search
           className="jinput"
           placeholder={this.props.placeholder}
           value={this.props.value}
