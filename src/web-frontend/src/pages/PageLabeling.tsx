@@ -34,11 +34,15 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
         this.props.labelingPageStore!.getRewardPoints();
     }
 
-
     handleLink = (e: any) => {
-        if (this.props.labelingPageStore?.labelingType === 'imgSel') {
-            this.props.history.push(`${this.props.match.url}/imgsel`);
-        }
+        this.props.history.push(`${this.props.match.url}/${this.props.labelingPageStore?.labelingType}`);
+    }
+
+    selectType = (type: string | undefined) => {
+        if(type === 'imgsel') return '이미지선택형'
+        else if(type === 'imgcap') return '이미지캡처형'
+        else if(type === 'txtsel') return '텍스트선택형'
+        else return '텍스트단답형'
     }
 
     render() {
@@ -54,7 +58,7 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                         <div className="project-title">{this.props.labelingPageStore?.labelingSubject}</div>
                         <div className="project-oneline-desc">{this.props.labelingPageStore?.oneLineDescription}</div>
                         <div className="project-line-info">
-                            <div>이미지 유형: {this.props.labelingPageStore?.labelingType}</div>
+                            <div>라벨링 유형: {this.selectType(this.props.labelingPageStore?.labelingType)}</div>
                             {this.props.labelingPageStore?.author}
                             &nbsp;/&nbsp;
                             {this.props.labelingPageStore?.rewardPoints}P
@@ -85,7 +89,7 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                                 <Grid.Row>
                                     {/* TODO : have to make labeling types */}
                                     <h3>라벨링 유형</h3>
-                                    {this.props.labelingPageStore?.labelingType}
+                                    {this.selectType(this.props.labelingPageStore?.labelingType)}
                                 </Grid.Row>
                                 <Grid.Row>
                                     {/* TODO : have to make date type */}
