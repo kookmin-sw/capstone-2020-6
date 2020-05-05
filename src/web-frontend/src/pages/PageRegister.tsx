@@ -162,7 +162,7 @@ class App extends React.Component<Props> {
           <button className="login_form_btn login_btn">회원가입</button>
           <div className="login_form_register_area">
             <div>이미 <span>T-SAN</span>의 회원이신가요?</div>
-            <button className="login_form_btn">로그인</button>
+            <button className="login_form_btn" onClick={() => {window.location.href="/login"}}>로그인</button>
           </div>
         </div>
       </Container>
