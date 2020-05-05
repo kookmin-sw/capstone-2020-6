@@ -50,7 +50,7 @@ export default class LabelingPageStore {
     }
 
     @action getLabelingType = () => {
-      this.labelingType = 'imgSel';
+      this.labelingType = 'imgsel';
     }
 
     @action getOneLineDescription = () => {
