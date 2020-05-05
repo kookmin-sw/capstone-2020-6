@@ -265,3 +265,11 @@ class Query(graphene.ObjectType):
             user.password = "*****"
             user.email = user.email.split("@")[0][0:3] + "****" + "@" + user.email.split("@")[1]
         return Users(message=Message(status=True, message=""), users=users)
+
+    my = graphene.Field(UserType, token=graphene.String())
+    @only_user
+    def resolve_my(self, info, token):
+        res = jwt_decode_handler(token)
+        user = User.objects.get(username=res['username'])
+        user.password = "*****"
+        return user
