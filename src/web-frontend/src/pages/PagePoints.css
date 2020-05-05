@@ -1,0 +1,41 @@
+.point-pointbox {
+    padding: 20px;
+    font-size: 13.5px;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+}
+
+.point-newPoint {
+    float: right;
+    margin-top: -35px;
+}
+
+.point-newPoint > span {
+    color: #0f5fa6;
+    font-weight: bold;
+    border-bottom: 1px solid #0f5fa6;
+    padding-bottom: 1px;
+    font-size: 13px;
+    margin-left: 5px;
+    cursor: pointer;
+}
+
+.point-mypoint {
+    text-align: center;
+    font-size: 15px;
+    padding: 30px 0px;
+}
+
+.point-mypoint > div {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.point-more {
+    margin-top: -35px;
+    float: right;
+    font-weight: bold;
+    cursor: pointer;
+}
