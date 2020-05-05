@@ -7,14 +7,16 @@ import './Navigation.css';
 import {observer, inject} from 'mobx-react';
 import NavigationStore from '../stores/NavigationStore';
 import LoginStore from '../stores/loginStore';
+import UserStore from '../stores/UserStore'
 
 interface Props {
   navigationStore?: NavigationStore;
   loginStore?: LoginStore;
+  userStore?: UserStore
 }
 
 // eslint-disable-next-line require-jsdoc
-@inject('navigationStore', 'loginStore')
+@inject('navigationStore', 'loginStore', 'userStore')
 @observer
 class Navigation extends React.Component<Props> {
   // eslint-disable-next-line require-jsdoc
@@ -42,9 +44,13 @@ class Navigation extends React.Component<Props> {
                   <div className='menu_item'>
                     <Link className='text' to='/mypage/points'>포인트</Link>
                   </div>
-                  <div className='menu_item'>
-                    <Link className='text' to='/labelingRegister'>새로운 프로젝트</Link>
-                  </div>
+                  {
+                    (this.props.userStore?.isRequester) ? (
+                      <div className='menu_item'>
+                        <Link className='text' to='/labelingRegister'>새로운 프로젝트</Link>
+                      </div>
+                    ) : <></>
+                  }
                   <div className='menu_item'>
                     <Link className='text' to="/mypage">마이페이지</Link>
                   </div>
