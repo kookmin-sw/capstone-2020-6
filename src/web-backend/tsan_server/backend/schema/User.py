@@ -1,4 +1,5 @@
 import graphene
+import datetime
 from backend.models import Dataset, User
 from django.contrib.auth import login
 from django.core.exceptions import ValidationError
@@ -64,6 +65,7 @@ class CreateAccount(graphene.Mutation):
             new_user = User(
               username=username,
               email=email,
+              password=password,
               fullname=fullname,
               birthday=datetime.datetime.strptime(birthday, "%Y-%m-%d"),
               phone=phone,
