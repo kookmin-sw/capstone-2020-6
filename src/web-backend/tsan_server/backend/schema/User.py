@@ -214,7 +214,25 @@ class DeleteUser(graphene.Mutation):
             return DeleteUser(
                 message=Message(status=False, message=message)
                 )
-        
+
+class AddPoint(graphene.Mutation):
+    message = graphene.Field(Message)
+    
+    class Arguments:
+        token = graphene.String()
+
+    @only_user
+    def mutate(self, info, token):
+        res = jwt_decode_handler(token)
+        user = User.objects.get(username=res['username'])
+        user.point = user.point + 100000
+        user.save()
+        # 블록체인에 추가하는 부분 제작 해야함
+        # 현 데이터베이스에 로깅하는 부분 제작해야함
+        return AddPoint(
+            message=Message(status=True, message="포인트 충전을 성공하였습니다.")
+        )
+
 
 class Query(graphene.ObjectType):
     """
