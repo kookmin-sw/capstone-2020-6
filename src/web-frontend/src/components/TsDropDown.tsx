@@ -8,7 +8,7 @@ interface Props extends RouteComponentProps<any> {
     placeholder: string;
     labelingType: any;
     handleChange: any;
-    value:string;
+    value:any;
 }
 
 @observer
