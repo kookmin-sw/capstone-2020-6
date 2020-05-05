@@ -2,14 +2,14 @@ import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {Container, Grid, Table} from 'semantic-ui-react';
 import "./PagePoints.css"
-import PointStore from '../stores/PointStore'
+import UserStore from '../stores/UserStore'
 import { inject, observer } from 'mobx-react';
 
 interface Props extends RouteComponentProps<any>{
-  pointStore?: PointStore
+  userStore?: UserStore
 }
 
-@inject("pointStore") @observer
+@inject("userStore") @observer
 class PagePoints extends React.Component<Props> {
   render() {
     return (
@@ -18,11 +18,11 @@ class PagePoints extends React.Component<Props> {
         <br/>
         <h2>포인트 관리</h2>
         <div className="point-newPoint">
-          <span onClick={this.props.pointStore?.getPoint}>충전하기</span>
+          <span onClick={this.props.userStore?.getPoint}>충전하기</span>
         </div>
         <div className="point-mypoint">
           현재 회원님이 보유하고 계신 포인트
-          <div>100,000P</div>
+          <div>{this.props.userStore?.point.toLocaleString()}P</div>
         </div>
 
         <h3>최근 포인트 수입/지출 내역</h3>

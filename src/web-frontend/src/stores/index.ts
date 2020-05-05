@@ -9,7 +9,7 @@ import MyPageListStore from './MyPageListStore';
 import LabelingPageTextWrite from './LabelingTextWriteStore';
 import MyPageProjectStore from './MyPageProjectStore';
 import LabelingRegisterStore from './LabelingRegisterStore';
-import PointStore from './PointStore';
+import UserStore from './UserStore';
 
 export default {
   navigationStore: new NavigationStore(),
@@ -23,5 +23,5 @@ export default {
   labelingTextWriteStore: new LabelingPageTextWrite(),
   myPageProjectStore: new MyPageProjectStore(),
   labelingRegisterStore: new LabelingRegisterStore(),
-  pointStore: new PointStore(),
+  userStore: new UserStore(),
 };
