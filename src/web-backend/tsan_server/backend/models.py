@@ -15,6 +15,8 @@ class Dataset(models.Model):
 
 # 사용자 확장 테이블
 class User(django.contrib.auth.models.AbstractUser):
+    fullname = models.CharField(max_length=100)
+    birthday = models.DateTimeField(null=True)
     email = models.CharField(max_length=30, validators=[validate_email])
     phone = models.CharField(max_length=30, validators=[validate_phone]) # 전화번호
     point = models.IntegerField(default=0) # 포인트

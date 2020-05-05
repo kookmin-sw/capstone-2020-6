@@ -36,7 +36,6 @@ export default class UserStore {
         })
         .catch(e => {
             console.error(e)
-            alert("사용자 정보를 불러오는것을 실패하였습니다.")
         })
     }
     @action getPoint = () => {

@@ -44,6 +44,8 @@ class CreateAccount(graphene.Mutation):
     message = graphene.Field(Message)
 
     class Arguments:
+        fullname = graphene.String()
+        birthday = graphene.String()
         username = graphene.String()
         email = graphene.String()
         password = graphene.String()
@@ -51,7 +53,7 @@ class CreateAccount(graphene.Mutation):
         is_requester = graphene.Boolean()
         is_robot = graphene.Boolean()
         
-    def mutate(self, info, username, email, password, phone, is_requester=False, is_robot=False):
+    def mutate(self, info, fullname, birthday, username, email, password, phone, is_requester=False, is_robot=False):
         try:
             res = User.objects.exclude().get(username=username)
             return CreateAccount(message=Message(status=False, message="이미 존재하는 아이디입니다."))
@@ -59,7 +61,15 @@ class CreateAccount(graphene.Mutation):
             # new_user = User.objects.create_user(username=username, email=email, password=password, phone=phone, is_requester=is_requester, is_robot=is_robot)
             # message = "'%s'님 정상적으로 가입되었습니다."%(new_user.username)
             # return CreateAccount(message=Message(status=True, message=message))
-            new_user = User(username=username, email=email, password=password, phone=phone, is_requester=is_requester, is_robot=is_robot)
+            new_user = User(
+              username=username,
+              email=email,
+              fullname=fullname,
+              birthday=datetime.datetime.strptime(birthday, "%Y-%m-%d"),
+              phone=phone,
+              is_requester=is_requester,
+              is_robot=is_robot
+            )
             try:
                 new_user.full_clean()
             except ValidationError as e:

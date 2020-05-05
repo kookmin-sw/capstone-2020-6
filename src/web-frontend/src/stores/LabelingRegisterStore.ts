@@ -62,7 +62,6 @@ export default class LabelingRegisterStore {
         })
         .catch(e => {
             console.error(e)
-            alert("데이터셋 목록을 불러오는데 실패하였습니다.")
         })
     }
 
