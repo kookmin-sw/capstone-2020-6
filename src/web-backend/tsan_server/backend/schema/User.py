@@ -217,6 +217,7 @@ class DeleteUser(graphene.Mutation):
 
 class AddPoint(graphene.Mutation):
     message = graphene.Field(Message)
+    point = graphene.Int()
     
     class Arguments:
         token = graphene.String()
@@ -230,7 +231,8 @@ class AddPoint(graphene.Mutation):
         # 블록체인에 추가하는 부분 제작 해야함
         # 현 데이터베이스에 로깅하는 부분 제작해야함
         return AddPoint(
-            message=Message(status=True, message="포인트 충전을 성공하였습니다.")
+            message=Message(status=True, message="포인트 충전을 성공하였습니다."),
+            point=user.point
         )
 
 
