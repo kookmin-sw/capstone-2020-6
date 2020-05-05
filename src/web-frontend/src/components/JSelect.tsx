@@ -11,14 +11,17 @@ interface Props extends RouteComponentProps<any> {
   value?: string,
   onChange?: any,
   type?: string,
-  style?: any
+  style?: any,
+  options?: any
 }
 
 class JSelect extends React.Component<Props> {
   static defaultProps = {
     onChange: () => { },
     type: "text",
-    style: {}
+    style: {
+      textAlign: "right"
+    }
   }
   render() {
     return (
@@ -37,9 +40,8 @@ class JSelect extends React.Component<Props> {
           value={this.props.value}
           onChange={this.props.onChange}
           type={this.props.type}
-          style={{
-            textAlign: "right"
-          }}
+          options={this.props.options}
+          style={this.props.style}
         />
       </div>
     );

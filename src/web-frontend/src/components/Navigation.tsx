@@ -40,10 +40,16 @@ class Navigation extends React.Component<Props> {
               this.props.loginStore?.is_login ? (
                 <>
                   <div className='menu_item'>
+                    <Link className='text' to='/mypage/points'>포인트</Link>
+                  </div>
+                  <div className='menu_item'>
+                    <Link className='text' to='/labelingRegister'>새로운 프로젝트</Link>
+                  </div>
+                  <div className='menu_item'>
                     <Link className='text' to="/mypage">마이페이지</Link>
                   </div>
                   <div className='menu_item'>
-                    <Link className='text' to="/logout">로그아웃</Link>
+                    <div className='text' onClick={this.props.loginStore?.logout}>로그아웃</div>
                   </div>
                 </>
               ) : (

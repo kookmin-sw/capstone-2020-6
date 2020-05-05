@@ -22,6 +22,12 @@ export default class LoginStore {
   @action setJwt = (jwt: string) => {
     this.jwt = jwt
   }
+  @action logout = () => {
+    localStorage.clear()
+    this.jwt = ''
+    window.location.href = '/'
+  }
+
   @action login = () => {
     return client.mutate({
       mutation: gql`
