@@ -1,11 +1,43 @@
-import {action, observable} from 'mobx';
+import { action, observable } from 'mobx';
 import { client } from '../tsan'
 import { gql } from 'apollo-boost'
 
 export default class UserStore {
-    @observable point: number = 0;
+    @observable username: string = ""
+    @observable isRequester: string = ""
+    @observable email: string = ""
+    @observable point: number = 0
+    @observable phone: string = ""
     constructor() {
-      this.point = 0;
+        this.point = 0;
+
+        client.query({
+            query: gql`
+            query My($token: String!) {
+                my(token: $token) {
+                    username
+                    isRequester
+                    email
+                    point
+                    phone
+                }
+            }
+        `,
+            variables: {
+                token: localStorage.token
+            }
+        })
+        .then(({ data }: any) => {
+            this.username = data.my.username
+            this.isRequester = data.my.isRequester
+            this.email = data.my.email
+            this.point = data.my.point
+            this.phone = data.my.phone
+        })
+        .catch(e => {
+            console.error(e)
+            alert("사용자 정보를 불러오는것을 실패하였습니다.")
+        })
     }
     @action getPoint = () => {
         client.mutate({
@@ -24,12 +56,12 @@ export default class UserStore {
                 token: localStorage.token
             }
         })
-        .then(({data}:any) => {
-            alert(data.addPoint.message.message)
-            this.point = data.addPoint.point
-        })
-        .catch(e => {
-            alert("포인트 충전에 실패하였습니다.")
-        })
+            .then(({ data }: any) => {
+                alert(data.addPoint.message.message)
+                this.point = data.addPoint.point
+            })
+            .catch(e => {
+                alert("포인트 충전에 실패하였습니다.")
+            })
     }
 }
