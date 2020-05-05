@@ -222,15 +222,41 @@ class PageLabelingRegister extends React.Component<Props, State> {
                             />
                         </Grid.Column>
                     </Grid.Row>
-                    <Grid.Row>
+                    <Grid.Row columns={2}>
                         <Grid.Column>
-                            <p className="subjectHeader">데이터 셋 업로드(.zip)</p>
-                            {/*TODO: 파일 업로드*/}
-                            <Form>
-                                <TextArea placeholder='파일을 가져와주세요.' style={{minHeight: 200}}/>
-                            </Form>
+                            <JSelect
+                                label="데이터셋을 선택해주세요."
+                                placeholder="데이터셋을 선택해주세요."
+                                style={{textAlign: "left"}}
+                                options={this.props.labelingRegisterStore?.datasets}
+                                onChange={this.props.labelingRegisterStore?.setDataset}
+                                value={this.props.labelingRegisterStore?.dataset}
+                            />
+                        </Grid.Column>
+                        <Grid.Column>
+                            <JInput
+                                label="데이터셋에서 추출할 임의의 데이터 개수"
+                                placeholder="데이터셋에서 몇개의 데이터를 뽑아서 프로젝트를 진행할까요?"
+                                onChange={this.props.labelingRegisterStore?.setCountDataset}
+                                value={this.props.labelingRegisterStore?.countDataset}
+                                type="text"
+                            />
                         </Grid.Column>
                     </Grid.Row>
+                    {
+                        (this.props.labelingRegisterStore?.dataset == "-1") ? (
+                            <Grid.Row>
+                                <Grid.Column>
+                                    <span className="subjectHeader">데이터 셋 업로드(.zip)</span>
+                                    {/*TODO: 파일 업로드*/}
+                                    <Form>
+                                        <TextArea placeholder='파일을 가져와주세요.' style={{minHeight: 200}}/>
+                                    </Form>
+                                </Grid.Column>
+                            </Grid.Row>
+                        ) : <></>
+                    }
+
                     <Grid.Row>
                         <Grid.Column style={{textAlign: 'right'}}>
                             <Button className="subjectBtn" primary size="medium">제출</Button>

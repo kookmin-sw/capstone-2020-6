@@ -19,7 +19,9 @@ class JSelect extends React.Component<Props> {
   static defaultProps = {
     onChange: () => { },
     type: "text",
-    style: {}
+    style: {
+      textAlign: "right"
+    }
   }
   render() {
     return (
@@ -39,9 +41,7 @@ class JSelect extends React.Component<Props> {
           onChange={this.props.onChange}
           type={this.props.type}
           options={this.props.options}
-          style={{
-            textAlign: "right"
-          }}
+          style={this.props.style}
         />
       </div>
     );
