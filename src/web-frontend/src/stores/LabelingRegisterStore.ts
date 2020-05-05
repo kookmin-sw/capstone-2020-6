@@ -133,4 +133,8 @@ export default class LabelingRegisterStore {
     @action setEndDateDay = (e:any, {value}:any) => {
         this.endDateDay = value
     }
+
+    @action submit = () => {
+        
+    }
 }

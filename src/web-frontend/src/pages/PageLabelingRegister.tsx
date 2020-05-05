@@ -259,7 +259,14 @@ class PageLabelingRegister extends React.Component<Props, State> {
 
                     <Grid.Row>
                         <Grid.Column style={{textAlign: 'right'}}>
-                            <Button className="subjectBtn" primary size="medium">제출</Button>
+                            <Button
+                                className="subjectBtn"
+                                primary
+                                size="medium"
+                                onClick={this.props.labelingRegisterStore?.submit}
+                            >
+                                제출
+                            </Button>
                         </Grid.Column>
                     </Grid.Row>
 
