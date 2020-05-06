@@ -1,0 +1,11 @@
+.uploadBtn > #file-upload-button{
+    cursor: pointer;
+    display: inline-block;
+    min-height: 1em;
+    outline: 0;
+    border: none;
+    vertical-align: baseline;
+    background: #e0e1e2 none;
+    color: rgba(0,0,0,.6);
+    font-family: Lato, 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
