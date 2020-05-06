@@ -9,6 +9,7 @@ import LabelingRegisterStore from '../stores/LabelingRegisterStore';
 import JSelect from '../components/JSelect';
 import TsDropDown from '../components/TsDropDown';
 import TsTag from '../components/TsTag';
+import FileUpload from "../components/FileUpload";
 
 import './PageLabelingRegister.css'
 
@@ -244,14 +245,12 @@ class PageLabelingRegister extends React.Component<Props, State> {
                         </Grid.Column>
                     </Grid.Row>
                     {
-                        (this.props.labelingRegisterStore?.dataset == "-1") ? (
+                        (this.props.labelingRegisterStore?.dataset !== "-1") ? (
                             <Grid.Row>
                                 <Grid.Column>
                                     <span className="subjectHeader">데이터 셋 업로드(.zip)</span>
                                     {/*TODO: 파일 업로드*/}
-                                    <Form>
-                                        <TextArea placeholder='파일을 가져와주세요.' style={{minHeight: 200}}/>
-                                    </Form>
+                                    <FileUpload/>
                                 </Grid.Column>
                             </Grid.Row>
                         ) : <></>
