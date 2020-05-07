@@ -7,10 +7,10 @@ import LabelingTextButton from '../components/LabelingTextButton';
 
 // for Mobx
 import {inject, observer} from 'mobx-react';
-import LabelingTextButtonStore from '../stores/LabelingTextButtonStore';
+import LabelingTextSelectStore from '../stores/LabelingTextSelectStore';
 
 interface Props {
-  labelingTextButtonStore?: LabelingTextButtonStore,
+  labelingTextButtonStore?: LabelingTextSelectStore,
 }
 
 @inject('labelingTextButtonStore')
