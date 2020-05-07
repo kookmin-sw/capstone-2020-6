@@ -1,6 +1,6 @@
 import {action, observable} from 'mobx';
 
-export default class LabelingTextButtonStore {
+export default class LabelingTextSelectStore {
     @observable buttonList: any = [];
     @observable activeButton: any = -1;
     @observable textLabelingContents: any = '';

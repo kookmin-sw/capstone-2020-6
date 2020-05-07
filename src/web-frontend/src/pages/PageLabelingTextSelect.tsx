@@ -1,6 +1,6 @@
 import React from 'react';
 import {Container, Grid} from 'semantic-ui-react';
-import './PageLabelingTextButton.css';
+import './PageLabelingTextSelect.css';
 
 // Components
 import LabelingTextButton from '../components/LabelingTextButton';
@@ -15,7 +15,7 @@ interface Props {
 
 @inject('labelingTextButtonStore')
 @observer
-class PageLabelingTextButton extends React.Component<Props> {
+class PageLabelingTextSelect extends React.Component<Props> {
   constructor(props: any) {
     super(props);
     this.props.labelingTextButtonStore!.getLabelingSubject();
@@ -53,4 +53,4 @@ class PageLabelingTextButton extends React.Component<Props> {
   }
 }
 
-export default PageLabelingTextButton;
+export default PageLabelingTextSelect;
