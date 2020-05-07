@@ -45,7 +45,7 @@ class CreatePaymentLog(graphene.Mutation):
 
     class Arguments:
         type = graphene.String()
-        request_idx = graphene.Int()
+        request_idx = graphene.Int() #type: 보상일때만 기입
         note = graphene.String()
         token = graphene.String()
 
@@ -53,30 +53,50 @@ class CreatePaymentLog(graphene.Mutation):
     def mutate(self, info, type, request_idx, note, token):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
-        try:
-            request = Request.objects.get(idx=request_idx)
-        except:
-            message = "해당하는 프로젝트가 존재하지 않습니다."
-            return CreatePaymentLog(message=Message(status=False, message=message))
-        else:
-            new_payment = PaymentLog(type=type, user=user, request=request, note=note)
+        # 보상일 때
+        if type == 0:
             try:
-                res = Labeling.objects.get(user=user, request=request)
+                request = Request.objects.get(idx=request_idx)
             except:
-                # 라벨링 참여 테이블을 사용하여 참여 기록 check
-                message = "'%s'님은 '%s'프로젝트를 참여한 기록이 없습니다."%(user.username, request.subject)
+                message = "해당하는 프로젝트가 존재하지 않습니다."
                 return CreatePaymentLog(message=Message(status=False, message=message))
             else:
+                new_payment = PaymentLog(type=type, user=user, request=request, note=note)
                 try:
-                    new_payment.clean()
-                except ValidationError as e:
-                    return CreatePaymentLog(message=Message(status=False, message=str(e)))
+                    res = Labeling.objects.get(user=user, request=request)
+                except:
+                    # 라벨링 참여 테이블을 사용하여 참여 기록 check
+                    message = "'%s'님은 '%s'프로젝트를 참여한 기록이 없습니다."%(user.username, request.subject)
+                    return CreatePaymentLog(message=Message(status=False, message=message))
                 else:
-                    new_payment.save()
-                    message = "포인트 지급내역이 정상적으로 작성되었습니다."
-                    return CreatePaymentLog(
-                        message=Message(status=True, message=message),
-                        idx=new_payment.idx)
+                    try:
+                        new_payment.clean()
+                    except ValidationError as e:
+                        return CreatePaymentLog(message=Message(status=False, message=str(e)))
+                    else:
+                        new_payment.save()
+                        message = "포인트 지급내역이 정상적으로 작성되었습니다."
+                        return CreatePaymentLog(
+                            message=Message(status=True, message=message),
+                            idx=new_payment.idx)
+        else:
+            new_payment = PaymentLog(
+                type=type, 
+                user=user, 
+                request= None, 
+                note=note
+            )
+            try:
+                new_payment.clean()
+            except ValidationError as e:
+                return CreatePaymentLog(message=Message(status=False, message=str(e)))
+            else:
+                new_payment.save()
+                message = "포인트 지급내역이 정상적으로 작성되었습니다."
+                return CreatePaymentLog(
+                    message=Message(status=True, message=message),
+                    idx=new_payment.idx)
+
 
 """
 mutation{

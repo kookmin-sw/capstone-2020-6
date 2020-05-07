@@ -15,7 +15,7 @@ def validate_email(value):
 
 # phone 유효성 검증
 def validate_phone(value):
-    PHONE_REGEX = r"(^01(?:0|1|[6-9])[0-9]{8}$)"
+    PHONE_REGEX = r"(^01([0|1|6|7|8|9]?)-([0-9]{3,4})-([0-9]{4})$)"
     if not re.match(PHONE_REGEX, value):
         raise ValidationError("유효한 전화번호 형식이 아닙니다.")
 
