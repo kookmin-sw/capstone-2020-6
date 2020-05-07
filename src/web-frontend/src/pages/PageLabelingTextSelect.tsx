@@ -1,11 +1,12 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Button, Container, Grid} from 'semantic-ui-react';
+import {Container, Grid} from 'semantic-ui-react';
 import './PageLabelingTextSelect.css';
 
 // Components
 import LabelingTextButton from '../components/LabelingTextButton';
 import LabelingNextBtn from '../components/LabelingNextBtn';
+import LabelingFinishButton from '../components/LabelingFinishButton';
 
 // for Mobx
 import {inject, observer} from 'mobx-react';
@@ -44,9 +45,10 @@ class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps
         </div>
         <Grid columns={2}>
           <Grid.Column className='textLabelingContents'>
-            {this.props.labelingTextSelectStore?.textLabelingContentList[this.props.match.params.dataId].content}
+            {this.props.labelingTextSelectStore?.
+             textLabelingContentList[this.props.match.params.dataId].content}
           </Grid.Column>
-          <Grid.Column>
+          <Grid.Column className='textSelectGrid'>
             <div className='subTitle'>
               {Number(this.props.match.params.dataId) + 1}. 다음 글의 유형을 선택하시오.
             </div>
@@ -59,10 +61,15 @@ class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps
               }
               onClick={this.props.labelingTextSelectStore?.setActiveButton}
             />
-            {/* TODO: 버튼 눌렀을 때 선택된 값 저장 + 버튼 눌린 상태 초기화 해줘야함 */}
-            {Number(this.props.match.params.dataId) + 1 !== this.props.labelingTextSelectStore?.textLabelingContentList.length ?
-              <LabelingNextBtn handleLink={this.handleLink}/> : <Button color={'blue'}>종료</Button>
-            }
+            <div className='finishButtonLocation'>
+              {/* TODO: 버튼 눌렀을 때 선택된 값 저장 + 버튼 눌린 상태 초기화 해줘야함 */}
+              {Number(this.props.match.params.dataId) + 1 !==
+               this.props.labelingTextSelectStore?.
+               textLabelingContentList.length ?
+               <LabelingNextBtn handleLink={this.handleLink}/> :
+               <LabelingFinishButton/>
+              }
+            </div>
           </Grid.Column>
         </Grid>
       </Container>

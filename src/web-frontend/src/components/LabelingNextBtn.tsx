@@ -19,7 +19,12 @@ class LabelingNextBtn extends React.Component<Props, RouteComponentProps> {
     return (
       <div>
         {/* TODO: Button Design 을 손보는게 좋을 것 같음! */}
-        <Button className='nextBtn' circular icon='forward' size='massive' onClick={this.props.handleLink}/>
+        <Button
+          className='nextBtn'
+          circular
+          icon='forward'
+          color='blue'
+          onClick={this.props.handleLink}/>
       </div>
     );
   }
