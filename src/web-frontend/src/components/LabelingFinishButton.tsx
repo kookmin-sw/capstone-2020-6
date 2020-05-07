@@ -33,7 +33,7 @@ class LabelingFinishButton extends React.Component<Props, State, RouteComponentP
         <Link to={`/labeling/${this.state.postId}/finish`}>
           <Button
             className='finishBtn'
-            color={'blue'}>
+            color={'red'}>
             종료
           </Button>
         </Link>
