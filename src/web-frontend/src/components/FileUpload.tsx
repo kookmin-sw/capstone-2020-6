@@ -6,41 +6,56 @@ import {observer, inject} from "mobx-react";
 
 import './FileUpload.css';
 
-interface Props{
-
+interface Props {
+    type: string;
 }
 
-interface State{
+interface State {
     selectedFile: any;
 }
 
-class FileUpload extends React.Component<Props, State>{
+class FileUpload extends React.Component<Props, State> {
 
-    constructor(props:Props) {
+    constructor(props: Props) {
         super(props);
+        this.onFileChange = this.onFileChange.bind(this);
+        this.onFileUpload = this.onFileUpload.bind(this);
     }
 
     onFileChange = (e:any) => {
         this.setState({selectedFile: e.target.files[0]});
     };
 
-    onFileUpload = () => {
+    onFileUpload = (type:string) => {
         const formData = new FormData();
+        let flag = 0;
+        if (type === 'img' && this.state.selectedFile.type.slice(0,5) === 'image') {
+            flag = 1;
+        }
+        else if(type === 'zip' && this.state.selectedFile.type === 'application/zip'){
+            flag = 1;
+        }
+        else {
+            type === 'img' ? alert('이미지파일(jpg, png)형식이 아닙니다.') : alert('압축파일(zip)형식이 아닙니다.');
+        }
 
-        formData.append(
-            "myFile",
-            this.state.selectedFile,
-            this.state.selectedFile.name
-        );
-
-        console.log(this.state.selectedFile);
+        if(flag){
+            console.log(type);
+            console.log(this.props.type);
+            formData.append(
+                "myFile",
+                this.state.selectedFile,
+                this.state.selectedFile.name
+            );
+            console.log(this.state.selectedFile);
+        }
 
         // axois.post("api/uploadfile", formData);
     };
 
     fileData = () => {
-        if(this.state.selectedFile !== null){
-            return(
+        if (this.state.selectedFile !== null) {
+            return (
                 <div>
                     <h2>File Details: </h2>
                     <p>File Name: {this.state.selectedFile.name}</p>
@@ -51,9 +66,8 @@ class FileUpload extends React.Component<Props, State>{
                     </p>
                 </div>
             )
-        }
-        else{
-            return(
+        } else {
+            return (
                 <div>
                     <br/>
                     <h4>Choose before Pressing the Upload button</h4>
@@ -63,13 +77,13 @@ class FileUpload extends React.Component<Props, State>{
     };
 
     render() {
-        return(
-          <div>
+        return (
+            <div>
               <span className="uploadBtn">
               <input type="file" onChange={this.onFileChange}/>
               </span>
-              <Button onClick={this.onFileUpload}>파일 업로드</Button>
-         </div>
+                <Button onClick={() => this.onFileUpload(this.props.type)}>파일 업로드</Button>
+            </div>
         );
     }
 }

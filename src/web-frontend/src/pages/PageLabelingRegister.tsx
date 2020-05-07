@@ -88,8 +88,12 @@ class PageLabelingRegister extends React.Component<Props, State> {
                             />
                         </Grid.Column>
                     </Grid.Row>
-                    <Grid.Row>
-                        <Grid.Column width={4}>
+                    <Grid.Row columns={2}>
+                        <Grid.Column>
+                            <p className="subjectHeader">썸네일 이미지(jpg, png)</p>
+                            <FileUpload type="img"/>
+                        </Grid.Column>
+                        <Grid.Column>
                             <p className="subjectHeader">라벨링 유형</p>
                             <TsDropDown
                                 placeholder={'라벨링 유형을 선택해주세요.'}
@@ -249,8 +253,7 @@ class PageLabelingRegister extends React.Component<Props, State> {
                             <Grid.Row>
                                 <Grid.Column>
                                     <span className="subjectHeader">데이터 셋 업로드(.zip)</span>
-                                    {/*TODO: 파일 업로드*/}
-                                    <FileUpload/>
+                                    <FileUpload type="zip"/>
                                 </Grid.Column>
                             </Grid.Row>
                         ) : <></>
