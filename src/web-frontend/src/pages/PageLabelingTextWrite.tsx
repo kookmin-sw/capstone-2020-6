@@ -67,10 +67,9 @@ class PageLabelingTextWrite extends React.Component<Props & RouteComponentProps<
               {/* TODO: 버튼 눌렀을 때 입력된 값 저장 + 입력 상태 초기화 해줘야함 */}
               {Number(this.props.match.params.dataId) + 1 !==
               this.props.labelingTextWriteStore?.
-                  textLabelingContentList.length ?
-                  <LabelingNextBtn handleLink={this.handleLink}/> :
-                  <LabelingFinishButton/>
-              }
+              textLabelingContentList.length ?
+              <LabelingNextBtn handleLink={this.handleLink}/> :
+              <LabelingFinishButton/>}
             </div>
           </Grid.Column>
         </Grid>
