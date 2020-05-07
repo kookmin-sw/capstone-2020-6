@@ -17,7 +17,7 @@ export default {
   menuStore: new MenuStore(),
   projectListStore: new ProjectListStore(),
   loginStore: new LoginStore(),
-  labelingTextButtonStore: new LabelingTextSelectStore(),
+  labelingTextSelectStore: new LabelingTextSelectStore(),
   labelingImgStore: new LabelingImgStore(),
   labelingPageStore: new LabelingPageStore(),
   myPageListStore: new MyPageListStore(),
@@ -25,5 +25,5 @@ export default {
   myPageProjectStore: new MyPageProjectStore(),
   labelingRegisterStore: new LabelingRegisterStore(),
   userStore: new UserStore(),
-  registerStore: new RegisterStore()
+  registerStore: new RegisterStore(),
 };

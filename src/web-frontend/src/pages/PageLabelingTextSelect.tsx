@@ -1,51 +1,68 @@
 import React from 'react';
-import {Container, Grid} from 'semantic-ui-react';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {Button, Container, Grid} from 'semantic-ui-react';
 import './PageLabelingTextSelect.css';
 
 // Components
 import LabelingTextButton from '../components/LabelingTextButton';
+import LabelingNextBtn from '../components/LabelingNextBtn';
 
 // for Mobx
 import {inject, observer} from 'mobx-react';
 import LabelingTextSelectStore from '../stores/LabelingTextSelectStore';
 
 interface Props {
-  labelingTextButtonStore?: LabelingTextSelectStore,
+  labelingTextSelectStore?: LabelingTextSelectStore,
 }
 
-@inject('labelingTextButtonStore')
+interface MatchParams {
+  postId: string;
+  dataId: string;
+}
+
+@inject('labelingTextSelectStore')
 @observer
-class PageLabelingTextSelect extends React.Component<Props> {
+class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps<MatchParams>> {
   constructor(props: any) {
     super(props);
-    this.props.labelingTextButtonStore!.getLabelingSubject();
-    this.props.labelingTextButtonStore!.getButtons();
-    this.props.labelingTextButtonStore!.getTextLabelingContents();
+    this.props.labelingTextSelectStore!.getLabelingSubject();
+    this.props.labelingTextSelectStore!.getButtons();
+    this.props.labelingTextSelectStore!.getTextLabelingContents();
+  }
+
+  handleLink = (e: any) => {
+    // TODO: 선택한 버튼 API 로 보내기
+    var num = parseInt(this.props.match.params.dataId) + 1;
+    this.props.history.push(`/labeling/${this.props.match.params.postId}/txtSel/${num}`);
   }
 
   render() {
     return (
       <Container className='container'>
         <div className='labelingTitle'>
-          <h2>{this.props.labelingTextButtonStore?.labelingSubject}</h2>
+          <h2>{this.props.labelingTextSelectStore?.labelingSubject}</h2>
         </div>
         <Grid columns={2}>
           <Grid.Column className='textLabelingContents'>
-            {this.props.labelingTextButtonStore?.textLabelingContents}
+            {this.props.labelingTextSelectStore?.textLabelingContentList[this.props.match.params.dataId].content}
           </Grid.Column>
           <Grid.Column>
             <div className='subTitle'>
-              1. 다음 글의 유형을 선택하시오.
+              {Number(this.props.match.params.dataId) + 1}. 다음 글의 유형을 선택하시오.
             </div>
             <LabelingTextButton
               category={
-                this.props.labelingTextButtonStore!.buttonList
+                this.props.labelingTextSelectStore!.buttonList
               }
               value={
-                this.props.labelingTextButtonStore?.activeButton
+                this.props.labelingTextSelectStore?.activeButton
               }
-              onClick={this.props.labelingTextButtonStore?.setActiveButton}
+              onClick={this.props.labelingTextSelectStore?.setActiveButton}
             />
+            {/* TODO: 버튼 눌렀을 때 선택된 값 저장 + 버튼 눌린 상태 초기화 해줘야함 */}
+            {Number(this.props.match.params.dataId) + 1 !== this.props.labelingTextSelectStore?.textLabelingContentList.length ?
+              <LabelingNextBtn handleLink={this.handleLink}/> : <Button color={'blue'}>종료</Button>
+            }
           </Grid.Column>
         </Grid>
       </Container>
@@ -53,4 +70,4 @@ class PageLabelingTextSelect extends React.Component<Props> {
   }
 }
 
-export default PageLabelingTextSelect;
+export default withRouter(PageLabelingTextSelect);
