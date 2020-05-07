@@ -1,12 +1,20 @@
 import {action, observable} from 'mobx';
 
-export default class LabelingTextButtonStore {
+export default class LabelingTextSelectStore {
+    @observable buttonList: any = [];
+    @observable activeButton: any = -1;
     @observable textLabelingContentList: any = [];
     @observable labelingSubject: any = '';
 
     constructor() {
+      this.buttonList = [];
+      this.activeButton = -1;
       this.textLabelingContentList = [];
       this.labelingSubject = '';
+    }
+
+    @action setActiveButton = (id: any) => {
+      this.activeButton = id;
     }
 
     @action getLabelingSubject = () => {
@@ -66,6 +74,31 @@ export default class LabelingTextButtonStore {
                    '천자만홍이 우는 만물은 피고 있다. 이는 전인 얼음에 것은 크고 ' +
                    '밝은 피부가 설산에서 위하여, 있는가? 이 청춘의 용기가 풍부하게 ' +
                    '보내는 무엇을 있는가?\n\n',
+        },
+      ];
+    }
+
+    @action getButtons = () => {
+      this.buttonList = [
+        {
+          id: 1,
+          category: '일반 광고',
+        },
+        {
+          id: 2,
+          category: '선거 홍보',
+        },
+        {
+          id: 3,
+          category: '사기 범죄',
+        },
+        {
+          id: 4,
+          category: '개인 문자',
+        },
+        {
+          id: 5,
+          category: '택배 안내',
         },
       ];
     }

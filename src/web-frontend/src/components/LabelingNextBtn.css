@@ -1,5 +1,6 @@
+/* TODO: 강제로 마진 줘서 위치 맞추기 보다는 가져다 쓸 때 위치를 조정해주는 것이 바람직 할 듯 합니다. */
 .nextBtn{
-    width: 150px;
-    margin-top: 350px !important;
-    margin-left: 150px !important;
+    /*width: 150px;*/
+    /*margin-top: 350px !important;*/
+    /*margin-left: 150px !important;*/
 }
