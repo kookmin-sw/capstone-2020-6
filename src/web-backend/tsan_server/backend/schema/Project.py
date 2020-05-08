@@ -1,7 +1,8 @@
 import graphene
 import datetime
+from mongodb import db
 from django.utils import timezone
-from backend.models import Dataset, User, Category, Request, Labeling
+from backend.models import Dataset, User, Category, Request, Labeling, Keyword
 from django.contrib.auth import login
 from django.core.exceptions import ValidationError
 from graphene_django.types import DjangoObjectType
@@ -91,34 +92,46 @@ class CreateRequest(graphene.Mutation):
     idx = graphene.Int()
 
     class Arguments:
+        token = graphene.String()
         category = graphene.String()
         subject = graphene.String()
         description = graphene.String()
-        due_date = graphene.Date()
+        oneline_description = graphene.String()
+        start_date = graphene.String()
+        end_date = graphene.String()
         max_cycle = graphene.Int()
         total_point = graphene.Int()
         is_captcha = graphene.Boolean()
-        token = graphene.String()
+        dataset = graphene.String()
+        count_dataset = graphene.Int()
+        keywords = graphene.String()
 
     @only_user
     @only_requester
-    def mutate(self, info, category, subject, description, due_date, max_cycle, total_point, is_captcha, token):
+    def mutate(
+        self,
+        info,
+        token,
+        category,
+        subject,
+        description,
+        oneline_description,
+        start_date,
+        end_date,
+        current_cycle,
+        max_cycle,
+        total_point,
+        is_captcha,
+        dataset,
+        count_dataset,
+        keywords
+    ):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
-        category = Category.objects.get(name=category)
-        rows = Request.objects.filter(subject=subject)
+        category = Category.objects.get(idx=category)
 
-        # 주제가 처음 등록된 경우
-        if not rows:
-            request = Request()
-            request.create(user, category, subject, description, due_date, max_cycle, is_captcha, total_point)
-            message = "'%s' 주제가 등록되었습니다."%(request.subject)
-            return CreateRequest(
-                    message=Message(status=True, message=message),
-                    idx=request.idx
-                )
-        # 같은 주제가 이미 등록되어있는 경우
-        else:
+        if Request.objects.filter(subject=subject).exists():
+            # 같은 주제가 이미 등록되어있는 경우
             # 동일 인물이 시도할 경우: 등록 불가
             if rows.filter(user_id=user.id):
                 return CreateRequest(message=Message(status=False, message="회원님은 이미 같은 주제로 등록하신 프로젝트가 있습니다."))
@@ -131,6 +144,38 @@ class CreateRequest(graphene.Mutation):
                         message=Message(status=True, message=message),
                         idx=request.idx
                     )
+
+        # dataset 모아서 처리하는 부분 들어와야함
+
+        # 주제가 처음 등록된 경우
+        request = Request(
+            category=category,
+            subject=subject,
+            description=description,
+            oneline_description=oneline_description,
+            start_date=datetime.datetime.strptime(start_date, "%Y-%m-%d"),
+            end_date=datetime.datetime.strptime(end_date, "%Y-%m-%d"),
+            current_cycle=current_cycle,
+            max_cycle=max_cycle,
+            total_point=total_point,
+            is_captcha=is_captcha,
+            dataset=dataset,
+            count_dataset=count_dataset
+        )
+        request.save()
+
+        keywords = [x.strip().strip("#") for x in keywords.split("#")]
+        for keyword in keywords:
+            k = Keyword(request=request, name=keyword)
+            k.save()
+        
+
+        message = "'%s' 주제가 등록되었습니다."%(request.subject)
+        return CreateRequest(
+                message=Message(status=True, message=message),
+                idx=request.idx
+            )
+
 
 """
 mutation{

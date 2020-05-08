@@ -21,13 +21,6 @@ interface State {
     value: string;
 }
 
-const labelingOptions = [
-    {key: 'imgCap', value: 'imgCap', text: '[이미지] 캡처형'},
-    {key: 'imgSel', value: 'imgSel', text: '[이미지] 선택형'},
-    {key: 'txtSel', value: 'txtSel', text: '[텍스트] 선택형'},
-    {key: 'txtWrite', value: 'txtWrite', text: '[텍스트] 단답형'}
-]
-
 const years:any = []
 const months:any = []
 const days:any = []
@@ -92,7 +85,7 @@ class PageLabelingRegister extends React.Component<Props, State> {
                             <p className="subjectHeader">라벨링 유형</p>
                             <TsDropDown
                                 placeholder={'라벨링 유형을 선택해주세요.'}
-                                labelingType={labelingOptions}
+                                labelingType={this.props.labelingRegisterStore?.labelingOptions}
                                 handleChange={this.props.labelingRegisterStore?.setLabelingOption}
                                 value={this.props.labelingRegisterStore?.labelingOption}
                             />
@@ -217,7 +210,8 @@ class PageLabelingRegister extends React.Component<Props, State> {
                             <JInput
                                 label="키워드"
                                 placeholder="라벨링 키워드를 해시 태그 형태로 입력해주세요. ( #콜라 #사이다 #맥주 #소주 ... )"
-                                value={''}
+                                value={this.props.labelingRegisterStore?.keywords}
+                                onChange={this.props.labelingRegisterStore?.setKeywords}
                                 type="text"
                             />
                         </Grid.Column>

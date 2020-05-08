@@ -9,6 +9,7 @@ import { gql } from 'apollo-boost'
 export default class LabelingRegisterStore {
     @observable datasets: any = []
     @observable dataset: string = ""
+    @observable labelingOptions: any = []
 
     @observable title: string = "";
     @observable labelingOption: string = "";
@@ -23,9 +24,52 @@ export default class LabelingRegisterStore {
     @observable endDateMonth: string = "";
     @observable endDateDay: string = "";
     @observable countDataset: string = "";
+    @observable isCaptcha: boolean = false;
+    @observable keywords: string = "";
 
     constructor() {
         this.title = ""
+        this.updateLabelingOptions()
+        this.updateDataset()
+    }
+
+    updateLabelingOptions = () => {
+        client.query({
+            query: gql`
+                query GetAllCategory($token: String!) {
+                    getAllCategory(token: $token) {
+                        message {
+                            status
+                            message
+                        }
+                        categorys {
+                            idx
+                            type
+                            name
+                        }
+                    }
+                }
+            `,
+            variables: {
+                token: localStorage.token
+            }
+        })
+            .then(({ data }: any) => {
+                const labelingOptions: any = []
+                data.getAllCategory.categorys.forEach((item: any) => {
+                    labelingOptions.push({
+                        value: item.idx,
+                        text: "[" + item.type + "] " + item.name
+                    })
+                })
+                this.labelingOptions = labelingOptions
+            })
+            .catch(e => {
+                console.error(e)
+            })
+    }
+
+    updateDataset = () => {
         client.query({
             query: gql`
                 query GetAllDataset($token: String!) {
@@ -45,95 +89,152 @@ export default class LabelingRegisterStore {
                 token: localStorage.token
             }
         })
-        .then(({data}:any) => {
-            let datasets:any = [
-                {
-                    value: -1,
-                    text: "데이터셋을 직업 업로드하겠습니다."
-                }
-            ]
-            data.getAllDataset.datasets.forEach((item:any) => {
-              datasets.push({
-                  value: item.idx,
-                  text: item.name
-              })  
+            .then(({ data }: any) => {
+                let datasets: any = [
+                    {
+                        value: -1,
+                        text: "데이터셋을 직업 업로드하겠습니다."
+                    }
+                ]
+                data.getAllDataset.datasets.forEach((item: any) => {
+                    datasets.push({
+                        value: item.idx,
+                        text: item.name
+                    })
+                })
+                this.datasets = datasets
             })
-            this.datasets = datasets
-        })
-        .catch(e => {
-            console.error(e)
-        })
+            .catch(e => {
+                console.error(e)
+            })
     }
 
-    @action setDataset = (e:any, {value}:any) => {
+    @action setDataset = (e: any, { value }: any) => {
         this.dataset = value
     }
 
-    @action setTitle = (e:any) => {
-        this.title = e.target.value 
+    @action setTitle = (e: any) => {
+        this.title = e.target.value
     }
 
-    @action setLabelingOption = (e:any) => {
-        this.labelingOption = e.target.value
+    @action setLabelingOption = (e: any, { value }: any) => {
+        this.labelingOption = value
     }
 
-    @action setOnelineDescription = (e:any) => {
+    @action setOnelineDescription = (e: any) => {
         this.onelineDescription = e.target.value
     }
 
-    @action setDetail = (e:any) => {
+    @action setDetail = (e: any) => {
         this.detail = e.target.value
     }
 
-    @action setReward = (e:any) => {
+    @action setReward = (e: any) => {
         var reward = "" + parseInt(e.target.value)
-        if(reward == "NaN") {
+        if (reward == "NaN") {
             reward = "0"
         }
         this.reward = reward
     }
 
-    @action setCycle = (e:any) => {
+    @action setCycle = (e: any) => {
         var cycle = "" + parseInt(e.target.value)
-        if(cycle == "NaN") {
+        if (cycle == "NaN") {
             cycle = "0"
         }
         this.cycle = cycle
     }
 
-    @action setCountDataset = (e:any) => {
+    @action setCountDataset = (e: any) => {
         var countDataset = "" + parseInt(e.target.value)
-        if(countDataset == "NaN") {
+        if (countDataset == "NaN") {
             countDataset = "0"
         }
         this.countDataset = countDataset
     }
 
-    @action setStartDateYear = (e:any, {value}:any) => {
+    @action setStartDateYear = (e: any, { value }: any) => {
         this.startDateYear = value
     }
 
-    @action setStartDateMonth = (e:any, {value}:any) => {
+    @action setStartDateMonth = (e: any, { value }: any) => {
         this.startDateMonth = value
     }
 
-    @action setStartDateDay = (e:any, {value}:any) => {
+    @action setStartDateDay = (e: any, { value }: any) => {
         this.startDateDay = value
     }
 
-    @action setEndDateYear = (e:any, {value}:any) => {
+    @action setEndDateYear = (e: any, { value }: any) => {
         this.endDateYear = value
     }
 
-    @action setEndDateMonth = (e:any, {value}:any) => {
+    @action setEndDateMonth = (e: any, { value }: any) => {
         this.endDateMonth = value
     }
 
-    @action setEndDateDay = (e:any, {value}:any) => {
+    @action setEndDateDay = (e: any, { value }: any) => {
         this.endDateDay = value
     }
 
+    @action setKeywords = (e:any) => {
+        this.keywords = e.target.value
+    }
+
     @action submit = () => {
-        
+        client.mutate({
+            mutation: gql`
+              mutation CreateAccount(
+                $birthday: String!,
+                $email: String!,
+                $fullname: String!,
+                $isRequester: Boolean!,
+                $isRobot: Boolean!,
+                $password: String!,
+                $phone: String!
+                $username: String!
+              ) {
+                createAccount(
+                  username: $username,
+                  password: $password,
+                  phone: $phone,
+                  isRobot: $isRobot,
+                  isRequester: $isRequester,
+                  fullname: $fullname,
+                  email: $email,
+                  birthday: $birthday
+                ) {
+                  message {
+                    status
+                    message
+                  }
+                }
+              }
+            `,
+            variables: {
+                category: this.labelingOption,
+                description: this.detail,
+                onelineDescription: this.onelineDescription,
+                startDate: this.startDateYear + "-" + this.startDateMonth + "-" + this.startDateDay,
+                endDate: this.endDateYear + "-" + this.endDateMonth + "-" + this.endDateDay,
+                isCaptcha: this.isCaptcha,
+                maxCycle: this.cycle,
+                subject: this.title,
+                token: localStorage.token,
+                dataset: this.dataset,
+                countDataset: this.countDataset,
+                totalPoint: this.reward,
+                keywords: this.keywords
+            }
+        })
+        .then(({ data }: any) => {
+            alert(data.createAccount.message.message)
+            if (data.createAccount.message.status) {
+                window.location.href = "/login"
+            }
+        })
+        .catch(e => {
+            console.log(e)
+        })
     }
 }
