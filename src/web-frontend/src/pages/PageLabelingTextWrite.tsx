@@ -55,7 +55,8 @@ class PageLabelingTextWrite extends React.Component<Props & RouteComponentProps<
               <JInput
                 style={{width: '80%'}}
                 placeholder='다음 글의 유형을 적어주세요.'
-                value={''}
+                value={this.props.labelingTextWriteStore?.labelingTextResultInput}
+                onChange={this.props.labelingTextWriteStore?.setLabelingTextResultInput}
                 type='text'/>
               <Button
                 color={'blue'}
