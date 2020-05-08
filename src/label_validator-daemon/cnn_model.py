@@ -6,10 +6,13 @@ from keras.applications.densenet import preprocess_input, decode_predictions
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 from keras.optimizers import Adam
 from keras.layers import Dense, GlobalAveragePooling2D, Dropout
+from sklearn.model_selection import KFold
 
 conv_base = DenseNet201(include_top = False, weights='imagenet', input_shape=(224,224,3))
 
 early_stopping = EarlyStopping(monitor='val_loss', patience=10)
+
+kf = KFold(n_splits=n_split, shuffle=True)
 
 # +
 num_epochs = 300
@@ -21,6 +24,8 @@ dropout_rate = 0.5
 
 input_shape = (224, 224, 3)
 num_classes = len(labels)
+
+n_split = 5
 
 
 # -
@@ -67,9 +72,14 @@ def extract_features(df, sample_count, num_classes):
 
 def train_model(train_set, valid_set):
 
-    history = model.fit(train_features, train_labels,
-                        epochs=num_epochs,
-                        batch_size=batch_size, 
-                        validation_data=(valid_features, valid_labels),
-                        callbacks = [early_stopping]
-                       )
+    for train_index, test_index in kf.split(total_features):
+        x_train,x_test=total_features[train_index],total_features[test_index]
+        y_train,y_test=total_labels[train_index],total_labels[test_index]
+
+            # Train model
+        history = model.fit(x_train, y_train,
+                            epochs=num_epochs,
+                            batch_size=batch_size, 
+                            validation_data=(x_test, y_test),
+                            callbacks = [early_stopping]
+                           )
