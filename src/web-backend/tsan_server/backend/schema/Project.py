@@ -118,7 +118,6 @@ class CreateRequest(graphene.Mutation):
         oneline_description,
         start_date,
         end_date,
-        current_cycle,
         max_cycle,
         total_point,
         is_captcha,
@@ -146,16 +145,18 @@ class CreateRequest(graphene.Mutation):
                     )
 
         # dataset 모아서 처리하는 부분 들어와야함
+        dataset = Dataset.objects.get(idx=dataset)
 
         # 주제가 처음 등록된 경우
         request = Request(
+            user=user,
             category=category,
             subject=subject,
             description=description,
             oneline_description=oneline_description,
             start_date=datetime.datetime.strptime(start_date, "%Y-%m-%d"),
             end_date=datetime.datetime.strptime(end_date, "%Y-%m-%d"),
-            current_cycle=current_cycle,
+            current_cycle=0,
             max_cycle=max_cycle,
             total_point=total_point,
             is_captcha=is_captcha,
@@ -169,6 +170,19 @@ class CreateRequest(graphene.Mutation):
             k = Keyword(request=request, name=keyword)
             k.save()
         
+        rows = db.text_dataset.aggregate(
+            [{
+                "$sample": {
+                    "size": 1000
+                }
+            }, {
+                "$project": {
+                    "_id": True
+                }
+            }]
+        )
+        
+        db.assigned_dataset.insert_one({"request": request.idx, "dataset": [x['_id'] for x in rows]})
 
         message = "'%s' 주제가 등록되었습니다."%(request.subject)
         return CreateRequest(

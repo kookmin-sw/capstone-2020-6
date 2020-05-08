@@ -184,25 +184,35 @@ export default class LabelingRegisterStore {
     @action submit = () => {
         client.mutate({
             mutation: gql`
-              mutation CreateAccount(
-                $birthday: String!,
-                $email: String!,
-                $fullname: String!,
-                $isRequester: Boolean!,
-                $isRobot: Boolean!,
-                $password: String!,
-                $phone: String!
-                $username: String!
+              mutation CreateRequest(
+                $token: String!,
+                $category: String!,
+                $subject: String!,
+                $description: String!,
+                $onelineDescription: String!,
+                $startDate: String!,
+                $endDate: String!,
+                $maxCycle: Int!,
+                $totalPoint: Int!,
+                $isCaptcha: Boolean!,
+                $dataset: String!,
+                $countDataset: Int!,
+                $keywords: String!
               ) {
-                createAccount(
-                  username: $username,
-                  password: $password,
-                  phone: $phone,
-                  isRobot: $isRobot,
-                  isRequester: $isRequester,
-                  fullname: $fullname,
-                  email: $email,
-                  birthday: $birthday
+                createRequest(
+                    token: $token,
+                    category: $category,
+                    subject: $subject,
+                    description: $description,
+                    onelineDescription: $onelineDescription,
+                    startDate: $startDate,
+                    endDate: $endDate,
+                    maxCycle: $maxCycle,
+                    totalPoint: $totalPoint,
+                    isCaptcha: $isCaptcha,
+                    dataset: $dataset,
+                    countDataset: $countDataset,
+                    keywords: $keywords
                 ) {
                   message {
                     status
@@ -228,9 +238,9 @@ export default class LabelingRegisterStore {
             }
         })
         .then(({ data }: any) => {
-            alert(data.createAccount.message.message)
-            if (data.createAccount.message.status) {
-                window.location.href = "/login"
+            alert(data.createRequest.message.message)
+            if (data.createRequest.message.status) {
+                window.location.href = "/mypage/projects"
             }
         })
         .catch(e => {
