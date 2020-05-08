@@ -75,7 +75,8 @@ class CreateAccount(graphene.Mutation):
             try:
                 new_user.full_clean()
             except ValidationError as e:
-                return CreateAccount(message=Message(status=False, message=str(e)))
+                # return CreateAccount(message=Message(status=False, message=str(e)))
+                return CreateAccount(message=Message(status=False, message="회원가입 형식에 맞춰서 작성해주세요."))
             else:
                 new_user.set_password(password)
                 new_user.save()
