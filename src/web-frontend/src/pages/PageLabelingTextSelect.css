@@ -1,0 +1,28 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+.labelingTitle {
+    margin: 20px 0px 20px 0px;
+}
+
+.textLabelingContents {
+    text-align: justify;
+    line-height: 25px;
+}
+
+.subTitle {
+    margin-bottom: 20px;
+}
+
+.textSelectGrid {
+    position: relative;
+    height: inherit;
+}
+
+.textSelectGrid .finishButtonLocation {
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+}

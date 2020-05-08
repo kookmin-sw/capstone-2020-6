@@ -6,8 +6,8 @@
 .jinput {
     padding: 10px 15px;
     width: 100%;
-    border: 0px solid;
-    border-bottom: 1px solid #ddd;
+    border-width: 0px 0px 1px 0px !important;
+    border-bottom: 1px solid #ddd !important;
     color: #777;
     outline: 0px;
 }

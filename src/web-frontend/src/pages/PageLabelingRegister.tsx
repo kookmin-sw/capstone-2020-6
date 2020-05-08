@@ -4,13 +4,12 @@ import {Container, Form, Radio, Button, Grid, Header, TextArea} from 'semantic-u
 import "./PageLogin.css"
 import JInput from '../components/JInput';
 import {inject, observer} from 'mobx-react';
-import LoginStore from '../stores/loginStore';
 import LabelingRegisterStore from '../stores/LabelingRegisterStore';
 import JSelect from '../components/JSelect';
 import TsDropDown from '../components/TsDropDown';
-import TsTag from '../components/TsTag';
+import FileUpload from "../components/FileUpload";
 
-import './PageLabelingRegister.css'
+import './PageLabelingRegister.css';
 
 interface Props extends RouteComponentProps<any> {
     navigate?: any,
@@ -80,8 +79,12 @@ class PageLabelingRegister extends React.Component<Props, State> {
                             />
                         </Grid.Column>
                     </Grid.Row>
-                    <Grid.Row>
-                        <Grid.Column width={4}>
+                    <Grid.Row columns={2}>
+                        <Grid.Column>
+                            <p className="subjectHeader">썸네일 이미지(jpg, png)</p>
+                            <FileUpload type="img"/>
+                        </Grid.Column>
+                        <Grid.Column>
                             <p className="subjectHeader">라벨링 유형</p>
                             <TsDropDown
                                 placeholder={'라벨링 유형을 선택해주세요.'}
@@ -238,14 +241,11 @@ class PageLabelingRegister extends React.Component<Props, State> {
                         </Grid.Column>
                     </Grid.Row>
                     {
-                        (this.props.labelingRegisterStore?.dataset == "-1") ? (
+                        (this.props.labelingRegisterStore?.dataset !== "-1") ? (
                             <Grid.Row>
                                 <Grid.Column>
                                     <span className="subjectHeader">데이터 셋 업로드(.zip)</span>
-                                    {/*TODO: 파일 업로드*/}
-                                    <Form>
-                                        <TextArea placeholder='파일을 가져와주세요.' style={{minHeight: 200}}/>
-                                    </Form>
+                                    <FileUpload type="zip"/>
                                 </Grid.Column>
                             </Grid.Row>
                         ) : <></>

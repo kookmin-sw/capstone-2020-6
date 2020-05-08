@@ -101,7 +101,7 @@ class App extends React.Component<Props> {
               <Grid>
                 <Grid.Column width={6}>
                   <JSelect
-                    label="생일"
+                    label="생년월일"
                     placeholder="년"
                     options={years}
                     value={this.props.registerStore?.year}
