@@ -44,20 +44,12 @@ class CardProject extends React.Component<Props> {
     super(props);
     this.handleLink = this.handleLink.bind(this);
   }
-
-  state = {open: false}
-  show = () => this.setState({open: true})
-
-  handleConfirm = () => this.setState({open: false})
-  handleCancel = () => this.setState({open: false})
-
   handleLink = (status: string) => {
     if(status !== 'client')
       this.props.history.push(`/labeling/${this.props.id}`);
   }
 
   render() {
-    const {open} = this.state;
     return (
       <div className="card_project">
         <Card className="card_image" onClick={()=>this.handleLink(this.props.status)}>
@@ -73,24 +65,6 @@ class CardProject extends React.Component<Props> {
               &nbsp;|&nbsp;
               {calcAgo(this.props.end_date - this.props.start_date).trim()} 뒤 종료
             </Card.Meta>
-            {this.props.status === 'client' &&
-                <>
-                  <div onClick={this.show}>
-                    <Icon name="trash alternate"/>
-                  </div>
-                  {/*TODO: 의뢰자 라벨링 수정 페이지 경로 설*/}
-                  <Link to={`/labeling/${this.props.id}/`}>
-                  <Icon name="pencil"/>정
-                  </Link>
-                  <Confirm
-                      header={'안내'}
-                      contents={['프로젝트를 정말로 삭제하시겠습니까?']}
-                      open={open}
-                      handleConfirm={this.handleConfirm}
-                      handleCancel={this.handleCancel}
-                  />
-                </>
-            }
             <Card.Description className="card_description">{this.props.description}</Card.Description>
             <ProgressBar
               progress={this.props.progress}
