@@ -1,7 +1,6 @@
 import React from 'react';
 import {Button, Container, Modal} from 'semantic-ui-react';
 import {withRouter, RouteComponentProps} from 'react-router';
-import './PageLabeling.css';
 
 // Components
 import ImagePicker from '../components/image_picker';

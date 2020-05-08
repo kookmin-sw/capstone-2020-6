@@ -4,14 +4,12 @@ import {Container, Form, Radio, Button, Grid, Header, TextArea} from 'semantic-u
 import "./PageLogin.css"
 import JInput from '../components/JInput';
 import {inject, observer} from 'mobx-react';
-import LoginStore from '../stores/loginStore';
 import LabelingRegisterStore from '../stores/LabelingRegisterStore';
 import JSelect from '../components/JSelect';
 import TsDropDown from '../components/TsDropDown';
-import TsTag from '../components/TsTag';
 import FileUpload from "../components/FileUpload";
 
-import './PageLabelingRegister.css'
+import './PageLabelingRegister.css';
 
 interface Props extends RouteComponentProps<any> {
     navigate?: any,

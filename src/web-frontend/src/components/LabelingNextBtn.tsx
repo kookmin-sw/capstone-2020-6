@@ -2,8 +2,6 @@ import React from 'react';
 import {Button} from 'semantic-ui-react';
 import {withRouter, RouteComponentProps} from 'react-router';
 
-import './LabelingNextBtn.css'
-
 interface Props {
     history: any;
     match: any;
