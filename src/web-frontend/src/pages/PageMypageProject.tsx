@@ -3,7 +3,6 @@ import {Link, withRouter} from 'react-router-dom';
 import {Container, Label, Table, Header, Icon} from 'semantic-ui-react';
 import './PageMypageProject.css';
 
-import CardProject from '../components/CardProject';
 import {observer, inject} from 'mobx-react';
 import MyPageProjectStore from '../stores/MyPageProjectStore';
 import Confirm from "../components/TSANConfirm";
@@ -42,6 +41,7 @@ class PageMypageProject extends React.Component<Props> {
                         <Table.Row>
                             <Table.HeaderCell>#</Table.HeaderCell>
                             <Table.HeaderCell>주제명</Table.HeaderCell>
+                            <Table.HeaderCell>라벨링 유형</Table.HeaderCell>
                             <Table.HeaderCell>시작일</Table.HeaderCell>
                             <Table.HeaderCell>마감일</Table.HeaderCell>
                             <Table.HeaderCell>수정</Table.HeaderCell>
@@ -57,6 +57,7 @@ class PageMypageProject extends React.Component<Props> {
                                     <Table.Row>
                                         <Table.Cell>{item.id}</Table.Cell>
                                         <Table.Cell>{item.title}</Table.Cell>
+                                        <Table.Cell>{item.type}</Table.Cell>
                                         <Table.Cell>2020.02.03</Table.Cell>
                                         <Table.Cell>2020.03.03</Table.Cell>
                                         <Table.Cell>
@@ -69,7 +70,7 @@ class PageMypageProject extends React.Component<Props> {
                                                 <Icon name="trash alternate"/>
                                             </div>
                                         </Table.Cell>
-                                        <Table.Cell>완료</Table.Cell>
+                                        <Table.Cell>{item.status}</Table.Cell>
                                     </Table.Row>
                                 </>
                             );

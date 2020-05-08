@@ -47,6 +47,7 @@ class CardProject extends React.Component<Props> {
   handleLink = (status: string) => {
     if(status !== 'client')
       this.props.history.push(`/labeling/${this.props.id}`);
+      window.scroll(0,0);
   }
 
   render() {
