@@ -1,7 +1,6 @@
 import React from "react";
 import {RouteComponentProps, withRouter} from "react-router-dom";
 import {Card, Button} from "semantic-ui-react";
-import './MyPageCard.css'
 
 interface Props extends RouteComponentProps<any> {
     userType: string;

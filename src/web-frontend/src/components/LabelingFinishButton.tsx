@@ -1,42 +1,52 @@
 import React from 'react';
 import {Button} from 'semantic-ui-react';
-import {withRouter, RouteComponentProps, Link} from 'react-router-dom';
 import {History, LocationState} from 'history';
+import {RouteComponentProps, withRouter} from 'react-router';
+
+// Components
+import Confirm from './TSANConfirm';
 
 import './LabelingFinishButton.css';
 
 interface Props {
   history: History<LocationState>;
-  match: any;
 }
 
 interface State {
-  postId: string;
+  open: boolean;
 }
 
 class LabelingFinishButton extends React.Component<Props, State, RouteComponentProps> {
   constructor(props: any) {
     super(props);
     this.state = {
-      postId: '',
+      open: false,
     };
   }
 
-  UNSAFE_componentWillMount(): void {
-    const parserArray = this.props.match.url.split('/');
-    this.setState({postId: parserArray[2]});
-  }
-
+  show = () => this.setState({open: true});
+  handleConfirm = () => {
+    this.setState({open: false});
+    this.props.history.push('/mypage/projects');
+  };
+  handleCancel = () => this.setState({open: false});
   render() {
+    const {open} = this.state;
     return (
       <div>
-        <Link to={`/labeling/${this.state.postId}/finish`}>
-          <Button
-            className='finishBtn'
-            color={'red'}>
-            종료
-          </Button>
-        </Link>
+        <Button
+          className='finishBtn'
+          color={'red'}
+          onClick={this.show}>
+          종료
+        </Button>
+        <Confirm
+          header={'알림'}
+          contents={['프로젝트를 완료하시겠습니까?']}
+          open={open}
+          handleConfirm={this.handleConfirm}
+          handleCancel={this.handleCancel}
+        />
       </div>
     );
   }
