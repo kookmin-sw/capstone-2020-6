@@ -59,6 +59,17 @@ class Category(models.Model):
             pass
         return self
 
+# 키워드
+class Keyword(models.Model):
+    idx = models.AutoField(primary_key=True) 
+    request = models.ForeignKey("Request", on_delete=models.DO_NOTHING, null=True, blank=True)
+    name = models.CharField(max_length=100)
+
+# 데이터셋
+class DatasetDependency(models.Model):
+    idx = models.AutoField(primary_key=True) 
+    request = models.ForeignKey("Request", on_delete=models.DO_NOTHING, null=True, blank=True)
+    mongo_key = models.CharField(max_length=100)
 
 # 의뢰 요청 테이블
 class Request(models.Model):
@@ -68,12 +79,15 @@ class Request(models.Model):
     subject = models.CharField(max_length=100) # 요청 주제
     description = models.TextField(blank=True) # 설명
     # thumbnail = models.ImageField(blank=True, upload_to='media/%Y%m%d/')
+    oneline_description = models.TextField(blank=True) # 설명
     start_date = models.DateTimeField(auto_now_add=True, validators=[validate_date]) # 시작
-    due_date = models.DateTimeField('due date', validators=[validate_date]) # 마감
+    end_date = models.DateTimeField('due date', validators=[validate_date]) # 마감
     current_cycle = models.IntegerField(default=0) # 현재 사이클
     max_cycle = models.IntegerField(default=0) # 최대 사이클
     total_point = models.IntegerField(default=0) # 총 가격
     is_captcha = models.BooleanField(default=False) # 디폴트 reCAPTCHA 비허용
+    dataset = models.ForeignKey("Dataset", on_delete=models.DO_NOTHING, null=True, blank=True) # 데이터셋
+    count_dataset = models.IntegerField(default=0)
     STATE_CHOICES = (
 		('RED', 'before_permission'),
         ('RUN', 'running'),

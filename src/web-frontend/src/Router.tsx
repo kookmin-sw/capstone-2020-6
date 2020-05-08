@@ -19,7 +19,7 @@ import PagePoints from './pages/PagePoints';
 import PageLabelingResult from './pages/PageLabelingResult';
 import PageLabeling from './pages/PageLabeling';
 import PageLabelingTextWrite from './pages/PageLabelingTextWrite';
-import PageLabelingTextButton from './pages/PageLabelingTextButton';
+import PageLabelingTextSelect from './pages/PageLabelingTextSelect';
 import PageLabelingImageCapture from './pages/PageLabelingImageCapture';
 import PageMypageProject from './pages/PageMypageProject';
 import PageCaptcha from './pages/PageCaptcha';
@@ -41,7 +41,6 @@ export interface Props {
 
 @inject('menuStore') @observer
 class App extends React.Component<Props> {
-
   constructor(props: any) {
     super(props);
   }
@@ -80,16 +79,16 @@ class App extends React.Component<Props> {
           <Route path="/labeling/:postId/imgsel/:dataId">
             <PageLabelingImgSelect/>
           </Route>
-          <Route path="/labeling/txtsel">
-            <PageLabelingTextButton/>
+          <Route path="/labeling/:postId/txtsel/:dataId">
+            <PageLabelingTextSelect/>
           </Route>
-          <Route path='/labeling/txtwrite'>
+          <Route path='/labeling/:postId/txtwrite/:dataId'>
             <PageLabelingTextWrite/>
           </Route>
-          <Route path='/labeling/result'>
+          <Route path='/labeling/:postId/result'>
             <PageLabelingResult/>
           </Route>
-          <Route path='/labeling/:postid'>
+          <Route path='/labeling/:postId'>
             <PageLabeling/>
           </Route>
           <Route path='/labelingRegister'>

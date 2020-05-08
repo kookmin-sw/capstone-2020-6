@@ -40,3 +40,14 @@
     flex-direction: row;
     justify-content: space-between;
 }
+
+.textWriteGrid {
+    position: relative;
+    height: inherit;
+}
+
+.textWriteGrid .finishButtonLocation {
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+}

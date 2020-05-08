@@ -106,20 +106,17 @@ class RequestAdmin(admin.ModelAdmin):
         'idx',
         'user',
         'category',
-        'due_date',
         'max_cycle',
         'total_point',
         'state',
     )
     list_filter = (
         'category',
-        'due_date',
     )
     search_fields = (
         'subject',
         'user',
         'category',
-        'due_date',
         'total_point'
     )
 

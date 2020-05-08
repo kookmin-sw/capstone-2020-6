@@ -1,0 +1,10 @@
+.imageSelectRightGrid {
+    position: relative;
+    height: inherit;
+}
+
+.imageSelectRightGrid .finishButtonLocation {
+    position: absolute;
+    bottom: 0px;
+    right: 10px;
+}
