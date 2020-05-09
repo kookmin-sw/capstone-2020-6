@@ -26,6 +26,7 @@ export default class LabelingRegisterStore {
     @observable countDataset: string = "";
     @observable isCaptcha: boolean = false;
     @observable keywords: string = "";
+    @observable image: string = "";
 
     constructor() {
         this.title = ""
@@ -179,6 +180,10 @@ export default class LabelingRegisterStore {
 
     @action setKeywords = (e:any) => {
         this.keywords = e.target.value
+    }
+
+    @action setImage = (link:string) => {
+        this.image = link
     }
 
     @action submit = () => {

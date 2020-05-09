@@ -1,9 +1,9 @@
 import React from 'react';
-import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Container, Form, Radio, Button, Grid, Header, TextArea} from 'semantic-ui-react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Container, Form, Radio, Button, Grid, Header, TextArea } from 'semantic-ui-react';
 import "./PageLogin.css"
 import JInput from '../components/JInput';
-import {inject, observer} from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import LabelingRegisterStore from '../stores/LabelingRegisterStore';
 import JSelect from '../components/JSelect';
 import TsDropDown from '../components/TsDropDown';
@@ -20,27 +20,27 @@ interface State {
     value: string;
 }
 
-const years:any = []
-const months:any = []
-const days:any = []
+const years: any = []
+const months: any = []
+const days: any = []
 
-const nowDate:Date = new Date
+const nowDate: Date = new Date
 
-for(let i:number = nowDate.getFullYear(); i<nowDate.getFullYear() + 2;i++) {
+for (let i: number = nowDate.getFullYear(); i < nowDate.getFullYear() + 2; i++) {
     years.push({
         text: i + "년",
         value: i
     })
 }
 
-for(let i:number = 1; i<=12;i++) {
+for (let i: number = 1; i <= 12; i++) {
     months.push({
         text: i + "월",
         value: i
     })
 }
 
-for(let i:number = 1; i<=31;i++) {
+for (let i: number = 1; i <= 31; i++) {
     days.push({
         text: i + "일",
         value: i
@@ -52,14 +52,14 @@ class PageLabelingRegister extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
         this.state = {
-            value: ''
-        };
+            value: ""
+        }
         this.handleChange = this.handleChange.bind(this);
     }
 
-    handleChange = (e: any, {value}: State) => {
-        console.log({value});
-        this.setState({value});
+    handleChange = (e: any, { value }: State) => {
+        console.log({ value });
+        this.setState({ value });
     };
 
     render() {
@@ -82,7 +82,7 @@ class PageLabelingRegister extends React.Component<Props, State> {
                     <Grid.Row columns={2}>
                         <Grid.Column>
                             <p className="subjectHeader">썸네일 이미지(jpg, png)</p>
-                            <FileUpload type="img"/>
+                            <FileUpload type="img" onChange={this.props.labelingRegisterStore?.setImage}/>
                         </Grid.Column>
                         <Grid.Column>
                             <p className="subjectHeader">라벨링 유형</p>
@@ -111,7 +111,7 @@ class PageLabelingRegister extends React.Component<Props, State> {
                                 <p className="subjectHeader">상세 설명</p>
                                 <TextArea
                                     placeholder='내용을 입력해주세요.'
-                                    style={{minHeight: 200}}
+                                    style={{ minHeight: 200 }}
                                     onChange={this.props.labelingRegisterStore?.setDetail}
                                     value={this.props.labelingRegisterStore?.detail}
                                 />
@@ -122,7 +122,7 @@ class PageLabelingRegister extends React.Component<Props, State> {
                         <Grid.Column>
                             <Grid>
                                 <Grid.Column>
-                                    <br/><br/>
+                                    <br /><br />
                                     <JInput
                                         label="보상 설정"
                                         placeholder="보상 금액을 입력해주세요."
@@ -224,7 +224,7 @@ class PageLabelingRegister extends React.Component<Props, State> {
                             <JSelect
                                 label="데이터셋을 선택해주세요."
                                 placeholder="데이터셋을 선택해주세요."
-                                style={{textAlign: "left"}}
+                                style={{ textAlign: "left" }}
                                 options={this.props.labelingRegisterStore?.datasets}
                                 onChange={this.props.labelingRegisterStore?.setDataset}
                                 value={this.props.labelingRegisterStore?.dataset}
@@ -245,14 +245,14 @@ class PageLabelingRegister extends React.Component<Props, State> {
                             <Grid.Row>
                                 <Grid.Column>
                                     <span className="subjectHeader">데이터 셋 업로드(.zip)</span>
-                                    <FileUpload type="zip"/>
+                                    <FileUpload type="zip" />
                                 </Grid.Column>
                             </Grid.Row>
                         ) : <></>
                     }
 
                     <Grid.Row>
-                        <Grid.Column style={{textAlign: 'right'}}>
+                        <Grid.Column style={{ textAlign: 'right' }}>
                             <Button
                                 className="subjectBtn"
                                 primary
