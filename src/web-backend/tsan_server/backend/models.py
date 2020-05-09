@@ -96,12 +96,13 @@ class Request(models.Model):
     state = models.CharField(max_length=3, choices=STATE_CHOICES, default='RED')
 
     
-    def create(self, user, category, subject, description, due_date, max_cycle, is_captcha, total_point):
+    def create(self, user, category, subject, thumbnail, description, end_date, max_cycle, is_captcha, total_point):
        self.user = user
        self.category = category
        self.subject = subject
+       self.thumbnail = thumbnail
        self.description = description
-       self.due_date = due_date
+       self.end_date = end_date
        self.max_cycle = max_cycle
        self.total_point = total_point
        self.is_captcha = is_captcha
