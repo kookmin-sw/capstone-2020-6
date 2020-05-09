@@ -78,8 +78,8 @@ class Request(models.Model):
     category = models.ForeignKey("Category", on_delete=models.DO_NOTHING, null=True, blank=True) # 데이터 라벨링 유형
     subject = models.CharField(max_length=100) # 요청 주제
     description = models.TextField(blank=True) # 설명
+    thumbnail = models.TextField(blank=True)
     oneline_description = models.TextField(blank=True) # 설명
-    # thumbnail = models.ImageField(upload_to = )
     start_date = models.DateTimeField(auto_now_add=True, validators=[validate_date]) # 시작
     end_date = models.DateTimeField('due date', validators=[validate_date]) # 마감
     current_cycle = models.IntegerField(default=0) # 현재 사이클

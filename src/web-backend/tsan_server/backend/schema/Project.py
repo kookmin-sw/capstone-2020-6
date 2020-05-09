@@ -487,8 +487,6 @@ class Query(graphene.ObjectType):
     """
     # 모든 주제 반환
     get_all_request = graphene.Field(Requests, token=graphene.String())
-    @only_user
-    @only_requester
     def resolve_get_all_request(self, info, token):
         requests = Request.objects.all()
         for request in requests:

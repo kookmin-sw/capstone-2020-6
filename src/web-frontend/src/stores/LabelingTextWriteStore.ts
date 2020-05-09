@@ -3,16 +3,23 @@ import {action, observable} from 'mobx';
 export default class LabelingTextButtonStore {
     @observable textLabelingContentList: any = [];
     @observable labelingSubject: any = '';
+    @observable labelingTextResultInput: any = '';
 
     constructor() {
       this.textLabelingContentList = [];
       this.labelingSubject = '';
+      this.labelingTextResultInput = '';
     }
 
     @action getLabelingSubject = () => {
       this.labelingSubject = '광고 문자 필터링을 위한 Labeling';
-    }
-
+    };
+    @action getLabelingTextResultInput = () => {
+      this.labelingTextResultInput = '';
+    };
+    @action setLabelingTextResultInput = (event: any) => {
+      this.labelingTextResultInput = event.target.value;
+    };
     @action getTextLabelingContents = () => {
       this.textLabelingContentList = [
         {
