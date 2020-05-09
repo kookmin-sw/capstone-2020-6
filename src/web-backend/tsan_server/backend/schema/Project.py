@@ -71,19 +71,24 @@ class CreateDataset(graphene.Mutation):
 mutation{
   createRequest(
     subject:"강아지 코 추출",
+    thumbnail:"~~testURL.jpg"
     description:"비문 인식 연구에 대한 강아지 코 추출 라벨링 주제 입니다."
-    dueDate:"2020-04-30"
+    startDate:"2020-05-12"
+    endDate:"2020-09-30"
     totalPoint:100
     maxCycle:10
     token:""
-    category:"이미지 캡쳐 라벨링"
+    category:1
+    onelineDescription:"test"
+    dataset:1
+    countDataset:1
+    keywords:"test"
     isCaptcha:false
   ) {
   	message{
       status
       message
     }
-    idx
   }
 }
 """
@@ -93,8 +98,9 @@ class CreateRequest(graphene.Mutation):
 
     class Arguments:
         token = graphene.String()
-        category = graphene.String()
+        category = graphene.Int()
         subject = graphene.String()
+        thumbnail = graphene.String()
         description = graphene.String()
         oneline_description = graphene.String()
         start_date = graphene.String()
@@ -102,7 +108,7 @@ class CreateRequest(graphene.Mutation):
         max_cycle = graphene.Int()
         total_point = graphene.Int()
         is_captcha = graphene.Boolean()
-        dataset = graphene.String()
+        dataset = graphene.Int()
         count_dataset = graphene.Int()
         keywords = graphene.String()
 
@@ -114,11 +120,11 @@ class CreateRequest(graphene.Mutation):
         token,
         category,
         subject,
+        thumbnail,
         description,
         oneline_description,
         start_date,
         end_date,
-        current_cycle,
         max_cycle,
         total_point,
         is_captcha,
@@ -129,16 +135,37 @@ class CreateRequest(graphene.Mutation):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
         category = Category.objects.get(idx=category)
+        dataset = Dataset.objects.get(idx=dataset)
 
         if Request.objects.filter(subject=subject).exists():
             # 같은 주제가 이미 등록되어있는 경우
             # 동일 인물이 시도할 경우: 등록 불가
-            if rows.filter(user_id=user.id):
+            if Request.objects.filter(user_id=user.id):
                 return CreateRequest(message=Message(status=False, message="회원님은 이미 같은 주제로 등록하신 프로젝트가 있습니다."))
             # 다른 사람이 시도할 경우: 등록 가능
             else:
-                request = Request()
-                request.create(user, category, subject, description, due_date, max_cycle, is_captcha, total_point)
+                request = Request(
+                    category=category,
+                    subject=subject,
+                    thumbnail = thumbnail,
+                    description=description,
+                    oneline_description=oneline_description,
+                    start_date=datetime.datetime.strptime(start_date, "%Y-%m-%d"),
+                    end_date=datetime.datetime.strptime(end_date, "%Y-%m-%d"),
+                    current_cycle=0,
+                    max_cycle=max_cycle,
+                    total_point=total_point,
+                    is_captcha=is_captcha,
+                    dataset=dataset,
+                    count_dataset=count_dataset
+                )
+                request.save()
+
+                keywords = [x.strip().strip("#") for x in keywords.split("#")]
+                for keyword in keywords:
+                    k = Keyword(request=request, name=keyword)
+                    k.save()
+
                 message = "'%s' 주제가 등록되었습니다. 다른 의뢰자가 등록한 같은 주제가 존재합니다."%(request.subject)
                 return CreateRequest(
                         message=Message(status=True, message=message),
@@ -151,11 +178,12 @@ class CreateRequest(graphene.Mutation):
         request = Request(
             category=category,
             subject=subject,
+            thumbnail = thumbnail,
             description=description,
             oneline_description=oneline_description,
             start_date=datetime.datetime.strptime(start_date, "%Y-%m-%d"),
             end_date=datetime.datetime.strptime(end_date, "%Y-%m-%d"),
-            current_cycle=current_cycle,
+            current_cycle=0,
             max_cycle=max_cycle,
             total_point=total_point,
             is_captcha=is_captcha,
@@ -205,11 +233,12 @@ class UpdateRequest(graphene.Mutation):
 
     class Arguments:
         idx = graphene.Int()
-        category = graphene.String()
+        category = graphene.Int()
+        thumbnail = graphene.String()
         subject = graphene.String()
         description = graphene.String()
         start_date = graphene.Date()
-        due_date = graphene.Date()
+        end_date = graphene.Date()
         max_cycle = graphene.Int()
         total_point = graphene.Int()
         is_captcha = graphene.Boolean()
@@ -217,14 +246,14 @@ class UpdateRequest(graphene.Mutation):
 
     @only_user
     @only_requester
-    def mutate(self, info, idx, category, subject, description, start_date, due_date, max_cycle, total_point, is_captcha, token):
+    def mutate(self, info, idx, category, subject, thumbnail, description, start_date, end_date, max_cycle, total_point, is_captcha, token):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
-        category = Category.objects.get(name=category)
+        category = Category.objects.get(idx=category)
         try:
             request = Request.objects.get(idx=idx)
-            update = Request(user=user, category=category, subject=subject, description=description, 
-                            start_date=str(start_date), due_date=str(due_date), 
+            update = Request(user=user, category=category, subject=subject, thumbnail=thumbnail, description=description, 
+                            start_date=str(start_date), end_date=str(end_date), 
                             max_cycle=max_cycle, total_point=total_point, is_captcha=is_captcha, state=request.state)
             try:
                 update.clean()
@@ -233,9 +262,10 @@ class UpdateRequest(graphene.Mutation):
             else:
                 request.category = category
                 request.subject = subject
+                request.thumbnail = thumbnail
                 request.description = description
                 request.start_date = start_date
-                request.due_date = due_date
+                request.end_date = end_date
                 request.max_cycle = max_cycle
                 request.total_point = total_point
                 request.is_captcha = is_captcha
@@ -280,7 +310,7 @@ class StartRequest(graphene.Mutation):
         try:
             request = Request.objects.get(idx=idx)
             now = str(timezone.localtime())
-            update = Request(user=user, category=request.category, subject=request.subject, description=request.description, 
+            update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject, description=request.description, 
                             start_date=now, due_date=str(request.due_date), 
                             max_cycle=request.max_cycle, total_point=request.total_point, is_captcha=request.is_captcha, state='RUN')
             try:
@@ -331,7 +361,7 @@ class EndRequest(graphene.Mutation):
         try:
             request = Request.objects.get(idx=idx)
             now = str(timezone.localtime())
-            update = Request(user=user, category=request.category, subject=request.subject, description=request.description, 
+            update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject, description=request.description, 
                             start_date=str(request.start_date), due_date=now, 
                             max_cycle=request.max_cycle, total_point=request.total_point, is_captcha=request.is_captcha, state='END')
             try:
