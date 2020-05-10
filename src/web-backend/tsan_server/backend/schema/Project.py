@@ -505,7 +505,7 @@ class Query(graphene.ObjectType):
         subject
         description
         startDate
-        dueDate
+        endDate
         currentCycle
         maxCycle
         totalPoint
@@ -544,7 +544,7 @@ class Query(graphene.ObjectType):
         subject
         description
         startDate
-        dueDate
+        endDate
         currentCycle
         maxCycle
         totalPoint
@@ -595,7 +595,7 @@ class Query(graphene.ObjectType):
             subject
             description
             startDate
-            dueDate
+            endDate
             currentCycle
             maxCycle
             totalPoint
@@ -625,3 +625,49 @@ class Query(graphene.ObjectType):
             return Labelings(message=Message(status=True, message=""), labelings=labelings)
         else:
             return Labelings(message=Message(status=True, message="해당 주제 목록이 없습니다."), labelings=labelings)
+
+    """
+    query {
+    getStateRequest(state:"RED", token: "의뢰자/관리자") {
+        message {
+        status
+        message
+        }
+        requests {
+        idx
+        user {
+            id
+            username
+            password
+            email
+        }
+        category {
+            name
+            type
+        }
+        subject
+        description
+        startDate
+        endDate
+        currentCycle
+        maxCycle
+        totalPoint
+        }
+    }
+    }
+    """
+    # 특정 state에 대한 주제 반환
+    get_state_request = graphene.Field(Requests, state=graphene.String(), token=graphene.String())
+    def resolve_get_state_request(self, info, state, token):
+        res = jwt_decode_handler(token)
+        users = User.objects.get(username=res['username'])
+        request_rows = Request.objects.filter(state=state)
+        for request in request_rows:
+            if request.user is not None:
+                request.user.password = "*****"
+                request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
+        if request_rows:
+            message = "'%s' 상태에 대한 주제 목록 반환" %(request.state)
+            return Requests(message=Message(status=True, message=message), requests=request_rows)
+        else:
+            return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
