@@ -137,42 +137,13 @@ class CreateRequest(graphene.Mutation):
         category = Category.objects.get(idx=category)
         dataset = Dataset.objects.get(idx=dataset)
 
-        if Request.objects.filter(subject=subject).exists():
+        already_exist = Request.objects.filter(subject=subject).exists()
+        if already_exist:
             # 같은 주제가 이미 등록되어있는 경우
             # 동일 인물이 시도할 경우: 등록 불가
             if Request.objects.filter(user_id=user.id):
                 return CreateRequest(message=Message(status=False, message="회원님은 이미 같은 주제로 등록하신 프로젝트가 있습니다."))
-            # 다른 사람이 시도할 경우: 등록 가능
-            else:
-                request = Request(
-                    category=category,
-                    subject=subject,
-                    thumbnail = thumbnail,
-                    description=description,
-                    oneline_description=oneline_description,
-                    start_date=datetime.datetime.strptime(start_date, "%Y-%m-%d"),
-                    end_date=datetime.datetime.strptime(end_date, "%Y-%m-%d"),
-                    current_cycle=0,
-                    max_cycle=max_cycle,
-                    total_point=total_point,
-                    is_captcha=is_captcha,
-                    dataset=dataset,
-                    count_dataset=count_dataset
-                )
-                request.save()
 
-                keywords = [x.strip().strip("#") for x in keywords.split("#")]
-                for keyword in keywords:
-                    k = Keyword(request=request, name=keyword)
-                    k.save()
-
-                message = "'%s' 주제가 등록되었습니다. 다른 의뢰자가 등록한 같은 주제가 존재합니다."%(request.subject)
-                return CreateRequest(
-                        message=Message(status=True, message=message),
-                        idx=request.idx
-                    )
-
-        # 주제가 처음 등록된 경우
         request = Request(
             user=user,
             category=category,
@@ -210,12 +181,22 @@ class CreateRequest(graphene.Mutation):
         
         db.assigned_dataset.insert_one({"request": request.idx, "dataset": [x['_id'] for x in rows]})
 
-        message = "'%s' 주제가 등록되었습니다."%(request.subject)
-        return CreateRequest(
-                message=Message(status=True, message=message),
-                idx=request.idx
-            )
-
+        # 같은 주제가 이미 등록되어있는 경우
+        # 다른 사람이 시도할 경우: 등록 가능
+        if already_exist:
+            message = "'%s' 주제가 등록되었습니다. 다른 의뢰자가 등록한 같은 주제가 존재합니다."%(request.subject)
+            return CreateRequest(
+                    message=Message(status=True, message=message),
+                    idx=request.idx
+                )
+        # 주제가 처음 등록된 경우
+        else:
+            message = "'%s' 주제가 등록되었습니다."%(request.subject)
+            return CreateRequest(
+                    message=Message(status=True, message=message),
+                    idx=request.idx
+                )
+                
 
 """
 mutation{
