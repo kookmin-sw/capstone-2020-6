@@ -8,6 +8,10 @@ rows = db.text_dataset.aggregate(
         "$sample": {
             "size": 1000
         }
+    }, {
+        "$project": {
+            "_id": True
+        }
     }]
 )
 print(">> 2")

@@ -26,6 +26,7 @@ export default class LabelingRegisterStore {
     @observable countDataset: string = "";
     @observable isCaptcha: boolean = false;
     @observable keywords: string = "";
+    @observable image: string = "";
 
     constructor() {
         this.title = ""
@@ -181,28 +182,44 @@ export default class LabelingRegisterStore {
         this.keywords = e.target.value
     }
 
+    @action setImage = (link:string) => {
+        this.image = link
+    }
+
     @action submit = () => {
         client.mutate({
             mutation: gql`
-              mutation CreateAccount(
-                $birthday: String!,
-                $email: String!,
-                $fullname: String!,
-                $isRequester: Boolean!,
-                $isRobot: Boolean!,
-                $password: String!,
-                $phone: String!
-                $username: String!
+              mutation CreateRequest(
+                $token: String!,
+                $category: Int!,
+                $subject: String!,
+                $description: String!,
+                $onelineDescription: String!,
+                $startDate: String!,
+                $endDate: String!,
+                $maxCycle: Int!,
+                $totalPoint: Int!,
+                $isCaptcha: Boolean!,
+                $dataset: Int!,
+                $countDataset: Int!,
+                $keywords: String!,
+                $thumbnail: String!
               ) {
-                createAccount(
-                  username: $username,
-                  password: $password,
-                  phone: $phone,
-                  isRobot: $isRobot,
-                  isRequester: $isRequester,
-                  fullname: $fullname,
-                  email: $email,
-                  birthday: $birthday
+                createRequest(
+                    token: $token,
+                    category: $category,
+                    subject: $subject,
+                    description: $description,
+                    onelineDescription: $onelineDescription,
+                    startDate: $startDate,
+                    endDate: $endDate,
+                    maxCycle: $maxCycle,
+                    totalPoint: $totalPoint,
+                    isCaptcha: $isCaptcha,
+                    dataset: $dataset,
+                    countDataset: $countDataset,
+                    keywords: $keywords,
+                    thumbnail: $thumbnail
                 ) {
                   message {
                     status
@@ -221,16 +238,17 @@ export default class LabelingRegisterStore {
                 maxCycle: this.cycle,
                 subject: this.title,
                 token: localStorage.token,
-                dataset: this.dataset,
+                dataset: parseInt(this.dataset),
                 countDataset: this.countDataset,
                 totalPoint: this.reward,
-                keywords: this.keywords
+                keywords: this.keywords,
+                thumbnail: this.image
             }
         })
         .then(({ data }: any) => {
-            alert(data.createAccount.message.message)
-            if (data.createAccount.message.status) {
-                window.location.href = "/login"
+            alert(data.createRequest.message.message)
+            if (data.createRequest.message.status) {
+                window.location.href = "/mypage/projects"
             }
         })
         .catch(e => {

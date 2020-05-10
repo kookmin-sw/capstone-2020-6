@@ -172,10 +172,9 @@ class CreateRequest(graphene.Mutation):
                         idx=request.idx
                     )
 
-        # dataset 모아서 처리하는 부분 들어와야함
-
         # 주제가 처음 등록된 경우
         request = Request(
+            user=user,
             category=category,
             subject=subject,
             thumbnail = thumbnail,
@@ -197,6 +196,19 @@ class CreateRequest(graphene.Mutation):
             k = Keyword(request=request, name=keyword)
             k.save()
         
+        rows = db.text_dataset.aggregate(
+            [{
+                "$sample": {
+                    "size": 1000
+                }
+            }, {
+                "$project": {
+                    "_id": True
+                }
+            }]
+        )
+        
+        db.assigned_dataset.insert_one({"request": request.idx, "dataset": [x['_id'] for x in rows]})
 
         message = "'%s' 주제가 등록되었습니다."%(request.subject)
         return CreateRequest(
