@@ -1,5 +1,6 @@
 import React from 'react';
 import {Container, Grid} from 'semantic-ui-react';
+import {Link} from 'react-router-dom';
 import './PageMain.css';
 
 // Components
@@ -28,7 +29,12 @@ class App extends React.Component<Props> {
         <Header />
         <br />
         <Container style={{position: 'relative'}}>
-          <h3>진행중인 라벨링 프로젝트</h3>
+          <div className='mainPageShowMore'>
+            <h3>진행중인 라벨링 프로젝트</h3>
+            <Link to='allProjects'>
+              <div className='showMoreLink'>더보기</div>
+            </Link>
+          </div>
           <Grid columns={4}>
             {this.props.projectListStore!.list.map((item: any, key:any) => {
               return (

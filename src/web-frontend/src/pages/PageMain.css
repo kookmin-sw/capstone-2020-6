@@ -1,23 +1,11 @@
-.main_body_image {
-    width: 100%;
-    height: 350px;
-    background-size: cover;
-    background-position: center center;
-    text-align: center;
+.mainPageShowMore {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
-.main_body_image > div {
-    background-color: rgba(0, 0, 0, 0.5);
-    height: 100%;
-    color: #fff;
-    font-size: 40px;
+.showMoreLink {
+    display: flex;
     font-weight: bold;
-    padding-top: 100px;
-}
-
-.main_body_text {
-    font-size: 20px;
-    line-height: 20px;
-    font-weight: 100;
-    margin-top: 50px;
+    color: black;
 }

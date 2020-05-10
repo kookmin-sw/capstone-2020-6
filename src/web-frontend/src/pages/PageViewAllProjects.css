@@ -1,0 +1,16 @@
+.projectSearchBar {
+    margin: 20px 0px 20px 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.allProjectHeader {
+    text-align: center;
+}
+
+.searchBarBox {
+    display: flex;
+    flex-direction: row;
+}
