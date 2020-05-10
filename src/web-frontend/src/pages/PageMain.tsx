@@ -30,7 +30,7 @@ class App extends React.Component<Props> {
         <Container style={{position: 'relative'}}>
           <h3>진행중인 라벨링 프로젝트</h3>
           <Grid columns={4}>
-            {this.props.projectListStore!.list.map((item: any, key:any) => {
+            {this.props.projectListStore!.listRun.map((item: any, key:any) => {
               return (
                 <Grid.Column key={key}>
                   <CardProject
@@ -54,7 +54,7 @@ class App extends React.Component<Props> {
           </Grid>
           <h3>완료된 라벨링 프로젝트</h3>
           <Grid columns={4}>
-            {this.props.projectListStore!.list.map((item: any, key:any) => {
+            {this.props.projectListStore!.listEnd.map((item: any, key:any) => {
               return (
                 <Grid.Column key={key}>
                   <CardProject
