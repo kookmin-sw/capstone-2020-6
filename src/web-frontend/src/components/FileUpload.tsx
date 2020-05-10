@@ -54,8 +54,7 @@ class FileUpload extends React.Component<Props, State> {
         })
         const data = await response.json()
         if (data.success) {
-            const name = files[index].name
-            this.props.onChange(data.link)
+            this.props.onChange(data.data.link)
             alert("이미지 업로드 성공")
         } else {
             alert("이미지 업로드 실패")

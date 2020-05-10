@@ -191,7 +191,7 @@ export default class LabelingRegisterStore {
             mutation: gql`
               mutation CreateRequest(
                 $token: String!,
-                $category: String!,
+                $category: Int!,
                 $subject: String!,
                 $description: String!,
                 $onelineDescription: String!,
@@ -200,9 +200,10 @@ export default class LabelingRegisterStore {
                 $maxCycle: Int!,
                 $totalPoint: Int!,
                 $isCaptcha: Boolean!,
-                $dataset: String!,
+                $dataset: Int!,
                 $countDataset: Int!,
-                $keywords: String!
+                $keywords: String!,
+                $thumbnail: String!
               ) {
                 createRequest(
                     token: $token,
@@ -217,7 +218,8 @@ export default class LabelingRegisterStore {
                     isCaptcha: $isCaptcha,
                     dataset: $dataset,
                     countDataset: $countDataset,
-                    keywords: $keywords
+                    keywords: $keywords,
+                    thumbnail: $thumbnail
                 ) {
                   message {
                     status
@@ -236,10 +238,11 @@ export default class LabelingRegisterStore {
                 maxCycle: this.cycle,
                 subject: this.title,
                 token: localStorage.token,
-                dataset: this.dataset,
+                dataset: parseInt(this.dataset),
                 countDataset: this.countDataset,
                 totalPoint: this.reward,
-                keywords: this.keywords
+                keywords: this.keywords,
+                thumbnail: this.image
             }
         })
         .then(({ data }: any) => {

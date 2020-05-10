@@ -172,9 +172,6 @@ class CreateRequest(graphene.Mutation):
                         idx=request.idx
                     )
 
-        # dataset 모아서 처리하는 부분 들어와야함
-        dataset = Dataset.objects.get(idx=dataset)
-
         # 주제가 처음 등록된 경우
         request = Request(
             user=user,
