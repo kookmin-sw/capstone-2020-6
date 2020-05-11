@@ -196,7 +196,7 @@ class CreateRequest(graphene.Mutation):
                     message=Message(status=True, message=message),
                     idx=request.idx
                 )
-                
+
 
 """
 mutation{
@@ -466,7 +466,7 @@ class DeleteLabelerTakenProject(graphene.Mutation):
 class Query(graphene.ObjectType):
     """
     query {
-    getAllRequest(token: "의뢰자/관리자") {
+    getAllRequest {
         message {
         status
         message
@@ -493,19 +493,53 @@ class Query(graphene.ObjectType):
         }
     }
     }
+
+    # 원하는 인자를 사용하여 해당 필드로 정렬 가능 (앞에 '-' 붙이면 해당 필드에 대해 내림차순)
+    query {
+    getAllRequest(orderby:"start_date") {
+        message {
+        status
+        message
+        }
+        requests {
+        idx
+        user {
+            id
+            username
+            password
+            email
+        }
+        category {
+            name
+            type
+        }
+        subject
+        description
+        startDate
+        endDate
+        currentCycle
+        maxCycle
+        totalPoint
+        }
+    }
+}
     """
-    # 모든 주제 반환
-    get_all_request = graphene.Field(Requests)
-    def resolve_get_all_request(self, info):
-        requests = Request.objects.all()
+    get_all_request = graphene.Field(Requests, orderby=graphene.String(required=False))
+    def resolve_get_all_request(self, info, **kwargs):
+        order = kwargs.get("orderby", None)
+        if order:
+            requests = Request.objects.all().order_by(order, '-idx') # 인자값 순, 최신 등록 순
+        else:
+            requests = Request.objects.all().order_by('-idx') # 최신 등록 순
         for request in requests:
             if request.user is not None:
                 request.user.password = "*****"
                 request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
         return Requests(message=Message(status=True, message=""), requests=requests)
+
     """
     query {
-    getRequesterRequest(token: "의뢰자/관리자") {
+    getRequesterRequest(token:"외뢰자/관리자") {
         message {
         status
         message
@@ -552,9 +586,7 @@ class Query(graphene.ObjectType):
 
     """
     query{
-    getLabelerTakenProject(
-        token:"참여자/관리자"
-    ) {
+    getLabelerTakenProject {
         message {
             status
             message
