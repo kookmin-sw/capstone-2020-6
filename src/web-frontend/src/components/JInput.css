@@ -12,6 +12,10 @@
     outline: 0px;
 }
 
+.jinput > .visible.transition{
+    height: 350px;
+}
+
 .jinput::placeholder {
     color: #aaa;
 }
