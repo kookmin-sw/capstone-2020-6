@@ -11,6 +11,7 @@ import MyPageProjectStore from './MyPageProjectStore';
 import LabelingRegisterStore from './LabelingRegisterStore';
 import UserStore from './UserStore';
 import RegisterStore from './RegisterStore';
+import PageViewAllProjectsStore from './PageViewAllProjectsStore';
 
 export default {
   navigationStore: new NavigationStore(),
@@ -26,4 +27,5 @@ export default {
   labelingRegisterStore: new LabelingRegisterStore(),
   userStore: new UserStore(),
   registerStore: new RegisterStore(),
+  pageViewAllProjectsStore: new PageViewAllProjectsStore(),
 };
