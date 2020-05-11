@@ -44,7 +44,6 @@ class PageMypageProject extends React.Component<Props> {
                             <Table.HeaderCell>라벨링 유형</Table.HeaderCell>
                             <Table.HeaderCell>시작일</Table.HeaderCell>
                             <Table.HeaderCell>마감일</Table.HeaderCell>
-                            <Table.HeaderCell>수정</Table.HeaderCell>
                             <Table.HeaderCell>삭제</Table.HeaderCell>
                             <Table.HeaderCell>비고</Table.HeaderCell>
                         </Table.Row>
@@ -56,15 +55,10 @@ class PageMypageProject extends React.Component<Props> {
                                 <>
                                     <Table.Row>
                                         <Table.Cell>{item.id}</Table.Cell>
-                                        <Table.Cell>{item.title}</Table.Cell>
+                                        <Table.Cell><Link to={'/updateRegister'}>{item.title}</Link></Table.Cell>
                                         <Table.Cell>{item.type}</Table.Cell>
                                         <Table.Cell>2020.02.03</Table.Cell>
                                         <Table.Cell>2020.03.03</Table.Cell>
-                                        <Table.Cell>
-                                            <Link to={`/updateRegister`}>
-                                                <Icon name="pencil"/>
-                                            </Link>
-                                        </Table.Cell>
                                         <Table.Cell>
                                             <div onClick={this.show}>
                                                 <Icon name="trash alternate"/>
