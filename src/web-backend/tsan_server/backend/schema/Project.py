@@ -523,14 +523,31 @@ class Query(graphene.ObjectType):
         }
     }
 }
+    
+    # offset : 몇 부터 (0 이면 처음것 부터), limit : 몇 개
+    query {
+    getAllRequest(
+      offset: 1,
+      limit: 2
+    ) {
+        생략...
+
     """
-    get_all_request = graphene.Field(Requests, orderby=graphene.String(required=False))
+    get_all_request = graphene.Field(Requests, 
+        orderby=graphene.String(required=False), 
+        offset=graphene.Int(required=False),
+        limit=graphene.Int(required=False)
+        )
     def resolve_get_all_request(self, info, **kwargs):
         order = kwargs.get("orderby", None)
+        offset = kwargs.get("offset", None)
+        limit = kwargs.get("limit", None)
+
         if order:
-            requests = Request.objects.all().order_by(order, '-idx') # 인자값 순, 최신 등록 순
+            requests = Request.objects.all().order_by(order, '-idx') [offset:offset+limit] # 인자값 순, 최신 등록 순
         else:
-            requests = Request.objects.all().order_by('-idx') # 최신 등록 순
+            requests = Request.objects.all().order_by('-idx') [offset:offset+limit] # 최신 등록 순
+
         for request in requests:
             if request.user is not None:
                 request.user.password = "*****"
