@@ -1,6 +1,6 @@
 import React from 'react';
-import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Button, Container, Table} from 'semantic-ui-react';
+import {RouteComponentProps, withRouter, Link} from 'react-router-dom';
+import {Button, Container, Table, Icon} from 'semantic-ui-react';
 import './PageViewAllProjects.css';
 
 // Components
@@ -59,22 +59,26 @@ class PageViewAllProjects extends React.Component<Props> {
                 <Table.HeaderCell>시작일</Table.HeaderCell>
                 <Table.HeaderCell>마감일</Table.HeaderCell>
                 <Table.HeaderCell>진행 상황</Table.HeaderCell>
+                <Table.HeaderCell>자세히</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
               {this.props.pageViewAllProjectsStore!.list.map((item: any) => {
                 return (
-                  <>
-                    <Table.Row>
-                      <Table.Cell>{item.id}</Table.Cell>
-                      <Table.Cell>{item.title}</Table.Cell>
-                      <Table.Cell>{item.type}</Table.Cell>
-                      {/* TODO: Change to date format. */}
-                      <Table.Cell>2020.01.01</Table.Cell>
-                      <Table.Cell>2020.05.05</Table.Cell>
-                      <Table.Cell>{item.progress}/{item.all}</Table.Cell>
-                    </Table.Row>
-                  </>
+                  <Table.Row key={item.id}>
+                    <Table.Cell>{item.id}</Table.Cell>
+                    <Table.Cell>{item.title}</Table.Cell>
+                    <Table.Cell>{item.type}</Table.Cell>
+                    {/* TODO: Change to date format. */}
+                    <Table.Cell>2020.01.01</Table.Cell>
+                    <Table.Cell>2020.05.05</Table.Cell>
+                    <Table.Cell>{item.progress}/{item.all}</Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/labeling/${item.id}`}>
+                        <Icon name='search'/>
+                      </Link>
+                    </Table.Cell>
+                  </Table.Row>
                 );
               })}
             </Table.Body>
