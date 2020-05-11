@@ -59,7 +59,6 @@ class PageViewAllProjects extends React.Component<Props> {
                 <Table.HeaderCell>시작일</Table.HeaderCell>
                 <Table.HeaderCell>마감일</Table.HeaderCell>
                 <Table.HeaderCell>진행 상황</Table.HeaderCell>
-                <Table.HeaderCell>자세히</Table.HeaderCell>
               </Table.Row>
             </Table.Header>
             <Table.Body>
@@ -67,17 +66,18 @@ class PageViewAllProjects extends React.Component<Props> {
                 return (
                   <Table.Row key={item.id}>
                     <Table.Cell>{item.id}</Table.Cell>
-                    <Table.Cell>{item.title}</Table.Cell>
+                    <Table.Cell>
+                      <Link to={`/labeling/${item.id}`}>
+                        <div className='normalTitleTextStyle'>
+                          {item.title}
+                        </div>
+                      </Link>
+                    </Table.Cell>
                     <Table.Cell>{item.type}</Table.Cell>
                     {/* TODO: Change to date format. */}
                     <Table.Cell>2020.01.01</Table.Cell>
                     <Table.Cell>2020.05.05</Table.Cell>
                     <Table.Cell>{item.progress}/{item.all}</Table.Cell>
-                    <Table.Cell>
-                      <Link to={`/labeling/${item.id}`}>
-                        <Icon name='search'/>
-                      </Link>
-                    </Table.Cell>
                   </Table.Row>
                 );
               })}
