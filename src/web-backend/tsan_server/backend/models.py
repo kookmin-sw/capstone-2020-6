@@ -81,7 +81,7 @@ class Request(models.Model):
     thumbnail = models.TextField(blank=True)
     oneline_description = models.TextField(blank=True) # 설명
     start_date = models.DateTimeField(auto_now_add=True, validators=[validate_date]) # 시작
-    end_date = models.DateTimeField('due date', validators=[validate_date]) # 마감
+    end_date = models.DateTimeField(validators=[validate_date]) # 마감
     current_cycle = models.IntegerField(default=0) # 현재 사이클
     max_cycle = models.IntegerField(default=0) # 최대 사이클
     total_point = models.IntegerField(default=0) # 총 가격
@@ -114,9 +114,9 @@ class Request(models.Model):
             pass
         if validate_date(self.start_date):
             pass
-        if validate_date(self.due_date):
+        if validate_date(self.end_date):
             pass
-        if self.due_date < self.start_date:
+        if self.end_date < self.start_date:
             raise ValidationError("마감일은 시작일 보다 이후여야 합니다.")
         if (self.is_captcha == True and self.category.idx != 4):
             raise ValidationError("해당 라벨링 유형은 CAPTCHA를 허용할 수 없는 유형입니다. (이미지 선택 라벨링 유형만 가능)")
