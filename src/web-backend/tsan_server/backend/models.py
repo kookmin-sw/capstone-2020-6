@@ -114,9 +114,9 @@ class Request(models.Model):
             pass
         if validate_date(self.start_date):
             pass
-        if validate_date(self.due_date):
+        if validate_date(self.end_date):
             pass
-        if self.due_date < self.start_date:
+        if self.end_date < self.start_date:
             raise ValidationError("마감일은 시작일 보다 이후여야 합니다.")
         if (self.is_captcha == True and self.category.idx != 4):
             raise ValidationError("해당 라벨링 유형은 CAPTCHA를 허용할 수 없는 유형입니다. (이미지 선택 라벨링 유형만 가능)")
