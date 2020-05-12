@@ -81,7 +81,7 @@ class Request(models.Model):
     thumbnail = models.TextField(blank=True)
     oneline_description = models.TextField(blank=True) # 설명
     start_date = models.DateTimeField(auto_now_add=True, validators=[validate_date]) # 시작
-    end_date = models.DateTimeField('due date', validators=[validate_date]) # 마감
+    end_date = models.DateTimeField(validators=[validate_date]) # 마감
     current_cycle = models.IntegerField(default=0) # 현재 사이클
     max_cycle = models.IntegerField(default=0) # 최대 사이클
     total_point = models.IntegerField(default=0) # 총 가격

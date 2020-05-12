@@ -201,7 +201,7 @@ class CreateRequest(graphene.Mutation):
 """
 mutation{
   updateRequest(
-    idx:25
+    idx:8
     subject:"강아지 코 추출",
     description:"비문 인식 연구에 대한 강아지 코 추출 라벨링 주제 입니다."
     dueDate:"2020-06-30"
@@ -227,27 +227,61 @@ class UpdateRequest(graphene.Mutation):
     class Arguments:
         idx = graphene.Int()
         category = graphene.Int()
-        thumbnail = graphene.String()
         subject = graphene.String()
+        thumbnail = graphene.String()
         description = graphene.String()
-        start_date = graphene.Date()
-        end_date = graphene.Date()
+        oneline_description = graphene.String()
+        start_date = graphene.String()
+        end_date = graphene.String()
         max_cycle = graphene.Int()
         total_point = graphene.Int()
         is_captcha = graphene.Boolean()
+        dataset = graphene.Int()
+        count_dataset = graphene.Int()
         token = graphene.String()
 
     @only_user
     @only_requester
-    def mutate(self, info, idx, category, subject, thumbnail, description, start_date, end_date, max_cycle, total_point, is_captcha, token):
+    def mutate(
+            self, 
+            info, 
+            idx, 
+            category, 
+            subject, 
+            thumbnail, 
+            description,
+            oneline_description, 
+            start_date, 
+            end_date, 
+            max_cycle, 
+            total_point, 
+            is_captcha,
+            dataset,
+            count_dataset,
+            token
+        ):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
         category = Category.objects.get(idx=category)
+        dataset = Dataset.objects.get(idx=dataset)
         try:
             request = Request.objects.get(idx=idx)
-            update = Request(user=user, category=category, subject=subject, thumbnail=thumbnail, description=description, 
-                            start_date=str(start_date), end_date=str(end_date), 
-                            max_cycle=max_cycle, total_point=total_point, is_captcha=is_captcha, state=request.state)
+            update = Request(
+                user=user, 
+                category=category, 
+                subject=subject, 
+                thumbnail=thumbnail, 
+                description=description,
+                oneline_description=oneline_description,
+                start_date=str(datetime.datetime.strptime(start_date, "%Y-%m-%d")), 
+                end_date=str(datetime.datetime.strptime(end_date, "%Y-%m-%d")), 
+                max_cycle=max_cycle, 
+                total_point=total_point, 
+                is_captcha=is_captcha, 
+                dataset=dataset,
+                count_dataset=count_dataset,
+                state=request.state
+            )
             try:
                 update.clean()
             except ValidationError as e:
@@ -257,11 +291,14 @@ class UpdateRequest(graphene.Mutation):
                 request.subject = subject
                 request.thumbnail = thumbnail
                 request.description = description
+                request.oneline_description = oneline_description
                 request.start_date = start_date
                 request.end_date = end_date
                 request.max_cycle = max_cycle
                 request.total_point = total_point
                 request.is_captcha = is_captcha
+                request.dataset = dataset
+                request.count_dataset = count_dataset
                 request.save()
                 message = "'%s'주제가 정상적으로 수정되었습니다."%(request.subject)
                 return UpdateRequest(
@@ -269,7 +306,9 @@ class UpdateRequest(graphene.Mutation):
                     idx=request.idx
                 )
         except Exception as ex:
-            return UpdateRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다."+str(ex)))
+            return UpdateRequest(
+                message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다."+str(ex))
+            )
 
 """
 mutation{
@@ -304,7 +343,7 @@ class StartRequest(graphene.Mutation):
             request = Request.objects.get(idx=idx)
             now = str(timezone.localtime())
             update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject, description=request.description, 
-                            start_date=now, due_date=str(request.due_date), 
+                            start_date=now, end_date=str(request.end_date), 
                             max_cycle=request.max_cycle, total_point=request.total_point, is_captcha=request.is_captcha, state='RUN')
             try:
                 update.clean()
@@ -337,7 +376,7 @@ mutation{
 }
 """
 # EndRequest는 프로젝트를 임의적으로 종료(end, not stop)시키는 함수이다.
-# due_date = 현재 날짜, state = 'END'으로 변경됨.
+# end_date = 현재 날짜, state = 'END'으로 변경됨.
 class EndRequest(graphene.Mutation):
     message = graphene.Field(Message)
     idx = graphene.Int()
@@ -355,7 +394,7 @@ class EndRequest(graphene.Mutation):
             request = Request.objects.get(idx=idx)
             now = str(timezone.localtime())
             update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject, description=request.description, 
-                            start_date=str(request.start_date), due_date=now, 
+                            start_date=str(request.start_date), end_date=now, 
                             max_cycle=request.max_cycle, total_point=request.total_point, is_captcha=request.is_captcha, state='END')
             try:
                 update.clean()
@@ -413,7 +452,7 @@ class TakeProject(graphene.Mutation):
                 if request.state != 'RUN':
                     message = "승인전/마감된 프로젝트 입니다."
                     return TakeProject(message=Message(status=False, message=message))
-                new_labeling = Labeling(request=request, user=user, end_date=request.due_date)
+                new_labeling = Labeling(request=request, user=user, end_date=request.end_date)
                 try:
                     new_labeling.clean()
                 except ValidationError as e:
