@@ -5,6 +5,7 @@ import './PageViewAllProjects.css';
 
 // Components
 import JInput from '../components/JInput';
+import ProjectListTable from '../components/ProjectListTable';
 
 // for mobx
 import {inject, observer} from 'mobx-react';
@@ -49,41 +50,36 @@ class PageViewAllProjects extends React.Component<Props> {
           </div>
         </div>
 
-        <div>
-          <Table celled >
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell>#</Table.HeaderCell>
-                <Table.HeaderCell>주제명</Table.HeaderCell>
-                <Table.HeaderCell>라벨링 유형</Table.HeaderCell>
-                <Table.HeaderCell>시작일</Table.HeaderCell>
-                <Table.HeaderCell>마감일</Table.HeaderCell>
-                <Table.HeaderCell>진행 상황</Table.HeaderCell>
+        <ProjectListTable
+          header={[
+            {id: 1, headerItem: '#'},
+            {id: 2, headerItem: '주제명'},
+            {id: 3, headerItem: '레이블링 유형'},
+            {id: 4, headerItem: '시작일'},
+            {id: 5, headerItem: '마감일'},
+            {id: 6, headerItem: '진행 상황'},
+          ]}
+          // body 내부에 Link 를 지정하려니 이 방법 밖에 떠오르지 않음. 좋은 방법이 있을까?
+          body={this.props.pageViewAllProjectsStore!.list.map((item: any) => {
+            return (
+              <Table.Row key={item.id}>
+                <Table.Cell>{item.id}</Table.Cell>
+                <Table.Cell>
+                  <Link to={`/labeling/${item.id}`}>
+                    <div className='normalTitleTextStyle'>
+                      {item.title}
+                    </div>
+                  </Link>
+                </Table.Cell>
+                <Table.Cell>{item.type}</Table.Cell>
+                {/* TODO: Change to date format. */}
+                <Table.Cell>2020.01.01</Table.Cell>
+                <Table.Cell>2020.05.05</Table.Cell>
+                <Table.Cell>{item.progress}/{item.all}</Table.Cell>
               </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              {this.props.pageViewAllProjectsStore!.list.map((item: any) => {
-                return (
-                  <Table.Row key={item.id}>
-                    <Table.Cell>{item.id}</Table.Cell>
-                    <Table.Cell>
-                      <Link to={`/labeling/${item.id}`}>
-                        <div className='normalTitleTextStyle'>
-                          {item.title}
-                        </div>
-                      </Link>
-                    </Table.Cell>
-                    <Table.Cell>{item.type}</Table.Cell>
-                    {/* TODO: Change to date format. */}
-                    <Table.Cell>2020.01.01</Table.Cell>
-                    <Table.Cell>2020.05.05</Table.Cell>
-                    <Table.Cell>{item.progress}/{item.all}</Table.Cell>
-                  </Table.Row>
-                );
-              })}
-            </Table.Body>
-          </Table>
-        </div>
+            );
+          })}
+        />
       </Container>
     );
   }
