@@ -52,8 +52,11 @@ class CardProject extends React.Component<Props> {
   render() {
     return (
       <div className="card_project">
-        <Card className="card_image" onClick={()=>this.handleLink(this.props.status)}>
-          <Image src={this.props.thumbnail} wrapped ui={false}/>
+        <Card className="card_image"
+          onClick={()=>this.handleLink(this.props.status)}>
+          <Image src={this.props.thumbnail}
+            wrapped ui={false}
+            onError={(i: any) => i.target.src='/images/NoImg.jpeg'}/>
           <Card.Content className="card_content">
             <Card.Header className="card_project_title">
               [{this.props.type}] {this.props.title}
