@@ -780,3 +780,47 @@ class Query(graphene.ObjectType):
             return Requests(message=Message(status=True, message=message), requests=request_rows)
         else:
             return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
+
+    """
+    query {
+        getSubjectRequest(keyword:"강아지") {
+            message {
+            status
+            message
+            }
+            requests {
+            idx
+            user {
+                id
+                username
+                password
+                email
+            }
+            category {
+                name
+                type
+            }
+            subject
+            description
+            startDate
+            endDate
+            currentCycle
+            maxCycle
+            totalPoint
+            }
+        }
+        }
+    """
+    # 부분적 request 제목(subject)에 대한 주제 반환
+    get_subject_request = graphene.Field(Requests, keyword=graphene.String())
+    def resolve_get_subject_request(self, info, keyword):
+        request_rows = Request.objects.filter(subject__icontains=keyword)
+        if request_rows:
+            for request in request_rows:
+                if request.user is not None:
+                    request.user.password = "*****"
+                    request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
+            message = "'%s'에 대한 주제 목록 반환" %(keyword)
+            return Requests(message=Message(status=True, message=message), requests=request_rows)
+        else:
+            return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
