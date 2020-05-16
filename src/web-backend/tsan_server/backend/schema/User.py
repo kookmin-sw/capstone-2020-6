@@ -28,11 +28,15 @@ class Users(graphene.ObjectType):
 """
 mutation {
   createAccount(
+    fullname: "daeunLee"
+    birthday: "1997-06-25"
+    isRobot: false
     isRequester:false
-    email:"guest@gmail.com",
-    password:"guest",
-    username:"guest",
-    phone: "01028858793"
+    email:"guest@gmail.com"
+    password:"guest"
+    username:"guest"
+    phone: "010-2885-8793"
+    
   ) {
     message {
       status
@@ -140,6 +144,65 @@ class UpdateAccount(graphene.Mutation):
                 return UpdateAccount(
                     message=Message(status=True, message=message),
                     jwt=token
+                )
+        else:
+            return UpdateAccount(message=Message(status=False, message="비밀번호가 일치하지 않습니다."))
+
+"""
+mutation {
+  updatePassword(
+    token:"참여자/의뢰자/관리자"
+    oldPassword:"guest1"
+    newPassword:"guest"
+  ){
+    message{
+      status
+      message
+    }
+    jwt
+  }
+}
+"""
+class UpdatePassword(graphene.Mutation):
+    message = graphene.Field(Message)
+
+    class Arguments:
+        old_password = graphene.String()
+        new_password = graphene.String()
+        token = graphene.String()
+
+    @only_user
+    def mutate(
+        self, 
+        info, 
+        old_password, 
+        new_password, 
+        token
+    ):
+        res = jwt_decode_handler(token)
+        user = User.objects.get(username=res['username'])
+        if check_password(old_password, user.password):
+            update = User(
+                username=user.username,
+                email=user.email,
+                fullname=user.fullname,
+                birthday=user.birthday,
+                phone=user.phone,
+                is_requester=user.is_requester,
+                is_robot=user.is_robot,
+                password=new_password
+            )
+            try:
+                update.clean()
+            except ValidationError as e:
+                    return UpdateAccount(message=Message(status=False, message=str(e)))
+            else:
+                user.set_password(new_password)
+                user.save()
+                
+                message = "개인정보가 정상적으로 변경되었습니다."
+                return UpdateAccount(
+                    message=Message(status=True, message=message)
                 )
         else:
             return UpdateAccount(message=Message(status=False, message="비밀번호가 일치하지 않습니다."))
