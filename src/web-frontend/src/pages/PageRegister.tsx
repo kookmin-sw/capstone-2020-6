@@ -128,25 +128,12 @@ class App extends React.Component<Props> {
                 </Grid.Column>
               </Grid>
             </Grid.Column>
-            <Grid.Column width={4}>
+            <Grid.Column width={16}>
               <JInput
                 label="전화번호"
                 placeholder="010-0000-0000"
                 value={this.props.registerStore?.phone}
                 onChange={this.props.registerStore?.setPhone}
-                type="text"
-              />
-            </Grid.Column>
-            <Grid.Column width={4}>
-              &nbsp;
-              <Button color="blue" fluid>인증번호 전송</Button>
-            </Grid.Column>
-            <Grid.Column width={8}>
-              <JInput
-                label="인증번호"
-                placeholder="인증번호를 입력해주세요."
-                value={this.props.registerStore?.auth}
-                onChange={this.props.registerStore?.setAuth}
                 type="text"
               />
             </Grid.Column>
