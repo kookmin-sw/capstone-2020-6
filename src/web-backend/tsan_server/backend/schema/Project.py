@@ -576,16 +576,22 @@ class Query(graphene.ObjectType):
         orderby=graphene.String(required=False), 
         offset=graphene.Int(required=False),
         limit=graphene.Int(required=False)
-        )
+    )
     def resolve_get_all_request(self, info, **kwargs):
         order = kwargs.get("orderby", None)
         offset = kwargs.get("offset", None)
         limit = kwargs.get("limit", None)
 
-        if order:
-            requests = Request.objects.all().order_by(order, '-idx') [offset:offset+limit] # 인자값 순, 최신 등록 순
+        if offset and limit:
+            if order:
+                requests = Request.objects.all().order_by(order, '-idx') [offset:offset+limit] # 인자값 순, 최신 등록 순
+            else:
+                requests = Request.objects.all().order_by('-idx') [offset:offset+limit] # 최신 등록 순
         else:
-            requests = Request.objects.all().order_by('-idx') [offset:offset+limit] # 최신 등록 순
+            if order:
+                requests = Request.objects.all().order_by(order, '-idx') # 인자값 순, 최신 등록 순
+            else:
+                requests = Request.objects.all().order_by('-idx') # 최신 등록 순
 
         for request in requests:
             if request.user is not None:
