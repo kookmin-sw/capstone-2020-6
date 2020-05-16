@@ -9,14 +9,9 @@ interface Props {
 }
 
 class LabelingNextBtn extends React.Component<Props, RouteComponentProps> {
-  constructor(props: any) {
-    super(props);
-  }
-
   render() {
     return (
       <div>
-        {/* TODO: Button Design 을 손보는게 좋을 것 같음! */}
         <Button
           className='nextBtn'
           circular
@@ -27,7 +22,6 @@ class LabelingNextBtn extends React.Component<Props, RouteComponentProps> {
     );
   }
 }
-
 
 // @ts-ignore
 export default withRouter(LabelingNextBtn);

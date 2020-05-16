@@ -1,9 +1,9 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Container, Grid, Table} from 'semantic-ui-react';
+import {Container, Table} from 'semantic-ui-react';
 import "./PagePoints.css"
-import UserStore from '../stores/UserStore'
-import { inject, observer } from 'mobx-react';
+import UserStore from '../stores/UserStore';
+import {inject, observer} from 'mobx-react';
 
 interface Props extends RouteComponentProps<any>{
   userStore?: UserStore

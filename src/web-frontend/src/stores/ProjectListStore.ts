@@ -68,9 +68,9 @@ export default class ProjectListStore {
           progress_rate: item.currentCycle / item.maxCycle
         })
       });
-      if(state == "RUN") {
+      if(state === "RUN") {
         this.listRun = list
-      } else if(state == "END") {
+      } else if(state === "END") {
         this.listEnd = list
       }
     })

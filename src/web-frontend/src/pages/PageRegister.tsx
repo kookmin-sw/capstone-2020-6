@@ -1,6 +1,6 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Container, Button, Grid, Checkbox} from 'semantic-ui-react';
+import {Container, Grid, Checkbox} from 'semantic-ui-react';
 import './PageLogin.css';
 import JInput from '../components/JInput';
 import {inject, observer} from 'mobx-react';
@@ -16,7 +16,7 @@ const years:any = []
 const months:any = []
 const days:any = []
 
-const nowDate:Date = new Date
+const nowDate:Date = new Date()
 
 for(let i:number = nowDate.getFullYear(); i >= 1900;i--) {
     years.push({

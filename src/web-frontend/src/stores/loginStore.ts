@@ -38,7 +38,7 @@ export default class LoginStore {
     window.location.href = '/'
   }
   @action changePassword = () => {
-    if(this.password != this.passwordCheck) {
+    if(this.password !== this.passwordCheck) {
       alert("입력하신 두 패스워드가 서로 같지 않습니다.")
       return false
     }

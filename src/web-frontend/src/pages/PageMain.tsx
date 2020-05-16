@@ -22,6 +22,8 @@ class App extends React.Component<Props> {
     super(props);
     // 답변 가능한 프로젝트 목록 요청
     this.props.projectListStore!.getAvailableProject();
+    this.props.projectListStore!.getProjects('RUN');
+    this.props.projectListStore!.getProjects('END');
   }
   render() {
     return (
