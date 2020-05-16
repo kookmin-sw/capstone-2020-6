@@ -9,17 +9,22 @@ import Confirm from '../components/TSANConfirm';
 // import {observer, inject} from "mobx-react";
 import JInput from '../components/JInput';
 import LoginStore from '../stores/loginStore';
+import { observer, inject } from 'mobx-react';
 
 interface Props extends RouteComponentProps<any> {
     navigate?: any
     loginStore?: LoginStore
 }
 
+@inject("loginStore") @observer
 class PageMypagePW extends React.Component<Props> {
     state = {open: false}
     show = () => this.setState({open: true})
     // TODO: 사용시, 그 상황에 맞는 함수 작성해야할 것
-    handleConfirm = () => this.setState({open: false})
+    handleConfirm = () => {
+        this.props.loginStore?.changePassword()
+        this.setState({open: false})
+    }
     handleCancel = () => this.setState({open: false})
 
     render() {
@@ -35,8 +40,8 @@ class PageMypagePW extends React.Component<Props> {
                 <JInput
                     label="기존 비밀번호"
                     placeholder="기존 비밀번호를 입력해주세요."
-                    value={this.props.loginStore?.password}
-                    onChange={this.props.loginStore?.setPassword}
+                    value={this.props.loginStore?.oldPassword}
+                    onChange={this.props.loginStore?.setOldPassword}
                     type="password"
                     style={{marginTop: 30}}
                 />
@@ -51,8 +56,8 @@ class PageMypagePW extends React.Component<Props> {
                 <JInput
                     label="새 비밀번호 확인"
                     placeholder="입력하신 비밀번호를 다시 입력해주세요."
-                    value={this.props.loginStore?.password}
-                    onChange={this.props.loginStore?.setPassword}
+                    value={this.props.loginStore?.passwordCheck}
+                    onChange={this.props.loginStore?.setPasswordCheck}
                     type="password"
                     style={{marginTop: 15, marginBottom: 30}}
                 />
@@ -72,7 +77,7 @@ class PageMypagePW extends React.Component<Props> {
                 </div>
                 <Confirm
                     header={'안내'}
-                    contents={['비밀번호 변경을 취소하시겠습니까?']}
+                    contents={['정말로 비밀번호를 변경하시겠습니까?']}
                     open={open}
                     handleConfirm={this.handleConfirm}
                     handleCancel={this.handleCancel}
