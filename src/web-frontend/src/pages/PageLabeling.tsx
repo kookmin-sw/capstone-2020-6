@@ -20,49 +20,32 @@ interface Props {
 class PageLabeling extends React.Component<Props, RouteComponentProps> {
     constructor(props: any) {
         super(props);
-        this.props.labelingPageStore!.getAuthor();
-        this.props.labelingPageStore!.getThumbnailURL();
-        this.props.labelingPageStore!.getDetailDescroption();
-        this.props.labelingPageStore!.getStartDate();
-        this.props.labelingPageStore!.getEndDate();
-        this.props.labelingPageStore!.getLabelingType();
-        this.props.labelingPageStore!.getLabelingSubject();
-        this.props.labelingPageStore!.getOneLineDescription();
-        this.props.labelingPageStore!.getProgress();
-        this.props.labelingPageStore!.getProgressRate();
-        this.props.labelingPageStore!.getTotalProgress();
-        this.props.labelingPageStore!.getRewardPoints();
+        console.log(props.match.params.postId)
+        this.props.labelingPageStore!.getRequest(props.match.params.postId);
     }
 
     // TODO: dataId, postId index 시작 통일하기 0 or 1.
     handleLink = (e: any) => {
-        this.props.history.push(`${this.props.match.url}/${this.props.labelingPageStore?.labelingType}/0`);
-    }
-
-    selectType = (type: string | undefined) => {
-        if(type === 'imgsel') return '이미지 선택형';
-        else if(type === 'imgcap') return '이미지 캡처형';
-        else if(type === 'txtsel') return '텍스트 선택형';
-        else return '텍스트 단답형';
+        this.props.history.push(`${this.props.match.url}/${this.props.labelingPageStore?.request.labelingType}/0`);
     }
 
     render() {
         return (
             <>
                 <img
-                    src={this.props.labelingPageStore?.thumbnailURL}
+                    src={this.props.labelingPageStore?.request.thumbnailURL}
                     alt='thumbnail'
                     className="project-top-image"
                 />
                 <div className="project-paper">
                     <Container>
-                        <div className="project-title">{this.props.labelingPageStore?.labelingSubject}</div>
-                        <div className="project-oneline-desc">{this.props.labelingPageStore?.oneLineDescription}</div>
+                        <div className="project-title">{this.props.labelingPageStore?.request.labelingSubject}</div>
+                        <div className="project-oneline-desc">{this.props.labelingPageStore?.request.oneLineDescription}</div>
                         <div className="project-line-info">
-                            <div>라벨링 유형: {this.selectType(this.props.labelingPageStore?.labelingType)}</div>
-                            {this.props.labelingPageStore?.author}
+                            <div>라벨링 유형: {this.props.labelingPageStore?.request.labelingType}</div>
+                            {this.props.labelingPageStore?.request.author}
                             &nbsp;/&nbsp;
-                            {this.props.labelingPageStore?.rewardPoints}P
+                            {this.props.labelingPageStore?.request.rewardPoints}P
                             /
                             2020.01.01. 00:00 - 2020.01.02. 23:59
                         </div>
@@ -74,22 +57,22 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                 <Container>
                     <Grid>
                         <Grid.Row className='labelingPageTitle'>
-                            <h2>{this.props.labelingPageStore?.labelingSubject}</h2>
+                            <h2>{this.props.labelingPageStore?.request.labelingSubject}</h2>
                         </Grid.Row>
                         <Grid.Row columns={2} className='labelingPageMain'>
                             <Grid.Column className='labelingPageThumbnailBox'>
                                 <img alt='thumbnail'
                                      className='labelingPageThumbnail'
-                                     src={this.props.labelingPageStore?.thumbnailURL}/>
+                                     src={this.props.labelingPageStore?.request.thumbnailURL}/>
                             </Grid.Column>
                             <Grid.Column rows={5} className='labelingPageDescription'>
                                 <Grid.Row>
                                     <h3>의뢰자</h3>
-                                    {this.props.labelingPageStore?.author}
+                                    {this.props.labelingPageStore?.request.author}
                                 </Grid.Row>
                                 <Grid.Row>
                                     <h3>라벨링 유형</h3>
-                                    {this.selectType(this.props.labelingPageStore?.labelingType)}
+                                    {this.props.labelingPageStore?.request.labelingType}
                                 </Grid.Row>
                                 <Grid.Row>
                                     {/* TODO : have to make date type */}
@@ -98,17 +81,17 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                                 </Grid.Row>
                                 <Grid.Row>
                                     <h3>한 줄 설명</h3>
-                                    {this.props.labelingPageStore?.oneLineDescription}
+                                    {this.props.labelingPageStore?.request.oneLineDescription}
                                 </Grid.Row>
                                 <Grid.Row>
                                     <h3>보상 금액</h3>
-                                    {this.props.labelingPageStore?.rewardPoints}P
+                                    {this.props.labelingPageStore?.request.rewardPoints}P
                                 </Grid.Row>
                             </Grid.Column>
                         </Grid.Row>
                         <Grid.Row className='detailDescriptionBox'>
                             <h3>상세 설명</h3>
-                            {this.props.labelingPageStore?.detailDescription}
+                            {this.props.labelingPageStore?.request.detailDescription}
                         </Grid.Row>
                         <Grid.Row style={{justifyContent: 'flex-end'}}>
                             <Button color={'blue'} onClick={this.handleLink}>
