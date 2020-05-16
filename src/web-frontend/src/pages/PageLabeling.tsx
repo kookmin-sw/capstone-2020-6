@@ -18,18 +18,33 @@ interface Props {
 @inject('labelingPageStore')
 @observer
 class PageLabeling extends React.Component<Props, RouteComponentProps> {
-    constructor(props: any) {
-        super(props);
-        console.log(props.match.params.postId)
-        this.props.labelingPageStore!.getRequest(props.match.params.postId);
-    }
+  constructor(props: any) {
+    super(props);
+    this.props.labelingPageStore!.getRequest(props.match.params.postId);
+  }
 
     // TODO: dataId, postId index 시작 통일하기 0 or 1.
     handleLink = (e: any) => {
-        this.props.history.push(`${this.props.match.url}/${this.props.labelingPageStore?.request.labelingType}/0`);
+      let labelingType;
+      switch (this.props.labelingPageStore?.request.labelingType) {
+        case '[TEXT] 객관식':
+          labelingType = 'txtsel';
+          break;
+        case '[TEXT] 단답식':
+          labelingType = 'txtwrite';
+          break;
+        case '[IMAGE] 선택형':
+          labelingType = 'imgSel';
+          break;
+        case '[IMAGE] 캡쳐형':
+          labelingType = 'imgCap';
+          break;
+      }
+      this.props.history.push(`${this.props.match.url}/${labelingType}/0`);
     }
 
     render() {
+      console.log(this.props.labelingPageStore?.request);
         return (
             <>
                 <img
@@ -91,6 +106,7 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                         </Grid.Row>
                         <Grid.Row className='detailDescriptionBox'>
                             <h3>상세 설명</h3>
+                            <br/>
                             {this.props.labelingPageStore?.request.detailDescription}
                         </Grid.Row>
                         <Grid.Row style={{justifyContent: 'flex-end'}}>
