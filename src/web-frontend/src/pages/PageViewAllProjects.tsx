@@ -1,6 +1,6 @@
 import React from 'react';
 import {RouteComponentProps, withRouter, Link} from 'react-router-dom';
-import {Button, Container, Table, Icon} from 'semantic-ui-react';
+import {Button, Container, Table} from 'semantic-ui-react';
 import './PageViewAllProjects.css';
 
 // Components
@@ -59,7 +59,6 @@ class PageViewAllProjects extends React.Component<Props> {
             {id: 5, headerItem: '마감일'},
             {id: 6, headerItem: '진행 상황'},
           ]}
-          // body 내부에 Link 를 지정하려니 이 방법 밖에 떠오르지 않음. 좋은 방법이 있을까?
           body={this.props.pageViewAllProjectsStore!.list.map((item: any) => {
             return (
               <Table.Row key={item.id}>

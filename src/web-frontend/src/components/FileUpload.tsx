@@ -1,8 +1,5 @@
 import React from "react";
-// import axios from 'axois';
-import { Button, Dimmer, Loader, Input } from 'semantic-ui-react';
-
-import { observer, inject } from "mobx-react";
+import {Input} from 'semantic-ui-react';
 
 import './FileUpload.css';
 

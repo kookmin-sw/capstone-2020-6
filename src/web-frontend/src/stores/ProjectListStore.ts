@@ -15,7 +15,6 @@ export default class ProjectListStore {
     this.getProjects("END");
   }
   @action getProjects = (state:string) => {
-    console.log(">>>>>>>>>>>>>>>>")
     client.query({
       query: gql`
         query GetAllRequest($token: String!){
@@ -55,7 +54,6 @@ export default class ProjectListStore {
       }
     })
     .then(({data}:any) => {
-      console.log(">>>>>>>>>>>>>>2>>")
       var list:any = []
       data.getAllRequest.requests.forEach((item:any) => {
         list.push({
@@ -73,9 +71,9 @@ export default class ProjectListStore {
           progress_rate: item.currentCycle / item.maxCycle
         })
       });
-      if(state == "RUN") {
+      if(state === "RUN") {
         this.listRun = list
-      } else if(state == "END") {
+      } else if(state === "END") {
         this.listEnd = list
       }
     })

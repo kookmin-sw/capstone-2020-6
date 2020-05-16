@@ -1,9 +1,8 @@
 import React from 'react';
-import {Link, RouteComponentProps, withRouter} from 'react-router-dom';
-import {Card, Image, Icon} from 'semantic-ui-react';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {Card, Image} from 'semantic-ui-react';
 import './CardProject.css';
 import ProgressBar from './ProgressBar';
-import Confirm from '../components/TSANConfirm';
 
 interface Props extends RouteComponentProps<any> {
   navigate?: any;

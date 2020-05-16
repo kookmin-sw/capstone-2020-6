@@ -8,9 +8,6 @@ interface Props extends RouteComponentProps<any> {
 }
 
 class ProjectListTable extends React.Component<Props> {
-  constructor(props: any) {
-    super(props);
-  }
   render() {
     return (
       <div>

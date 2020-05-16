@@ -70,6 +70,7 @@ class App extends React.Component<Props> {
             <Grid.Column>
               <Header as='h2' className="about_h2">소개영상</Header>
               <iframe
+                title='about-youtube'
                 className="about-youtube"
                 src="https://www.youtube.com/embed/zOQfu3Gawzw"
                 frameBorder="0"

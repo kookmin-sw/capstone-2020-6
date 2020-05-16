@@ -2,11 +2,11 @@ import React from 'react';
 import {Button} from 'semantic-ui-react';
 import {History, LocationState} from 'history';
 import {RouteComponentProps, withRouter} from 'react-router';
+import './LabelingFinishButton.css';
 
 // Components
 import Confirm from './TSANConfirm';
 
-import './LabelingFinishButton.css';
 
 interface Props {
   history: History<LocationState>;

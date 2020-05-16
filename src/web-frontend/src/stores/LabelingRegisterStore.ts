@@ -132,7 +132,7 @@ export default class LabelingRegisterStore {
 
     @action setReward = (e: any) => {
         var reward = "" + parseInt(e.target.value)
-        if (reward == "NaN") {
+        if (reward === "NaN") {
             reward = "0"
         }
         this.reward = reward
@@ -140,7 +140,7 @@ export default class LabelingRegisterStore {
 
     @action setCycle = (e: any) => {
         var cycle = "" + parseInt(e.target.value)
-        if (cycle == "NaN") {
+        if (cycle === "NaN") {
             cycle = "0"
         }
         this.cycle = cycle
@@ -148,7 +148,7 @@ export default class LabelingRegisterStore {
 
     @action setCountDataset = (e: any) => {
         var countDataset = "" + parseInt(e.target.value)
-        if (countDataset == "NaN") {
+        if (countDataset === "NaN") {
             countDataset = "0"
         }
         this.countDataset = countDataset

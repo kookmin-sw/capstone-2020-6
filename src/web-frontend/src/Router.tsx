@@ -33,9 +33,9 @@ import Footer from './components/Footer';
 // for Mobx
 import {inject, observer} from 'mobx-react';
 import MenuStore from './stores/MenuStore';
-import {useCookies} from 'react-cookie';
-import {instanceOf} from 'prop-types';
-import {withCookies, Cookies} from 'react-cookie';
+// import {useCookies} from 'react-cookie';
+// import {instanceOf} from 'prop-types';
+// import {withCookies, Cookies} from 'react-cookie';
 
 export interface Props {
     menuStore?: MenuStore
@@ -43,9 +43,6 @@ export interface Props {
 
 @inject('menuStore') @observer
 class App extends React.Component<Props> {
-  constructor(props: any) {
-    super(props);
-  }
   render() {
     return (
       <Router>
