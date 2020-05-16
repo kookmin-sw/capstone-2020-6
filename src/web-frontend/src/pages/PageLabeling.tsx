@@ -47,7 +47,7 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                             &nbsp;/&nbsp;
                             {this.props.labelingPageStore?.request.rewardPoints}P
                             /
-                            2020.01.01. 00:00 - 2020.01.02. 23:59
+                            {this.props.labelingPageStore?.request.start_date} - {this.props.labelingPageStore?.request.end_date}
                         </div>
                         <div className="project-progress">
                             <div style={{width: `${this.props.labelingPageStore?.request.progressRate}%`}}/>
@@ -77,7 +77,7 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                                 <Grid.Row>
                                     {/* TODO : have to make date type */}
                                     <h3>기간</h3>
-                                    2020.01.01 - 2020.05.05
+                                    {this.props.labelingPageStore?.request.start_date} - {this.props.labelingPageStore?.request.end_date}
                                 </Grid.Row>
                                 <Grid.Row>
                                     <h3>한 줄 설명</h3>
