@@ -86,15 +86,16 @@ class CreateAccount(graphene.Mutation):
                 new_user.save()
                 message = "'%s'님 정상적으로 가입되었습니다."%(new_user.username)
                 return CreateAccount(message=Message(status=True, message=message))
+
 """
 mutation {
   updateAccount(
+    fullname: "daeunLee"
+    birthday: "1997-06-25"
+    username: "guest"
     phone:"01000000000"
     email:"guest@gmail.com"
     token:"참여자/의뢰자/관리자"
-    oldPassword:"guest"
-    username: "guest"
-    newPassword:"guest1"
   ){
     message{
       status
@@ -106,47 +107,54 @@ mutation {
 """
 class UpdateAccount(graphene.Mutation):
     message = graphene.Field(Message)
-    jwt = graphene.String()
 
     class Arguments:
+        fullname = graphene.String()
+        birthday = graphene.String()
         username = graphene.String()
         email = graphene.String()
-        old_password = graphene.String()
-        new_password = graphene.String()
         phone = graphene.String()
         token = graphene.String()
 
     @only_user
-    def mutate(self, info, username, email, old_password, new_password, phone, token):
+    def mutate(
+        self, 
+        info,
+        fullname,
+        birthday,
+        username, 
+        email, 
+        phone, 
+        token
+    ):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
-        if check_password(old_password, user.password):
-            update = User(username=username, email=email, password=new_password, phone=phone)
-            try:
-                update.clean()
-            except ValidationError as e:
-                    return UpdateAccount(message=Message(status=False, message=str(e)))
-            else:
-                user.username = username
-                user.email = email
-                user.phone = phone
-                user.set_password(new_password)
-                user.save()
-                user = {
-                    'username': username,
-                    'password': new_password
-                    }
-                serializer = JSONWebTokenSerializer(data=user)
-                if serializer.is_valid():
-                    token = serializer.object['token']
-                    user = serializer.object['user']
-                message = "개인정보가 정상적으로 변경되었습니다."
-                return UpdateAccount(
-                    message=Message(status=True, message=message),
-                    jwt=token
-                )
+        update = User(
+                username=username,
+                email=email,
+                fullname=fullname,
+                birthday=datetime.datetime.strptime(birthday, "%Y-%m-%d"),
+                phone=phone,
+                is_requester=user.is_requester,
+                is_robot=user.is_robot,
+                password=user.password
+            )
+        try:
+            update.clean()
+        except ValidationError as e:
+                return UpdateAccount(message=Message(status=False, message=str(e)))
         else:
-            return UpdateAccount(message=Message(status=False, message="비밀번호가 일치하지 않습니다."))
+            user.fullname = fullname
+            user.birthday = datetime.datetime.strptime(birthday, "%Y-%m-%d")
+            user.username = username
+            user.email = email
+            user.phone = phone
+            user.save()
+
+            message = "개인정보가 정상적으로 변경되었습니다."
+            return UpdateAccount(
+                message=Message(status=True, message=message),
+            )
 
 """
 mutation {
