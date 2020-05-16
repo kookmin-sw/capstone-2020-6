@@ -50,7 +50,7 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                             2020.01.01. 00:00 - 2020.01.02. 23:59
                         </div>
                         <div className="project-progress">
-                            <div></div>
+                            <div style={{width: `${this.props.labelingPageStore?.request.progressRate}%`}}/>
                         </div>
                     </Container>
                 </div>

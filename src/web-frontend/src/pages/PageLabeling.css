@@ -58,7 +58,6 @@
 .project-progress > div{
     height: 20px;
     background-color: rgba(255,255,255);
-    width: 500px;
 }
 
 .project-line-info {
