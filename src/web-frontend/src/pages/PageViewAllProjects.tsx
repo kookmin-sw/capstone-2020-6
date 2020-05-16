@@ -65,7 +65,7 @@ class PageViewAllProjects extends React.Component<Props> {
                 <Table.Cell>{item.id}</Table.Cell>
                 <Table.Cell>
                   <Link to={`/labeling/${item.id}`}>
-                    <div className='normalTitleTextStyle'>
+                    <div>
                       {item.title}
                     </div>
                   </Link>
