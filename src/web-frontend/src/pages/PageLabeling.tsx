@@ -1,7 +1,7 @@
 import React from 'react';
 import {withRouter, RouteComponentProps} from 'react-router';
 import {History, LocationState} from 'history';
-import {Button, Container, Grid} from 'semantic-ui-react';
+import {Button, Container, Grid, Header} from 'semantic-ui-react';
 import './PageLabeling.css';
 
 // Components
@@ -107,11 +107,10 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                                 </Grid.Row>
                             </Grid.Column>
                         </Grid.Row>
+                        <Grid.Row>
+                            <Header as={'h3'}>상세 설명</Header>
+                        </Grid.Row>
                         <Grid.Row className='detailDescriptionBox'>
-                            {/* TODO: Modify detail description location UI */}
-                            {/* 상세 설명이 화면 기준으로 한 줄 이상이면 텍스트가 제대로 된 위치에 위치하는데, */}
-                            {/* 상세 설명이 짧을 경우에 상세 설명 글씨 옆에 붙어버리는 문제가 발생함 */}
-                            <h3>상세 설명</h3>
                             {this.props.labelingPageStore?.request.detailDescription}
                         </Grid.Row>
                         <Grid.Row style={{justifyContent: 'flex-end'}}>
