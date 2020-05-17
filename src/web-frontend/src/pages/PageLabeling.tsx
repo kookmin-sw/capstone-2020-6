@@ -109,12 +109,14 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                         </Grid.Row>
                         <Grid.Row className='detailDescriptionBox'>
                             {/* TODO: Modify detail description location UI */}
+                            {/* 상세 설명이 화면 기준으로 한 줄 이상이면 텍스트가 제대로 된 위치에 위치하는데, */}
+                            {/* 상세 설명이 짧을 경우에 상세 설명 글씨 옆에 붙어버리는 문제가 발생함 */}
                             <h3>상세 설명</h3>
                             {this.props.labelingPageStore?.request.detailDescription}
                         </Grid.Row>
                         <Grid.Row style={{justifyContent: 'flex-end'}}>
                             <Button color={'blue'} onClick={this.handleLink}>
-                                연습하고 시작하기
+                              시작하기
                             </Button>
                         </Grid.Row>
                     </Grid>
