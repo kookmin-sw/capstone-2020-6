@@ -3,4 +3,5 @@
 }
 .ui.progress .bar  {
     background-color: #415D9E;
+    min-width: 0;
 }
