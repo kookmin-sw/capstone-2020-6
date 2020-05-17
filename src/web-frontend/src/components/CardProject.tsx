@@ -21,7 +21,20 @@ interface Props extends RouteComponentProps<any> {
   status: string;
 }
 
-function calcAgo(timestamp:number) {
+function calcAgo(start: string, end: string) {
+  let y1 = parseInt(start.slice(0,4));
+  let y2 = parseInt(end.slice(0,4));
+  let m1 = parseInt(start.slice(5,7));
+  let m2 = parseInt(end.slice(5,7));
+  let d1 = parseInt(start.slice(8,10));
+  let d2 = parseInt(end.slice(8,10));
+
+  let _start = new Date(y1, m1, d1) as any;
+  let _end = new Date(y2, m2, d2) as any;
+
+  console.log(_start, _end);
+  let timestamp = _end - _start;
+
   let ago = '';
   timestamp /= 1000;
   const min = Math.floor(timestamp / 60) % 60;
@@ -34,6 +47,7 @@ function calcAgo(timestamp:number) {
   ago += parseInt(''+date) ? date + '일 ' : '';
   ago += parseInt(''+hour) ? hour + '시간 ' : '';
   ago += parseInt(''+min) ? min + '분 ' : '';
+
   return ago;
 }
 
@@ -66,7 +80,7 @@ class CardProject extends React.Component<Props> {
               &nbsp;|&nbsp;
               {this.props.point}P
               &nbsp;|&nbsp;
-              {calcAgo(this.props.end_date - this.props.start_date).trim()} 뒤 종료
+              {calcAgo(this.props.start_date, this.props.end_date)} 뒤 종료
             </Card.Meta>
             <Card.Description className="card_description">{this.props.description}</Card.Description>
             <ProgressBar
