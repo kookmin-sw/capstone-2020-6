@@ -48,7 +48,7 @@ export default class ProjectListStore {
             }
           }
         }
-      `
+      `,
     })
     .then(({data}:any) => {
       var list:any = []

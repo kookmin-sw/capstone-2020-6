@@ -1,11 +1,15 @@
 import React from 'react';
+import {withRouter, RouteComponentProps} from 'react-router';
+import {History, LocationState} from 'history';
 import {Button, Container, Grid} from 'semantic-ui-react';
 import './PageLabeling.css';
+
+// Components
+import Datetime from '../components/DateTime';
+
 // for mobx
 import LabelingPageStore from '../stores/LabelingPageStore';
 import {inject, observer} from 'mobx-react';
-import { withRouter, RouteComponentProps} from "react-router";
-import { History, LocationState } from "history";
 
 interface Props {
     labelingPageStore?: LabelingPageStore,
@@ -42,9 +46,7 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
       }
       this.props.history.push(`${this.props.match.url}/${labelingType}/0`);
     }
-
     render() {
-      console.log(this.props.labelingPageStore?.request);
         return (
             <>
                 <img
@@ -62,7 +64,6 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                             &nbsp;/&nbsp;
                             {this.props.labelingPageStore?.request.rewardPoints}P
                             /
-                            {this.props.labelingPageStore?.request.start_date} - {this.props.labelingPageStore?.request.end_date}
                         </div>
                         <div className="project-progress">
                             <div style={{width: `${this.props.labelingPageStore?.request.progressRate}%`}}/>
@@ -92,7 +93,9 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                                 <Grid.Row>
                                     {/* TODO : have to make date type */}
                                     <h3>기간</h3>
-                                    {this.props.labelingPageStore?.request.start_date} - {this.props.labelingPageStore?.request.end_date}
+                                    <Datetime datetime={this.props.labelingPageStore?.request.startDate}/>
+                                    &nbsp;-&nbsp;
+                                    <Datetime datetime={this.props.labelingPageStore?.request.endDate}/>
                                 </Grid.Row>
                                 <Grid.Row>
                                     <h3>한 줄 설명</h3>
@@ -105,8 +108,8 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                             </Grid.Column>
                         </Grid.Row>
                         <Grid.Row className='detailDescriptionBox'>
+                            {/* TODO: Modify detail description location UI */}
                             <h3>상세 설명</h3>
-                            <br/>
                             {this.props.labelingPageStore?.request.detailDescription}
                         </Grid.Row>
                         <Grid.Row style={{justifyContent: 'flex-end'}}>
