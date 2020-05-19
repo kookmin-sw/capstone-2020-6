@@ -61,30 +61,30 @@ export default class ProjectListStore {
         }
       `,
     })
-        .then(({data}:any) => {
-          var list:any = []
-          data.getAllRequest.requests.forEach((item:any) => {
-            list.push({
-              id: item.idx,
-              thumbnail: item.thumbnail,
-              title: item.subject,
-              author: item.user ? (item.user.fullname.length === 0 ? "익명" : item.user.fullname) : "알 수 없음",
-              start_date: item.startDate,
-              end_date: item.endDate,
-              type: item.category.type.toUpperCase() + "-" + item.category.name,
-              point: item.totalPoint / item.maxCycle,
-              description: item.onelineDescription,
-              progress: item.currentCycle,
-              all: item.maxCycle,
-              progress_rate: item.currentCycle / item.maxCycle
-            });
-          });
-          if (state === 'RUN') {
-            this.listRun = list;
-          } else if (state === 'END') {
-            this.listEnd = list;
-          }
+    .then(({data}:any) => {
+      var list:any = []
+      data.getAllRequest.requests.forEach((item:any) => {
+        list.push({
+          id: item.idx,
+          thumbnail: item.thumbnail,
+          title: item.subject,
+          author: item.user ? (item.user.fullname.length === 0 ? "익명" : item.user.fullname) : "알 수 없음",
+          start_date: item.startDate,
+          end_date: item.endDate,
+          type: item.category.type.toUpperCase() + "-" + item.category.name,
+          point: Math.floor(item.totalPoint / item.maxCycle),
+          description: item.onelineDescription,
+          progress: item.currentCycle,
+          all: item.maxCycle,
+          progress_rate: item.currentCycle / item.maxCycle
         })
+      });
+      if(state === "RUN") {
+        this.listRun = list
+      } else if(state === "END") {
+        this.listEnd = list
+      }
+    })
         .catch(e => {
           console.error(e);
         });

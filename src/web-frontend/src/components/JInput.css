@@ -12,8 +12,8 @@
     outline: 0px;
 }
 
-.jinput > .visible.transition{
-    height: 350px;
+.visible.transition{
+    height: 300px;
 }
 
 .jinput::placeholder {

@@ -10,6 +10,7 @@ import TsDropDown from '../components/TsDropDown';
 import FileUpload from "../components/FileUpload";
 
 import './PageLabelingRegister.css';
+import Confirm from "../components/TSANConfirm";
 
 interface Props extends RouteComponentProps<any> {
     navigate?: any,
@@ -124,7 +125,7 @@ class PageLabelingRegister extends React.Component<Props, State> {
                                 <Grid.Column>
                                     <br /><br />
                                     <JInput
-                                        label="보상 설정"
+                                       label="총 보상설정"
                                         placeholder="보상 금액을 입력해주세요."
                                         onChange={this.props.labelingRegisterStore?.setReward}
                                         value={this.props.labelingRegisterStore?.reward}
@@ -135,7 +136,7 @@ class PageLabelingRegister extends React.Component<Props, State> {
                             <Grid>
                                 <Grid.Column>
                                     <JInput
-                                        label="총 횟수"
+                                        label="총 참여인원 수"
                                         placeholder="총 횟수를 적어주세요."
                                         onChange={this.props.labelingRegisterStore?.setCycle}
                                         value={this.props.labelingRegisterStore?.cycle}
@@ -241,7 +242,7 @@ class PageLabelingRegister extends React.Component<Props, State> {
                         </Grid.Column>
                     </Grid.Row>
                     {
-                        (this.props.labelingRegisterStore?.dataset !== "-1") ? (
+                        (this.props.labelingRegisterStore?.dataset === "-1") ? (
                             <Grid.Row>
                                 <Grid.Column>
                                     <span className="subjectHeader">데이터 셋 업로드(.zip)</span>

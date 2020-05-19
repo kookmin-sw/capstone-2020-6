@@ -24,7 +24,6 @@ import PageLabelingImageCapture from './pages/PageLabelingImageCapture';
 import PageMypageProject from './pages/PageMypageProject';
 import PageCaptcha from './pages/PageCaptcha';
 import PageViewAllProjects from './pages/PageViewAllProjects';
-import PageLabelingUpdateRegister from "./pages/PageLabelingUpdateRegister";
 
 // for Components
 import Navigation from './components/Navigation';
@@ -95,9 +94,6 @@ class App extends React.Component<Props> {
           </Route>
           <Route path='/labelingRegister'>
             <PageLabelingRegister/>
-          </Route>
-          <Route path='/updateRegister'>
-            <PageLabelingUpdateRegister/>
           </Route>
           <Route path='/'>
             <PageMain />
