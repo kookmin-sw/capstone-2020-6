@@ -112,6 +112,30 @@ def cal_credibility(total_label_df, cor_pers, right_id):
     return total_label_df
 
 
+def second_labeling(df, rest_df):
+#     df_temp_labeling = pd.DataFrame({'file_index' : [], 'path' : [], 'label_temp' : []})
+    
+    total_paths = set(df.path.tolist())
+    mode_labels = []
+    
+    for path in total_paths:
+        temp_df = df[df['path'] == path]
+        
+        credibilities = temp_df.new_cred.tolist()
+        credibilities.sort()
+        
+        if len(credibilities) > 2:
+            labels = temp_df[temp_df['new_cred'] >= credibilities[-3]].label.tolist()
+            mode_label = find_mode_label(labels)
+            mode_labels.append(mode_label)
+#         data = pd.Series([i, temp_df['path'].iloc[0], mode_label], index = ['file_index', 'path', 'label_temp'])  
+#         df_temp_labeling = df_temp_labeling.append(data, ignore_index = True)
+
+    rest_df['second_label'] = mode_labels
+            
+    return rest_df
+
+
 def main():
     
     df = make_dataframe()
