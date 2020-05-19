@@ -37,10 +37,10 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
         case '[TEXT] 단답식':
           labelingType = 'txtwrite';
           break;
-        case '[IMAGE] 선택형':
+        case '[IMAGE] 객관식':
           labelingType = 'imgSel';
           break;
-        case '[IMAGE] 캡쳐형':
+        case '[IMAGE] 영역지정':
           labelingType = 'imgCap';
           break;
       }
