@@ -63,11 +63,11 @@ class PageViewAllProjects extends React.Component<Props> {
             {id: 5, headerItem: '마감일'},
             {id: 6, headerItem: '진행 상황'},
           ]}
-          body={this.state.list.map((item: any) => {
+          body={this.state.list.map((item: any, idx: number) => {
             return (
               // TODO: Sort projects by id.
-              <Table.Row key={item.id}>
-                <Table.Cell>{item.id}</Table.Cell>
+              <Table.Row key={idx+1}>
+                <Table.Cell>{idx+1}</Table.Cell>
                 <Table.Cell>
                   <Link to={`/labeling/${item.id}`}>
                     <div>

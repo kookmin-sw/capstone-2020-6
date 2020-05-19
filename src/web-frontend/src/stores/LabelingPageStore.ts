@@ -81,7 +81,7 @@ export default class LabelingPageStore {
         endDate: new Date(new Date().setUTCMinutes(59, 59)),
         labelingType: "[" + req.category.type.toUpperCase() + "] " + req.category.name,
         oneLineDescription: req.onelineDescription,
-        rewardPoints: req.totalPoint / req.maxCycle,
+        rewardPoints: Math.floor(req.totalPoint / req.maxCycle),
         detailDescription: req.description,
         progress: req.cycle,
         totalProgress: req.maxCycle,

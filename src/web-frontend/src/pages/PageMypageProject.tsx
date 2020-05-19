@@ -1,12 +1,13 @@
 import React from 'react';
 import {Link, withRouter} from 'react-router-dom';
-import {Container, Table, Icon} from 'semantic-ui-react';
+import {Container, Table, Icon, Grid} from 'semantic-ui-react';
 import './PageMypageProject.css';
 
 import {observer, inject} from 'mobx-react';
 import MyPageProjectStore from '../stores/MyPageProjectStore';
 import Confirm from "../components/TSANConfirm";
 import ProjectListTable from "../components/ProjectListTable";
+import Datetime from '../components/DateTime';
 
 interface Props {
     myPageProjectStore?: MyPageProjectStore;
@@ -19,20 +20,18 @@ interface State {
 @inject('myPageProjectStore')
 @observer
 
-// const formatDate = () => {
-//
-// }
 
 class PageMypageProject extends React.Component<Props,State> {
     constructor(props: any) {
         super(props);
         // 답변 가능한 프로젝트 목록 요청
-        this.props.myPageProjectStore!.getAvailableProject();
+        this.props.myPageProjectStore!.getProjects();
         this.state = {
             open: false,
             type: '',
         }
         this.show = this.show.bind(this);
+        this.handleConfirm = this.handleConfirm.bind(this);
     }
     header = [
         {id: 1, headerItem: '#'},
@@ -50,10 +49,19 @@ class PageMypageProject extends React.Component<Props,State> {
         this.setState({type: _type});
     }
 
-    handleConfirm = () => {
-        // TODO: API 연동
-        this.setState({open: false})
+    handleConfirm = (idx: string) => {
+        this.props.myPageProjectStore?.setId(idx);
+
+        if(this.state.type === 'start')
+            this.props.myPageProjectStore?.setStartReq();
+        else
+            this.props.myPageProjectStore?.setEndReq();
+
+        this.setState({open: false});
+        window.location.reload();
+
     }
+
     handleCancel = () => {
         this.setState({open: false})
     }
@@ -63,15 +71,19 @@ class PageMypageProject extends React.Component<Props,State> {
         return (
             <Container className="project_cont">
                 <h3>내 프로젝트 관리</h3>
-                <ProjectListTable header={this.header} body={this.props.myPageProjectStore!.list.map((item: any) => {
+                <ProjectListTable header={this.header} body={this.props.myPageProjectStore!.list.map((item: any, idx: number) => {
                     return (
                         <>
-                            <Table.Row>
-                                <Table.Cell>{item.id}</Table.Cell>
+                            <Table.Row key={idx}>
+                                <Table.Cell>{idx+1}</Table.Cell>
                                 <Table.Cell><Link to={`/labeling/${item.id}`}>{item.title}</Link></Table.Cell>
                                 <Table.Cell>{item.type}</Table.Cell>
-                                <Table.Cell>2020.02.03</Table.Cell>
-                                <Table.Cell>2020.03.03</Table.Cell>
+                                <Table.Cell>{
+                                    <Datetime datetime={item.startDate}/>
+                                }</Table.Cell>
+                                <Table.Cell>{
+                                    <Datetime datetime={item.endDate}/>
+                                }</Table.Cell>
                                 <Table.Cell>
                                     <div onClick={()=>this.show('start')}>
                                         <Icon name="sign-in alternate"/>
@@ -84,17 +96,16 @@ class PageMypageProject extends React.Component<Props,State> {
                                 </Table.Cell>
                                 <Table.Cell>{item.status}</Table.Cell>
                             </Table.Row>
+                            <Confirm
+                                header={'안내'}
+                                contents={this.state.type==='start'?['지금 시작하시겠습니까?']:['지금 종료하시겠습니까?']}
+                                open={open}
+                                handleConfirm={()=>this.handleConfirm(item.id)}
+                                handleCancel={this.handleCancel}
+                            />
                         </>
                     );
                 })}/>
-
-                <Confirm
-                    header={'안내'}
-                    contents={this.state.type==='start'?['지금 시작하시겠습니까?']:['지금 종료하시겠습니까?']}
-                    open={open}
-                    handleConfirm={this.handleConfirm}
-                    handleCancel={this.handleCancel}
-                />
             </Container>
         );
     }

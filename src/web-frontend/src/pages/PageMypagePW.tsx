@@ -27,6 +27,8 @@ class PageMypagePW extends React.Component<Props> {
     }
     handleCancel = () => this.setState({open: false})
 
+    goBack = () => this.props.history.push(`/mypage`);
+
     render() {
         const {open} = this.state;
 
@@ -64,7 +66,7 @@ class PageMypagePW extends React.Component<Props> {
                 <div className="btn_group">
                     <Button
                         className="mp_btn"
-                        onClick={this.show}>
+                        onClick={this.goBack}>
                         뒤로가기
                     </Button>
                     <Button
