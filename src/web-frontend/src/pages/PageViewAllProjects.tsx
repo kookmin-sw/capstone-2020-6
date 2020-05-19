@@ -6,27 +6,28 @@ import './PageViewAllProjects.css';
 // Components
 import JInput from '../components/JInput';
 import ProjectListTable from '../components/ProjectListTable';
+import Datetime from '../components/DateTime';
 
 // for mobx
 import {inject, observer} from 'mobx-react';
-import PageViewAllProjectsStore from '../stores/PageViewAllProjectsStore';
+import ProjectListStore from '../stores/ProjectListStore';
 
 interface Props extends RouteComponentProps<any> {
-  pageViewAllProjectsStore?: PageViewAllProjectsStore
+    projectListStore?: ProjectListStore
 }
 
-@inject('pageViewAllProjectsStore')
+@inject('projectListStore')
 @observer
 class PageViewAllProjects extends React.Component<Props> {
   constructor(props: any) {
     super(props);
-      this.props.pageViewAllProjectsStore?.getAvailableProject();
-      this.props.pageViewAllProjectsStore?.getSearchKeyword();
+      this.props.projectListStore?.getProjects('RUN');
+      // this.props.projectListStore?.getSearchKeyword();
   }
 
   // TODO: Implement search query.
   search = () => {
-    console.log(this.props.pageViewAllProjectsStore?.searchKeyword);
+    // console.log(this.props.projectListStore?.searchKeyword);
   }
 
   render() {
@@ -35,12 +36,12 @@ class PageViewAllProjects extends React.Component<Props> {
         <div className='projectSearchBar'>
           <h2 className='allProjectHeader'>현재 진행중인 프로젝트</h2>
           <div className='searchBarBox'>
-            <JInput
-              style={{width: '300px'}}
-              placeholder='프로젝트 이름'
-              value={this.props.pageViewAllProjectsStore?.searchKeyword}
-              onChange={this.props.pageViewAllProjectsStore?.setSearchKeyword}
-              type='text'/>
+            {/*<JInput*/}
+            {/*  style={{width: '300px'}}*/}
+            {/*  placeholder='프로젝트 이름'*/}
+            {/*  value={this.props.pageViewAllProjectsStore?.searchKeyword}*/}
+            {/*  onChange={this.props.pageViewAllProjectsStore?.setSearchKeyword}*/}
+            {/*  type='text'/>*/}
             <Button
               color={'blue'}
               style={{marginLeft: '10px', width: '100px', height: '37px'}}
@@ -59,8 +60,9 @@ class PageViewAllProjects extends React.Component<Props> {
             {id: 5, headerItem: '마감일'},
             {id: 6, headerItem: '진행 상황'},
           ]}
-          body={this.props.pageViewAllProjectsStore!.list.map((item: any) => {
+          body={this.props.projectListStore!.listRun.map((item: any) => {
             return (
+              // TODO: Sort projects by id.
               <Table.Row key={item.id}>
                 <Table.Cell>{item.id}</Table.Cell>
                 <Table.Cell>
@@ -71,9 +73,8 @@ class PageViewAllProjects extends React.Component<Props> {
                   </Link>
                 </Table.Cell>
                 <Table.Cell>{item.type}</Table.Cell>
-                {/* TODO: Change to date format. */}
-                <Table.Cell>2020.01.01</Table.Cell>
-                <Table.Cell>2020.05.05</Table.Cell>
+                <Table.Cell><Datetime datetime={item.start_date}/></Table.Cell>
+                <Table.Cell><Datetime datetime={item.end_date}/></Table.Cell>
                 <Table.Cell>{item.progress}/{item.all}</Table.Cell>
               </Table.Row>
             );
