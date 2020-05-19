@@ -61,7 +61,17 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
               1. 강아지 코를 찾아서 캡쳐해주세요.
             </div>
             <Grid className='imagePreviewCanvas'>
-
+              <div
+                style={{
+                  // TODO: Chagep url to state
+                  backgroundImage: "url('https://www.futurekorea.co.kr/news/photo/201910/121674_123146_2638.jpg')",
+                  backgroundPositionX: `-${this.state.crop.x + 25}px`,
+                  backgroundPositionY: `-${this.state.crop.y + 10}px`,
+                  backgroundRepeat: 'no-repeat',
+                  width: this.state.crop.width,
+                  height: this.state.crop.height,
+                }}
+              />
             </Grid>
             <br/><br/>
             <Grid className='captureButtonGrid'>

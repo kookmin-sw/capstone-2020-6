@@ -16,7 +16,9 @@
 
 .imagePreviewCanvas {
     background: #f7f7f7;
-    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-content: center;
 }
 
 .captureButtonGrid {
