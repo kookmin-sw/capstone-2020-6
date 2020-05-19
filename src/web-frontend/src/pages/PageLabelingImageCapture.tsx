@@ -48,7 +48,7 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
           <h2>비문 인식을 위한 강아지 코 labeling</h2>
         </div>
         <Grid columns={2}>
-          <Grid.Column className='labelingImageCapture'>
+          <Grid.Column>
             <ReactCrop
               src={this.state.src}
               crop={this.state.crop}
@@ -56,7 +56,7 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
               onChange={this.onCropChange}
             />
           </Grid.Column>
-          <Grid.Column className='labelingCaptureResult'>
+          <Grid.Column>
             <div className='subTitle'>
               1. 강아지 코를 찾아서 캡쳐해주세요.
             </div>
