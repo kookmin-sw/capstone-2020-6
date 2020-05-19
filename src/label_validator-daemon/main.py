@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import cnn_model 
 import clustering
 
@@ -56,6 +57,32 @@ def label_validate(df):
     kmeans_labels = clustering.kmeans_clustering(img_feature, label_num)
     
     return kmeans_labels
+
+
+def cal_cor_pers(total_label_df, correct_df): 
+    cor_pers = {}
+    cor_id = {}
+    
+    path_label = {}
+    total_paths = set(total_label_df.path.tolist())
+    
+    for i in range(len(correct_df)):
+        path = correct_df.iloc[i].path
+        path_label[path] = correct_df.iloc[i].label
+#     일단 path로 
+    path_df = total_label_df.loc[:, ['path', 'label_user', 'id']]
+
+    for path in path_label:
+        if path in total_paths:
+            cor_df = path_df[(path_df['path'] == path) & (path_df['label_user']== path_label[path])]
+            correct = len(cor_df)
+
+            cor_per = correct / len(path_df[path_df['path'] == path])
+
+            cor_pers[path] = cor_per
+            cor_id[path] = cor_df.id.tolist()
+        
+    return cor_pers, cor_id
 
 
 def main():
