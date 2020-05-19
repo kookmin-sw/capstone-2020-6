@@ -85,6 +85,33 @@ def cal_cor_pers(total_label_df, correct_df):
     return cor_pers, cor_id
 
 
+def cal_credibility(total_label_df, cor_pers, right_id):
+    new_cred = 0
+    new_creds = {}
+    cred_df = total_label_df.loc[:, ['path', 'id', 'credibility']]
+    
+    for i in range(len(cred_df)):
+        index = cred_df.iloc[i]
+        new_creds[index.id] = index.credibility
+    
+    total_paths = set(cred_df.path.tolist())
+    total_ids = cred_df.id.tolist()
+    
+    for path in total_paths:
+        tmp_df = cred_df[cred_df['path']== path]
+        id_list = tmp_df.id.tolist()
+        for id in id_list:
+            if id in right_id[path]:
+                new_cred = 0.01 * cor_pers[path]
+            else:
+                new_cred = -0.01 * cor_pers[path]
+            new_creds[id] += new_cred
+    
+    new_cred_list = [new_creds[id] for id in total_ids]
+    total_label_df['new_cred'] = new_cred_list
+    return total_label_df
+
+
 def main():
     
     df = make_dataframe()
