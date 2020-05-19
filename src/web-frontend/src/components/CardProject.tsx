@@ -32,7 +32,6 @@ function calcAgo(start: string, end: string) {
   let _start = new Date(y1, m1, d1) as any;
   let _end = new Date(y2, m2, d2) as any;
 
-  console.log(_start, _end);
   let timestamp = _end - _start;
 
   let ago = '';

@@ -13,35 +13,39 @@ import {inject, observer} from 'mobx-react';
 import ProjectListStore from '../stores/ProjectListStore';
 
 interface Props extends RouteComponentProps<any> {
-    projectListStore?: ProjectListStore
+  projectListStore?: ProjectListStore
 }
 
 @inject('projectListStore')
 @observer
 class PageViewAllProjects extends React.Component<Props> {
+  state = {
+    list: this.props.projectListStore!.listRun,
+  };
   constructor(props: any) {
     super(props);
       this.props.projectListStore?.getProjects('RUN');
-      // this.props.projectListStore?.getSearchKeyword();
+      this.props.projectListStore?.getSearchKeyword();
   }
-
-  // TODO: Implement search query.
+  // TODO: Resolve search error.
   search = () => {
-    // console.log(this.props.projectListStore?.searchKeyword);
+    this.props.projectListStore?.searchProjects();
+    this.setState({
+      list: this.props.projectListStore!.searchList,
+    });
   }
-
   render() {
     return (
       <Container>
         <div className='projectSearchBar'>
           <h2 className='allProjectHeader'>현재 진행중인 프로젝트</h2>
           <div className='searchBarBox'>
-            {/*<JInput*/}
-            {/*  style={{width: '300px'}}*/}
-            {/*  placeholder='프로젝트 이름'*/}
-            {/*  value={this.props.pageViewAllProjectsStore?.searchKeyword}*/}
-            {/*  onChange={this.props.pageViewAllProjectsStore?.setSearchKeyword}*/}
-            {/*  type='text'/>*/}
+            <JInput
+              style={{width: '300px'}}
+              placeholder='프로젝트 이름'
+              value={this.props.projectListStore?.searchKeyword}
+              onChange={this.props.projectListStore?.setSearchKeyword}
+              type='text'/>
             <Button
               color={'blue'}
               style={{marginLeft: '10px', width: '100px', height: '37px'}}
@@ -50,7 +54,6 @@ class PageViewAllProjects extends React.Component<Props> {
             </Button>
           </div>
         </div>
-
         <ProjectListTable
           header={[
             {id: 1, headerItem: '#'},
@@ -60,7 +63,7 @@ class PageViewAllProjects extends React.Component<Props> {
             {id: 5, headerItem: '마감일'},
             {id: 6, headerItem: '진행 상황'},
           ]}
-          body={this.props.projectListStore!.listRun.map((item: any) => {
+          body={this.state.list.map((item: any) => {
             return (
               // TODO: Sort projects by id.
               <Table.Row key={item.id}>
