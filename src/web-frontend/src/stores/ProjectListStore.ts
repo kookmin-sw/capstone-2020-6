@@ -61,7 +61,7 @@ export default class ProjectListStore {
           start_date: item.startDate,
           end_date: item.endDate,
           type: item.category.type.toUpperCase() + "-" + item.category.name,
-          point: item.totalPoint / item.maxCycle,
+          point: Math.floor(item.totalPoint / item.maxCycle),
           description: item.onelineDescription,
           progress: item.currentCycle,
           all: item.maxCycle,
