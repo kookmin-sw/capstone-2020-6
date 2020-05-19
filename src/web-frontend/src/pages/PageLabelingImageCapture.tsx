@@ -38,7 +38,7 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
   }
 
   onCropChange = (crop: any) => {
-    this.setState({crop});
+    this.setState({crop: crop});
   }
 
   render() {
