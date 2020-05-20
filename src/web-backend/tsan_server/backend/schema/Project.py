@@ -141,7 +141,6 @@ class CreateRequest(graphene.Mutation):
         own = Request.objects.filter(user=user, subject=subject).exists()
 
         if own:
-            print('aaaaa')
             # 같은 주제가 이미 등록되어있는 경우
             # 동일 인물이 시도할 경우: 등록 불가
             return CreateRequest(message=Message(status=False, message="회원님은 이미 같은 주제로 등록하신 프로젝트가 있습니다."))
@@ -500,6 +499,45 @@ class DeleteLabelerTakenProject(graphene.Mutation):
             labeling.delete()
             message = "'%s' 참여 프로젝트 목록이 정상적으로 삭제되었습니다."%(deleted_labeling.request.subject)
             return DeleteLabelerTakenProject(
+                message=Message(status=True, message=message)
+            )
+
+"""
+mutation{
+  deleteRequest(
+    idx:5
+    token:"관리자"
+  ){
+    message{
+      status
+      message
+    }
+  }
+}
+"""
+# DeleteRequest는 특정 프로젝트를 삭제하는 함수이다.
+class DeleteRequest(graphene.Mutation):
+    message = graphene.Field(Message)
+    
+    class Arguments:
+        idx = graphene.Int()
+        token = graphene.String()
+
+    @only_user
+    @only_admin
+    def mutate(self, info, idx, token):
+        try:
+            request = Request.objects.get(idx=idx)
+        except:
+            message = "해당하는 인스턴스가 존재하지 않습니다."
+            return DeleteRequest(
+                message=Message(status=False, message=message)
+                )
+        else:
+            deleted_request = request
+            request.delete()
+            message = "'%s' 프로젝트가 정상적으로 삭제되었습니다."%(deleted_request.subject)
+            return DeleteRequest(
                 message=Message(status=True, message=message)
             )
 
