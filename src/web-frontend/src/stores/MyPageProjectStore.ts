@@ -140,7 +140,6 @@ export default class ProjectListStore {
             }
         })
         .then(({data}:any) => {
-            console.log(data)
             var list:any = []
             var status:any = {
                 'RED': "준비중",
@@ -152,8 +151,8 @@ export default class ProjectListStore {
                     id: item.idx,
                     title: item.subject,
                     author: item.user.fullname,
-                    start_date: new Date(item.startDate),
-                    end_date: new Date(item.endDate),
+                    start_date: item.startDate,
+                    end_date: item.endDate,
                     type: "[" + item.category.type + "] " + item.category.name,
                     status: status[item.state],
                 })

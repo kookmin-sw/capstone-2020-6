@@ -78,12 +78,12 @@ class PageMypageProject extends React.Component<Props,State> {
                                 <Table.Cell>{idx+1}</Table.Cell>
                                 <Table.Cell><Link to={`/labeling/${item.id}`}>{item.title}</Link></Table.Cell>
                                 <Table.Cell>{item.type}</Table.Cell>
-                                <Table.Cell>{
-                                    <Datetime datetime={item.startDate}/>
-                                }</Table.Cell>
-                                <Table.Cell>{
-                                    <Datetime datetime={item.endDate}/>
-                                }</Table.Cell>
+                                <Table.Cell>
+                                    <Datetime datetime={item.start_date}/>
+                                </Table.Cell>
+                                <Table.Cell>
+                                    <Datetime datetime={item.end_date}/>
+                                </Table.Cell>
                                 <Table.Cell>
                                     <div onClick={()=>this.show('start')}>
                                         <Icon name="sign-in alternate"/>
