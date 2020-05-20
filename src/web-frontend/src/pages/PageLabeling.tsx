@@ -63,7 +63,10 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                             {this.props.labelingPageStore?.request.author}
                             &nbsp;/&nbsp;
                             {this.props.labelingPageStore?.request.rewardPoints}P
-                            /
+                            &nbsp;/&nbsp;
+                            <Datetime datetime={this.props.labelingPageStore?.request.startDate}/>
+                            &nbsp;-&nbsp;
+                            <Datetime datetime={this.props.labelingPageStore?.request.endDate}/>
                         </div>
                         <div className="project-progress">
                             <div style={{width: `${this.props.labelingPageStore?.request.progressRate}%`}}/>
