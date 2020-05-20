@@ -4,7 +4,6 @@ import {
 } from 'mobx';
 import {client} from '../tsan';
 import {gql} from 'apollo-boost';
-import {act} from 'react-dom/test-utils';
 
 export default class ProjectListStore {
   @observable listRun: any = [];
@@ -16,8 +15,8 @@ export default class ProjectListStore {
     this.listEnd = [];
     this.searchList = [];
     this.searchKeyword = '';
-    this.getProjects("RUN");
-    this.getProjects("END");
+    this.getProjects('RUN');
+    this.getProjects('END');
   }
   @action getSearchKeyword = () => {
     this.searchKeyword = '';
@@ -61,42 +60,38 @@ export default class ProjectListStore {
         }
       `,
     })
-    .then(({data}:any) => {
-      var list:any = []
-      data.getAllRequest.requests.forEach((item:any) => {
-        list.push({
-          id: item.idx,
-          thumbnail: item.thumbnail,
-          title: item.subject,
-          author: item.user ? (item.user.fullname.length === 0 ? "익명" : item.user.fullname) : "알 수 없음",
-          start_date: item.startDate,
-          end_date: item.endDate,
-          type: item.category.type.toUpperCase() + "-" + item.category.name,
-          point: Math.floor(item.totalPoint / item.maxCycle),
-          description: item.onelineDescription,
-          progress: item.currentCycle,
-          all: item.maxCycle,
-          progress_rate: item.currentCycle / item.maxCycle
+        .then(({data}:any) => {
+          var list:any = [];
+          data.getAllRequest.requests.forEach((item:any) => {
+            list.push({
+              id: item.idx,
+              thumbnail: item.thumbnail,
+              title: item.subject,
+              author: item.user ? (item.user.fullname.length === 0 ? '익명' : item.user.fullname) : '알 수 없음',
+              start_date: item.startDate,
+              end_date: item.endDate,
+              type: item.category.type.toUpperCase() + '-' + item.category.name,
+              point: Math.floor(item.totalPoint / item.maxCycle),
+              description: item.onelineDescription,
+              progress: item.currentCycle,
+              all: item.maxCycle,
+              progress_rate: item.currentCycle / item.maxCycle
+            });
+          });
+          if (state === 'RUN') {
+            this.listRun = list;
+          } else if (state === 'END') {
+            this.listEnd = list;
+          }
         })
-      });
-      if(state === "RUN") {
-        this.listRun = list
-      } else if(state === "END") {
-        this.listEnd = list
-      }
-    })
         .catch(e => {
           console.error(e);
         });
   }
-  // TODO: Delete this method.
-  @action getAvailableProject = () => {
-    this.listRun = [
-    ];
-  }
-  @action searchProjects = () => {
-    client.query({
-      query: gql`
+  @action searchProjects = (state: string) => {
+    if (state === 'RUN') {
+      client.query({
+        query: gql`
         query GetSubjectRequest($keyword: String!) {
           getSubjectRequest(keyword: $keyword) {
             message {
@@ -126,34 +121,38 @@ export default class ProjectListStore {
         }
       }
     `,
-      variables: {
-        keyword: this.searchKeyword,
-      },
-    })
-        .then(({data}: any) => {
-          var list: any = [];
-          data.getSubjectRequest.requests.forEach((item: any) => {
-            list.push({
-              id: item.idx,
-              title: item.subject,
-              type: item.category.type.toUpperCase() + '-' + item.category.name,
-              start_date: item.startDate,
-              end_date: item.endDate,
-              progress: item.currentCycle,
-              all: item.maxCycle,
-              progress_rate: item.currentCycle / item.maxCycle,
+        variables: {
+          keyword: this.searchKeyword,
+        },
+      })
+          .then(({data}: any) => {
+            var list: any = [];
+            data.getSubjectRequest.requests.forEach((item: any) => {
+              list.push({
+                id: item.idx,
+                title: item.subject,
+                type: item.category.type.toUpperCase() + '-' + item.category.name,
+                start_date: item.startDate,
+                end_date: item.endDate,
+                progress: item.currentCycle,
+                all: item.maxCycle,
+                progress_rate: item.currentCycle / item.maxCycle,
+              });
             });
+            if (this.searchKeyword === '') {
+              this.searchList = this.listRun;
+            } else {
+              this.searchList = list;
+            }
+            // TODO: After fix search error.
+            // this.searchKeyword = '';
+          })
+          .catch(e => {
+            console.error(e);
           });
-          if (this.searchKeyword === '') {
-            this.searchList = this.listRun;
-          } else {
-            this.searchList = list;
-          }
-          // TODO: After fix search error.
-          // this.searchKeyword = '';
-        })
-        .catch(e => {
-          console.error(e);
-        });
+    } else {
+      console.log('state End');
+    // TODO: Implement search finished projects query.
+    }
   }
 }

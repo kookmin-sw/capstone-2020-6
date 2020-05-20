@@ -157,7 +157,6 @@ export default class ProjectListStore {
                     status: status[item.state],
                 })
             });
-            console.log(list)
             this.list = list
         })
         .catch(e => {
