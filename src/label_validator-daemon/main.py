@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import cnn_model 
 import clustering
 
@@ -56,6 +57,83 @@ def label_validate(df):
     kmeans_labels = clustering.kmeans_clustering(img_feature, label_num)
     
     return kmeans_labels
+
+
+def cal_cor_pers(total_label_df, correct_df): 
+    cor_pers = {}
+    cor_id = {}
+    
+    path_label = {}
+    total_paths = set(total_label_df.path.tolist())
+    
+    for i in range(len(correct_df)):
+        path = correct_df.iloc[i].path
+        path_label[path] = correct_df.iloc[i].label
+#     일단 path로 
+    path_df = total_label_df.loc[:, ['path', 'label_user', 'id']]
+
+    for path in path_label:
+        if path in total_paths:
+            cor_df = path_df[(path_df['path'] == path) & (path_df['label_user']== path_label[path])]
+            correct = len(cor_df)
+
+            cor_per = correct / len(path_df[path_df['path'] == path])
+
+            cor_pers[path] = cor_per
+            cor_id[path] = cor_df.id.tolist()
+        
+    return cor_pers, cor_id
+
+
+def cal_credibility(total_label_df, cor_pers, right_id):
+    new_cred = 0
+    new_creds = {}
+    cred_df = total_label_df.loc[:, ['path', 'id', 'credibility']]
+    
+    for i in range(len(cred_df)):
+        index = cred_df.iloc[i]
+        new_creds[index.id] = index.credibility
+    
+    total_paths = set(cred_df.path.tolist())
+    total_ids = cred_df.id.tolist()
+    
+    for path in total_paths:
+        tmp_df = cred_df[cred_df['path']== path]
+        id_list = tmp_df.id.tolist()
+        for id in id_list:
+            if id in right_id[path]:
+                new_cred = 0.01 * cor_pers[path]
+            else:
+                new_cred = -0.01 * cor_pers[path]
+            new_creds[id] += new_cred
+    
+    new_cred_list = [new_creds[id] for id in total_ids]
+    total_label_df['new_cred'] = new_cred_list
+    return total_label_df
+
+
+def second_labeling(df, rest_df):
+#     df_temp_labeling = pd.DataFrame({'file_index' : [], 'path' : [], 'label_temp' : []})
+    
+    total_paths = set(df.path.tolist())
+    mode_labels = []
+    
+    for path in total_paths:
+        temp_df = df[df['path'] == path]
+        
+        credibilities = temp_df.new_cred.tolist()
+        credibilities.sort()
+        
+        if len(credibilities) > 2:
+            labels = temp_df[temp_df['new_cred'] >= credibilities[-3]].label.tolist()
+            mode_label = find_mode_label(labels)
+            mode_labels.append(mode_label)
+#         data = pd.Series([i, temp_df['path'].iloc[0], mode_label], index = ['file_index', 'path', 'label_temp'])  
+#         df_temp_labeling = df_temp_labeling.append(data, ignore_index = True)
+
+    rest_df['second_label'] = mode_labels
+            
+    return rest_df
 
 
 def main():
