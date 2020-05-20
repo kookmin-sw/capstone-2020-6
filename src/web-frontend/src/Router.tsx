@@ -24,6 +24,7 @@ import PageLabelingImageCapture from './pages/PageLabelingImageCapture';
 import PageMypageProject from './pages/PageMypageProject';
 import PageCaptcha from './pages/PageCaptcha';
 import PageViewAllProjects from './pages/PageViewAllProjects';
+import PageViewAllProjectsFinished from './pages/PageViewAllProjectsFinished';
 
 // for Components
 import Navigation from './components/Navigation';
@@ -58,6 +59,9 @@ class App extends React.Component<Props> {
           </Route>
           <Route path='/allprojects'>
             <PageViewAllProjects/>
+          </Route>
+          <Route path='/allProjectsFinished'>
+            <PageViewAllProjectsFinished/>
           </Route>
           <Route exact path='/mypage'>
             <PageMypage/>

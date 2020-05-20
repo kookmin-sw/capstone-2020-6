@@ -1,7 +1,7 @@
 import React from 'react';
 import {RouteComponentProps, withRouter, Link} from 'react-router-dom';
 import {Button, Container, Table} from 'semantic-ui-react';
-import './PageViewAllProjects.css';
+import './PageViewAllProjectsFinished.css';
 
 // Components
 import JInput from '../components/JInput';
@@ -18,18 +18,18 @@ interface Props extends RouteComponentProps<any> {
 
 @inject('projectListStore')
 @observer
-class PageViewAllProjects extends React.Component<Props> {
+class PageViewAllProjectsFinished extends React.Component<Props> {
   state = {
     list: this.props.projectListStore!.listRun,
   };
   constructor(props: any) {
     super(props);
-      this.props.projectListStore?.getProjects('RUN');
+      this.props.projectListStore?.getProjects('END');
       this.props.projectListStore?.getSearchKeyword();
   }
   // TODO: Resolve search error.
   search = () => {
-    this.props.projectListStore?.searchProjects('RUN');
+    this.props.projectListStore?.searchProjects('END');
     this.setState({
       list: this.props.projectListStore!.searchList,
     });
@@ -38,7 +38,7 @@ class PageViewAllProjects extends React.Component<Props> {
     return (
       <Container>
         <div className='projectSearchBar'>
-          <h2 className='allProjectHeader'>현재 진행중인 프로젝트</h2>
+          <h2 className='allProjectHeader'>완료된 프로젝트</h2>
           <div className='searchBarBox'>
             <JInput
               style={{width: '300px'}}
@@ -88,4 +88,4 @@ class PageViewAllProjects extends React.Component<Props> {
   }
 }
 
-export default withRouter(PageViewAllProjects);
+export default withRouter(PageViewAllProjectsFinished);
