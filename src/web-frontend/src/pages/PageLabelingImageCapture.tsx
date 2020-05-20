@@ -63,8 +63,7 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
             <Grid className='imagePreviewCanvas'>
               <div
                 style={{
-                  // TODO: Chagep url to state
-                  backgroundImage: "url('https://www.futurekorea.co.kr/news/photo/201910/121674_123146_2638.jpg')",
+                  backgroundImage: `url(${this.state.src})`,
                   backgroundPositionX: `-${this.state.crop.x + 25}px`,
                   backgroundPositionY: `-${this.state.crop.y + 10}px`,
                   backgroundRepeat: 'no-repeat',
@@ -75,6 +74,7 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
             </Grid>
             <br/><br/>
             <Grid className='captureButtonGrid'>
+              {/* TODO: Implement onClick method */}
               <Button color={'blue'} className='captureButton'>
                 캡쳐
               </Button>
