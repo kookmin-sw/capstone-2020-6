@@ -24,26 +24,36 @@ def find_mode_label(labels):
     return label_count[0][0]
 
 
-def temp_labeling(df):
-    df_temp_labeling = pd.DataFrame({'file_index' : [], 'path' : [], 'label_temp' : []})
+def temp_labeling(df, n):
     
-    file_indices = set(df.file_index.tolist())
+    temp_labeling_df = pd.DataFrame({'data_index' : [], 'data' : [], 'label_temp' : []})
     
-    for i in file_indices:
-        temp_df = df[df['file_index'] == i]
+    data_indicis = set(df.data_index.tolist())
+    
+    for i in data_indicis:
+        temp_df = df[df['data_index'] == i]
         
-        credibilities = temp_df.credibility.tolist()
+        credibilities = df.user_credibility.tolist()
         credibilities.sort()
         
-        if len(credibilities) > 2:
-            labels = temp_df[temp_df['credibility'] >= credibilities[-3]].label.tolist()
-            mode_label = find_mode_label(labels)
-        
-        
-        data = pd.Series([i, temp_df['path'].iloc[0], mode_label], index = ['file_index', 'path', 'label_temp'])  
-        df_temp_labeling = df_temp_labeling.append(data, ignore_index = True)
+        if len(credibilities) > n-1:
+            credibilities_n_df = temp_df[temp_df['user_credibility'] >= credibilities[-n]]
             
-    return df_temp_labeling
+            labels = credibilities_n_df.label_user.tolist()
+            
+            mode_label = find_mode_label(labels)
+            
+            credibilities_n = temp_df[temp_df['label_user'] == mode_label].user_credibility.tolist()
+            
+            credibility_label_temp = sum(credibilities_n) / len(credibilities_n)
+        
+        ##라벨러 n 명 이하일 때
+        ##추가##
+        
+        data = pd.Series([i, temp_df.data.iloc[0], mode_label, credibility_label_temp], index = ['data_index', 'data', 'label_temp', 'credibility_label_temp'])  
+        temp_labeling_df = temp_labeling_df.append(data, ignore_index = True)
+            
+    return temp_labeling_df
 
 
 def label_validate(df):
