@@ -16,7 +16,6 @@ import datetime
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
@@ -27,9 +26,9 @@ SECRET_KEY = 'l(-gpuaz6^yvme=*x-f*gyz)deg2d1^xhye5)+9)4=d9+-fx^v'
 DEBUG = True
 
 ALLOWED_HOSTS = [
-	"13.209.70.145",
-	"127.0.0.1:8000",
-	"127.0.0.1",
+    "13.209.70.145",
+    "127.0.0.1:8000",
+    "127.0.0.1",
     "localhost",
     "localhost:8000",
 ]
@@ -50,7 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles', # Required for GraphiQL
+    'django.contrib.staticfiles',  # Required for GraphiQL
     'graphene_django',
     'command_center',
     'backend',
@@ -60,7 +59,7 @@ INSTALLED_APPS = [
 ]
 
 GRAPHENE = {
-    'SCHEMA': 'tsan_server.schema.schema' # Where your Graphene schema lives
+    'SCHEMA': 'tsan_server.schema.schema'  # Where your Graphene schema lives
 }
 
 MIDDLEWARE = [
@@ -68,7 +67,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-#    'django.middleware.csrf.CsrfViewMiddleware',
+    #    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -94,7 +93,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'tsan_server.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -138,7 +136,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated',
@@ -173,13 +170,12 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
 
-AUTH_USER_MODEL = 'backend.User' # AbstractUser
+AUTH_USER_MODEL = 'backend.User'  # AbstractUser
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

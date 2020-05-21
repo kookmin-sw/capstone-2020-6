@@ -3,9 +3,9 @@ from backend.models import Dataset, User
 from django.contrib.auth import login
 from graphene_django.types import DjangoObjectType
 from rest_framework_jwt.serializers import (
-  JSONWebTokenSerializer,
-  RefreshJSONWebTokenSerializer,
-  jwt_decode_handler
+    JSONWebTokenSerializer,
+    RefreshJSONWebTokenSerializer,
+    jwt_decode_handler
 )
 from backend.utils import (
     only_user,
@@ -14,13 +14,16 @@ from backend.utils import (
     Message
 )
 
+
 class DatasetType(DjangoObjectType):
     class Meta:
         model = Dataset
 
+
 class Datasets(graphene.ObjectType):
     message = graphene.Field(Message)
     datasets = graphene.List(DatasetType)
+
 
 """
 mutation {
@@ -33,13 +36,15 @@ mutation {
   } 
 }
 """
+
+
 class CreateDataset(graphene.Mutation):
     message = graphene.Field(Message)
     idx = graphene.Int()
 
     class Arguments:
         name = graphene.String()
-        token= graphene.String()
+        token = graphene.String()
 
     @only_user
     @only_admin
@@ -50,11 +55,12 @@ class CreateDataset(graphene.Mutation):
         except:
             dataset = Dataset()
             dataset.create(name=name)
-            message = "'%s'가 생성되었습니다."%(dataset.name)
+            message = "'%s'가 생성되었습니다." % (dataset.name)
             return CreateDataset(
-                        message=Message(status=True, message=message),
-                        idx=dataset.idx
-                    )
+                message=Message(status=True, message=message),
+                idx=dataset.idx
+            )
+
 
 class Query(graphene.ObjectType):
     """
@@ -69,6 +75,7 @@ class Query(graphene.ObjectType):
     """
     # 모든 데이터셋 카테고리 반환
     get_all_dataset = graphene.Field(Datasets, token=graphene.String())
+
     @only_user
     @only_requester
     def resolve_get_all_dataset(self, info, token):

@@ -2,16 +2,18 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator
 import re
 
+
 # email 유효성 검증
 def validate_email(value):
     if not '@' in value:
-       raise ValidationError("유효한 이메일 형식이 아닙니다.")
+        raise ValidationError("유효한 이메일 형식이 아닙니다.")
 
     EMAIL_REGEX = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
     if not re.match(EMAIL_REGEX, value):
         raise ValidationError("유효한 이메일 형식이 아닙니다.")
-    
+
     return value
+
 
 # phone 유효성 검증
 def validate_phone(value):
@@ -20,6 +22,7 @@ def validate_phone(value):
         raise ValidationError("유효한 전화번호 형식이 아닙니다.")
 
     return value
+
 
 # password 유효성 검증
 """
@@ -32,12 +35,14 @@ def validate_password(value):
     return value
 """
 
+
 # Category type 유효성 검증
 def validate_category_type(value):
     if not (value == "text" or value == "image"):
         raise ValidationError("카테고리 타입이 image/text 형식이 아닙니다.")
 
     return value
+
 
 # date 유효성 검증
 def validate_date(value):
@@ -47,12 +52,14 @@ def validate_date(value):
         raise ValidationError("유효한 날짜 형식이 아닙니다.")
     return value
 
+
 """
 # 최소 글자 수 유효성 검증
 def validate_min_len(min_len, value):
     MinLengthValidator(min_len, "길이가 너무 짧습니다.")
     return value
 """
+
 
 # Payment type 유효성 검증
 def validate_paymentlog_type(value):

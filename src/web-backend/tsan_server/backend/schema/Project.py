@@ -18,21 +18,26 @@ from backend.utils import (
     Message
 )
 
+
 class RequestType(DjangoObjectType):
     class Meta:
         model = Request
+
 
 class Requests(graphene.ObjectType):
     message = graphene.Field(Message)
     requests = graphene.List(RequestType)
 
+
 class LabelingType(DjangoObjectType):
     class Meta:
         model = Labeling
 
+
 class Labelings(graphene.ObjectType):
     message = graphene.Field(Message)
     labelings = graphene.List(LabelingType)
+
 
 """
 mutation {
@@ -45,13 +50,15 @@ mutation {
   } 
 }
 """
+
+
 class CreateDataset(graphene.Mutation):
     message = graphene.Field(Message)
     idx = graphene.Int()
 
     class Arguments:
         name = graphene.String()
-        token= graphene.String()
+        token = graphene.String()
 
     @only_user
     @only_admin
@@ -62,11 +69,13 @@ class CreateDataset(graphene.Mutation):
         except:
             dataset = Dataset()
             dataset.create(name=name)
-            message = "'%s'가 생성되었습니다."%(dataset.name)
+            message = "'%s'가 생성되었습니다." % (dataset.name)
             return CreateDataset(
                 message=Message(status=True, message=message),
                 idx=dataset.idx
             )
+
+
 """
 mutation{
   createRequest(
@@ -92,6 +101,8 @@ mutation{
   }
 }
 """
+
+
 class CreateRequest(graphene.Mutation):
     message = graphene.Field(Message)
     idx = graphene.Int()
@@ -137,14 +148,14 @@ class CreateRequest(graphene.Mutation):
 
         # 의뢰자의 포인트 확인
         if user.point < total_point:
-            message = "회원님은 %d 포인트가 부족합니다. 충전 후 다시 프로젝트를 등록 해주세요." %(total_point-user.point)
+            message = "회원님은 %d 포인트가 부족합니다. 충전 후 다시 프로젝트를 등록 해주세요." % (total_point - user.point)
             return CreateRequest(message=Message(status=False, message=message))
 
         category = Category.objects.get(idx=category)
         dataset = Dataset.objects.get(idx=dataset)
 
         exist_subject = Request.objects.filter(subject=subject).exists()
-        own = Request.objects.filter(Q(user_id=user.id)&Q(subject=subject)).exists()
+        own = Request.objects.filter(Q(user_id=user.id) & Q(subject=subject)).exists()
         print('own: ', own)
         if own:
             # 같은 주제가 이미 등록되어있는 경우
@@ -195,14 +206,14 @@ class CreateRequest(graphene.Mutation):
             # 같은 주제가 이미 등록되어있는 경우
             # 다른 사람이 시도할 경우: 등록 가능
             if exist_subject:
-                message = "'%s' 주제가 등록되었습니다. 다른 의뢰자가 등록한 같은 주제가 존재합니다. 남은 포인트 %d 입니다." %(request.subject, user.point)
+                message = "'%s' 주제가 등록되었습니다. 다른 의뢰자가 등록한 같은 주제가 존재합니다. 남은 포인트 %d 입니다." % (request.subject, user.point)
                 return CreateRequest(
                     message=Message(status=True, message=message),
                     idx=request.idx
                 )
             # 주제가 처음 등록된 경우
             else:
-                message = "'%s' 주제가 등록되었습니다. 남은 포인트 %d 입니다." %(request.subject, user.point)
+                message = "'%s' 주제가 등록되었습니다. 남은 포인트 %d 입니다." % (request.subject, user.point)
                 return CreateRequest(
                     message=Message(status=True, message=message),
                     idx=request.idx
@@ -231,6 +242,8 @@ mutation{
   }
 }
 """
+
+
 class UpdateRequest(graphene.Mutation):
     message = graphene.Field(Message)
     idx = graphene.Int()
@@ -311,15 +324,16 @@ class UpdateRequest(graphene.Mutation):
                 request.dataset = dataset
                 request.count_dataset = count_dataset
                 request.save()
-                message = "'%s'주제가 정상적으로 수정되었습니다."%(request.subject)
+                message = "'%s'주제가 정상적으로 수정되었습니다." % (request.subject)
                 return UpdateRequest(
                     message=Message(status=True, message=message),
                     idx=request.idx
                 )
         except Exception as ex:
             return UpdateRequest(
-                message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다."+str(ex))
+                message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다." + str(ex))
             )
+
 
 """
 mutation{
@@ -335,6 +349,8 @@ mutation{
   }
 }
 """
+
+
 # StartRequest는 프로젝트를 임의적으로 시작시키는 함수이다.
 # start_date = 현재 날짜, state = 'RUN'으로 변경됨.
 class StartRequest(graphene.Mutation):
@@ -353,9 +369,11 @@ class StartRequest(graphene.Mutation):
         try:
             request = Request.objects.get(idx=idx)
             now = datetime.datetime.now()
-            update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject, description=request.description,
+            update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject,
+                             description=request.description,
                              start_date=now, end_date=str(request.end_date),
-                             max_cycle=request.max_cycle, total_point=request.total_point, is_captcha=request.is_captcha, state='RUN')
+                             max_cycle=request.max_cycle, total_point=request.total_point,
+                             is_captcha=request.is_captcha, state='RUN')
             try:
                 update.clean()
             except ValidationError as e:
@@ -364,13 +382,14 @@ class StartRequest(graphene.Mutation):
                 request.start_date = now
                 request.state = 'RUN'
                 request.save()
-                message = "'%s'주제가 정상적으로 시작되었습니다."%(request.subject)
+                message = "'%s'주제가 정상적으로 시작되었습니다." % (request.subject)
                 return StartRequest(
                     message=Message(status=True, message=message),
                     idx=request.idx
                 )
         except Exception as ex:
-            return StartRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다."+str(ex)))
+            return StartRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다." + str(ex)))
+
 
 """
 mutation{
@@ -386,6 +405,8 @@ mutation{
   }
 }
 """
+
+
 # EndRequest는 프로젝트를 임의적으로 종료(end, not stop)시키는 함수이다.
 # end_date = 현재 날짜, state = 'END'으로 변경됨.
 class EndRequest(graphene.Mutation):
@@ -404,9 +425,11 @@ class EndRequest(graphene.Mutation):
         try:
             request = Request.objects.get(idx=idx)
             now = datetime.datetime.now()
-            update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject, description=request.description,
+            update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject,
+                             description=request.description,
                              start_date=str(request.start_date), end_date=now,
-                             max_cycle=request.max_cycle, total_point=request.total_point, is_captcha=request.is_captcha, state='END')
+                             max_cycle=request.max_cycle, total_point=request.total_point,
+                             is_captcha=request.is_captcha, state='END')
             try:
                 update.clean()
             except ValidationError as e:
@@ -415,13 +438,14 @@ class EndRequest(graphene.Mutation):
                 request.start_date = now
                 request.state = 'END'
                 request.save()
-                message = "'%s'주제가 정상적으로 종료되었습니다."%(request.subject)
+                message = "'%s'주제가 정상적으로 종료되었습니다." % (request.subject)
                 return EndRequest(
                     message=Message(status=True, message=message),
                     idx=request.idx
                 )
         except Exception as ex:
-            return EndRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다."+str(ex)))
+            return EndRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다." + str(ex)))
+
 
 """
 mutation{
@@ -437,6 +461,8 @@ mutation{
   }
 }
 """
+
+
 class TakeProject(graphene.Mutation):
     message = graphene.Field(Message)
     idx = graphene.Int()
@@ -470,8 +496,9 @@ class TakeProject(graphene.Mutation):
                     return TakeProject(message=Message(status=False, message=str(e)))
                 else:
                     new_labeling.save()
-                    message = "'%s'님 '%%s' 주제가 정상적으로 등록되었습니다."%(user.username)%(request.subject)
+                    message = "'%s'님 '%%s' 주제가 정상적으로 등록되었습니다." % (user.username) % (request.subject)
                     return TakeProject(message=Message(status=True, message=message))
+
 
 """
 mutation{
@@ -486,6 +513,8 @@ mutation{
   }
 }
 """
+
+
 # DeleteLabelerTakenProject는 참여자가 신청한 특정 프로젝트를 삭제하는 함수이다.
 class DeleteLabelerTakenProject(graphene.Mutation):
     message = graphene.Field(Message)
@@ -507,10 +536,11 @@ class DeleteLabelerTakenProject(graphene.Mutation):
         else:
             deleted_labeling = labeling
             labeling.delete()
-            message = "'%s' 참여 프로젝트 목록이 정상적으로 삭제되었습니다."%(deleted_labeling.request.subject)
+            message = "'%s' 참여 프로젝트 목록이 정상적으로 삭제되었습니다." % (deleted_labeling.request.subject)
             return DeleteLabelerTakenProject(
                 message=Message(status=True, message=message)
             )
+
 
 """
 mutation{
@@ -525,6 +555,8 @@ mutation{
   }
 }
 """
+
+
 # DeleteRequest는 특정 프로젝트를 삭제하는 함수이다.
 class DeleteRequest(graphene.Mutation):
     message = graphene.Field(Message)
@@ -546,7 +578,7 @@ class DeleteRequest(graphene.Mutation):
         else:
             deleted_request = request
             request.delete()
-            message = "'%s' 프로젝트가 정상적으로 삭제되었습니다."%(deleted_request.subject)
+            message = "'%s' 프로젝트가 정상적으로 삭제되었습니다." % (deleted_request.subject)
             return DeleteRequest(
                 message=Message(status=True, message=message)
             )
@@ -627,6 +659,7 @@ class Query(graphene.ObjectType):
                                      offset=graphene.Int(required=False),
                                      limit=graphene.Int(required=False)
                                      )
+
     def resolve_get_all_request(self, info, **kwargs):
         order = kwargs.get("orderby", None)
         offset = kwargs.get("offset", None)
@@ -634,19 +667,20 @@ class Query(graphene.ObjectType):
 
         if offset and limit:
             if order:
-                requests = Request.objects.all().order_by(order, '-idx') [offset:offset+limit] # 인자값 순, 최신 등록 순
+                requests = Request.objects.all().order_by(order, '-idx')[offset:offset + limit]  # 인자값 순, 최신 등록 순
             else:
-                requests = Request.objects.all().order_by('-idx') [offset:offset+limit] # 최신 등록 순
+                requests = Request.objects.all().order_by('-idx')[offset:offset + limit]  # 최신 등록 순
         else:
             if order:
-                requests = Request.objects.all().order_by(order, '-idx') # 인자값 순, 최신 등록 순
+                requests = Request.objects.all().order_by(order, '-idx')  # 인자값 순, 최신 등록 순
             else:
-                requests = Request.objects.all().order_by('-idx') # 최신 등록 순
+                requests = Request.objects.all().order_by('-idx')  # 최신 등록 순
 
         for request in requests:
             if request.user is not None:
                 request.user.password = "*****"
-                request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
+                request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + \
+                                     request.user.email.split("@")[1]
         return Requests(message=Message(status=True, message=""), requests=requests)
 
     """
@@ -681,6 +715,7 @@ class Query(graphene.ObjectType):
     """
     # 특정 의뢰자에 대한 주제 반환
     get_requester_request = graphene.Field(Requests, token=graphene.String())
+
     @only_user
     @only_requester
     def resolve_get_requester_request(self, info, token):
@@ -690,7 +725,8 @@ class Query(graphene.ObjectType):
         for request in request_rows:
             if request.user is not None:
                 request.user.password = "*****"
-                request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
+                request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + \
+                                     request.user.email.split("@")[1]
         if request_rows:
             return Requests(message=Message(status=True, message=""), requests=request_rows)
         else:
@@ -733,6 +769,7 @@ class Query(graphene.ObjectType):
     # GetLabelerTakenProject는 참여자가 신청한 특정 라벨링 프로젝트를 조회하는 함수이다.
     # 프로젝트 목록과 해당 프로젝트의 세부사항까지 선택적으로 조회할 수 있다.
     get_labeler_taken_project = graphene.Field(Labelings, token=graphene.String())
+
     @only_user
     def resolve_get_labeler_taken_project(self, info, token):
         res = jwt_decode_handler(token)
@@ -745,7 +782,8 @@ class Query(graphene.ObjectType):
                                       "@" + labeling.user.email.split("@")[1]
             if labeling.request.user is not None:
                 labeling.request.user.password = "*****"
-                labeling.request.user.email = labeling.request.user.email.split("@")[0][0:3] + "****" + "@" + labeling.request.user.email.split("@")[1]
+                labeling.request.user.email = labeling.request.user.email.split("@")[0][0:3] + "****" + "@" + \
+                                              labeling.request.user.email.split("@")[1]
         if labelings:
             return Labelings(message=Message(status=True, message=""), labelings=labelings)
         else:
@@ -783,14 +821,16 @@ class Query(graphene.ObjectType):
     """
     # 특정 state에 대한 주제 반환
     get_state_request = graphene.Field(Requests, state=graphene.String())
+
     def resolve_get_state_request(self, info, state):
         request_rows = Request.objects.filter(state=state)
         for request in request_rows:
             if request.user is not None:
                 request.user.password = "*****"
-                request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
+                request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + \
+                                     request.user.email.split("@")[1]
         if request_rows:
-            message = "'%s' 상태에 대한 주제 목록 반환" %(request.state)
+            message = "'%s' 상태에 대한 주제 목록 반환" % (request.state)
             return Requests(message=Message(status=True, message=message), requests=request_rows)
         else:
             return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
@@ -825,14 +865,16 @@ class Query(graphene.ObjectType):
     """
     # 특정 id에 대한 주제 반환
     get_idx_request = graphene.Field(Requests, idx=graphene.Int())
+
     def resolve_get_idx_request(self, info, idx):
         request_rows = Request.objects.filter(idx=idx)
         for request in request_rows:
             if request.user is not None:
                 request.user.password = "*****"
-                request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
+                request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + \
+                                     request.user.email.split("@")[1]
         if request_rows:
-            message = "'%s' 상태에 대한 주제 목록 반환" %(request.state)
+            message = "'%s' 상태에 대한 주제 목록 반환" % (request.state)
             return Requests(message=Message(status=True, message=message), requests=request_rows)
         else:
             return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
@@ -869,14 +911,16 @@ class Query(graphene.ObjectType):
     """
     # 부분적 request 제목(subject)에 대한 주제 반환
     get_subject_request = graphene.Field(Requests, keyword=graphene.String())
+
     def resolve_get_subject_request(self, info, keyword):
         request_rows = Request.objects.filter(subject__icontains=keyword)
         if request_rows:
             for request in request_rows:
                 if request.user is not None:
                     request.user.password = "*****"
-                    request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
-            message = "'%s'에 대한 주제 목록 반환" %(keyword)
+                    request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + \
+                                         request.user.email.split("@")[1]
+            message = "'%s'에 대한 주제 목록 반환" % (keyword)
             return Requests(message=Message(status=True, message=message), requests=request_rows)
         else:
             return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
@@ -913,14 +957,16 @@ class Query(graphene.ObjectType):
     """
     # state='RUN' 일 때 키워드로 request 제목(subject) 찾기
     get_subject_running_request = graphene.Field(Requests, keyword=graphene.String())
+
     def resolve_get_subject_running_request(self, info, keyword):
         request_rows = Request.objects.filter(state='RUN', subject__icontains=keyword)
         if request_rows:
             for request in request_rows:
                 if request.user is not None:
                     request.user.password = "*****"
-                    request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
-            message = "'%s'에 대한 주제 목록 반환" %(keyword)
+                    request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + \
+                                         request.user.email.split("@")[1]
+            message = "'%s'에 대한 주제 목록 반환" % (keyword)
             return Requests(message=Message(status=True, message=message), requests=request_rows)
         else:
             return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
@@ -957,14 +1003,16 @@ class Query(graphene.ObjectType):
     """
     # state='END' 일 때 키워드로 request 제목(subject) 찾기
     get_subject_end_request = graphene.Field(Requests, keyword=graphene.String())
+
     def resolve_get_subject_end_request(self, info, keyword):
         request_rows = Request.objects.filter(state='END', subject__icontains=keyword)
         if request_rows:
             for request in request_rows:
                 if request.user is not None:
                     request.user.password = "*****"
-                    request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + request.user.email.split("@")[1]
-            message = "'%s'에 대한 주제 목록 반환" %(keyword)
+                    request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + \
+                                         request.user.email.split("@")[1]
+            message = "'%s'에 대한 주제 목록 반환" % (keyword)
             return Requests(message=Message(status=True, message=message), requests=request_rows)
         else:
             return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
