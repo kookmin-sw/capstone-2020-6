@@ -1,15 +1,15 @@
 import graphene
 import datetime
 from mongodb import db
-from django.utils import timezone
+from django.db.models import Q
 from backend.models import Dataset, User, Category, Request, Labeling, Keyword
 from django.contrib.auth import login
 from django.core.exceptions import ValidationError
 from graphene_django.types import DjangoObjectType
 from rest_framework_jwt.serializers import (
-  JSONWebTokenSerializer,
-  RefreshJSONWebTokenSerializer,
-  jwt_decode_handler
+    JSONWebTokenSerializer,
+    RefreshJSONWebTokenSerializer,
+    jwt_decode_handler
 )
 from backend.utils import (
     only_user,
@@ -64,9 +64,9 @@ class CreateDataset(graphene.Mutation):
             dataset.create(name=name)
             message = "'%s'가 생성되었습니다."%(dataset.name)
             return CreateDataset(
-                        message=Message(status=True, message=message),
-                        idx=dataset.idx
-                    )
+                message=Message(status=True, message=message),
+                idx=dataset.idx
+            )
 """
 mutation{
   createRequest(
@@ -115,41 +115,51 @@ class CreateRequest(graphene.Mutation):
     @only_user
     @only_requester
     def mutate(
-        self,
-        info,
-        token,
-        category,
-        subject,
-        thumbnail,
-        description,
-        oneline_description,
-        start_date,
-        end_date,
-        max_cycle,
-        total_point,
-        is_captcha,
-        dataset,
-        count_dataset,
-        keywords
+            self,
+            info,
+            token,
+            category,
+            subject,
+            thumbnail,
+            description,
+            oneline_description,
+            start_date,
+            end_date,
+            max_cycle,
+            total_point,
+            is_captcha,
+            dataset,
+            count_dataset,
+            keywords
     ):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
+
+        # 의뢰자의 포인트 확인
+        if user.point < total_point:
+            message = "회원님은 %d 포인트가 부족합니다. 충전 후 다시 프로젝트를 등록 해주세요." %(total_point-user.point)
+            return CreateRequest(message=Message(status=False, message=message))
+
         category = Category.objects.get(idx=category)
         dataset = Dataset.objects.get(idx=dataset)
 
         exist_subject = Request.objects.filter(subject=subject).exists()
-        own = Request.objects.filter(user=user, subject=subject).exists()
-
+        own = Request.objects.filter(Q(user_id=user.id)&Q(subject=subject)).exists()
+        print('own: ', own)
         if own:
             # 같은 주제가 이미 등록되어있는 경우
             # 동일 인물이 시도할 경우: 등록 불가
             return CreateRequest(message=Message(status=False, message="회원님은 이미 같은 주제로 등록하신 프로젝트가 있습니다."))
         else:
+            # 의뢰자 포인트 차감
+            user.point = user.point - total_point
+            user.save()
+
             request = Request(
                 user=user,
                 category=category,
                 subject=subject,
-                thumbnail = thumbnail,
+                thumbnail=thumbnail,
                 description=description,
                 oneline_description=oneline_description,
                 start_date=datetime.datetime.strptime(start_date, "%Y-%m-%d"),
@@ -167,7 +177,7 @@ class CreateRequest(graphene.Mutation):
             for keyword in keywords:
                 k = Keyword(request=request, name=keyword)
                 k.save()
-            
+
             rows = db.text_dataset.aggregate(
                 [{
                     "$sample": {
@@ -179,24 +189,24 @@ class CreateRequest(graphene.Mutation):
                     }
                 }]
             )
-            
+
             db.assigned_dataset.insert_one({"request": request.idx, "dataset": [x['_id'] for x in rows]})
 
             # 같은 주제가 이미 등록되어있는 경우
             # 다른 사람이 시도할 경우: 등록 가능
             if exist_subject:
-                message = "'%s' 주제가 등록되었습니다. 다른 의뢰자가 등록한 같은 주제가 존재합니다."%(request.subject)
+                message = "'%s' 주제가 등록되었습니다. 다른 의뢰자가 등록한 같은 주제가 존재합니다. 남은 포인트 %d 입니다." %(request.subject, user.point)
                 return CreateRequest(
-                        message=Message(status=True, message=message),
-                        idx=request.idx
-                    )
+                    message=Message(status=True, message=message),
+                    idx=request.idx
+                )
             # 주제가 처음 등록된 경우
             else:
-                message = "'%s' 주제가 등록되었습니다."%(request.subject)
+                message = "'%s' 주제가 등록되었습니다. 남은 포인트 %d 입니다." %(request.subject, user.point)
                 return CreateRequest(
-                        message=Message(status=True, message=message),
-                        idx=request.idx
-                    )
+                    message=Message(status=True, message=message),
+                    idx=request.idx
+                )
 
 
 """
@@ -244,23 +254,23 @@ class UpdateRequest(graphene.Mutation):
     @only_user
     @only_requester
     def mutate(
-            self, 
-            info, 
-            idx, 
-            category, 
-            subject, 
-            thumbnail, 
+            self,
+            info,
+            idx,
+            category,
+            subject,
+            thumbnail,
             description,
-            oneline_description, 
-            start_date, 
-            end_date, 
-            max_cycle, 
-            total_point, 
+            oneline_description,
+            start_date,
+            end_date,
+            max_cycle,
+            total_point,
             is_captcha,
             dataset,
             count_dataset,
             token
-        ):
+    ):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
         category = Category.objects.get(idx=category)
@@ -268,17 +278,17 @@ class UpdateRequest(graphene.Mutation):
         try:
             request = Request.objects.get(idx=idx)
             update = Request(
-                user=user, 
-                category=category, 
-                subject=subject, 
-                thumbnail=thumbnail, 
+                user=user,
+                category=category,
+                subject=subject,
+                thumbnail=thumbnail,
                 description=description,
                 oneline_description=oneline_description,
-                start_date=str(datetime.datetime.strptime(start_date, "%Y-%m-%d")), 
-                end_date=str(datetime.datetime.strptime(end_date, "%Y-%m-%d")), 
-                max_cycle=max_cycle, 
-                total_point=total_point, 
-                is_captcha=is_captcha, 
+                start_date=str(datetime.datetime.strptime(start_date, "%Y-%m-%d")),
+                end_date=str(datetime.datetime.strptime(end_date, "%Y-%m-%d")),
+                max_cycle=max_cycle,
+                total_point=total_point,
+                is_captcha=is_captcha,
                 dataset=dataset,
                 count_dataset=count_dataset,
                 state=request.state
@@ -342,10 +352,10 @@ class StartRequest(graphene.Mutation):
         user = User.objects.get(username=res['username'])
         try:
             request = Request.objects.get(idx=idx)
-            now = str(timezone.localtime())
-            update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject, description=request.description, 
-                            start_date=now, end_date=str(request.end_date), 
-                            max_cycle=request.max_cycle, total_point=request.total_point, is_captcha=request.is_captcha, state='RUN')
+            now = datetime.datetime.now()
+            update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject, description=request.description,
+                             start_date=now, end_date=str(request.end_date),
+                             max_cycle=request.max_cycle, total_point=request.total_point, is_captcha=request.is_captcha, state='RUN')
             try:
                 update.clean()
             except ValidationError as e:
@@ -393,10 +403,10 @@ class EndRequest(graphene.Mutation):
         user = User.objects.get(username=res['username'])
         try:
             request = Request.objects.get(idx=idx)
-            now = str(timezone.localtime())
-            update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject, description=request.description, 
-                            start_date=str(request.start_date), end_date=now, 
-                            max_cycle=request.max_cycle, total_point=request.total_point, is_captcha=request.is_captcha, state='END')
+            now = datetime.datetime.now()
+            update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject, description=request.description,
+                             start_date=str(request.start_date), end_date=now,
+                             max_cycle=request.max_cycle, total_point=request.total_point, is_captcha=request.is_captcha, state='END')
             try:
                 update.clean()
             except ValidationError as e:
@@ -479,7 +489,7 @@ mutation{
 # DeleteLabelerTakenProject는 참여자가 신청한 특정 프로젝트를 삭제하는 함수이다.
 class DeleteLabelerTakenProject(graphene.Mutation):
     message = graphene.Field(Message)
-    
+
     class Arguments:
         idx = graphene.Int()
         token = graphene.String()
@@ -493,7 +503,7 @@ class DeleteLabelerTakenProject(graphene.Mutation):
             message = "해당하는 인스턴스가 존재하지 않습니다."
             return DeleteLabelerTakenProject(
                 message=Message(status=False, message=message)
-                )
+            )
         else:
             deleted_labeling = labeling
             labeling.delete()
@@ -518,7 +528,7 @@ mutation{
 # DeleteRequest는 특정 프로젝트를 삭제하는 함수이다.
 class DeleteRequest(graphene.Mutation):
     message = graphene.Field(Message)
-    
+
     class Arguments:
         idx = graphene.Int()
         token = graphene.String()
@@ -532,7 +542,7 @@ class DeleteRequest(graphene.Mutation):
             message = "해당하는 인스턴스가 존재하지 않습니다."
             return DeleteRequest(
                 message=Message(status=False, message=message)
-                )
+            )
         else:
             deleted_request = request
             request.delete()
@@ -602,7 +612,7 @@ class Query(graphene.ObjectType):
         }
     }
 }
-    
+
     # offset : 몇 부터 (0 이면 처음것 부터), limit : 몇 개
     query {
     getAllRequest(
@@ -612,11 +622,11 @@ class Query(graphene.ObjectType):
         생략...
 
     """
-    get_all_request = graphene.Field(Requests, 
-        orderby=graphene.String(required=False), 
-        offset=graphene.Int(required=False),
-        limit=graphene.Int(required=False)
-    )
+    get_all_request = graphene.Field(Requests,
+                                     orderby=graphene.String(required=False),
+                                     offset=graphene.Int(required=False),
+                                     limit=graphene.Int(required=False)
+                                     )
     def resolve_get_all_request(self, info, **kwargs):
         order = kwargs.get("orderby", None)
         offset = kwargs.get("offset", None)
@@ -731,8 +741,8 @@ class Query(graphene.ObjectType):
         for labeling in labelings:
             if labeling.user is not None:
                 labeling.user.password = "*****"
-                labeling.user.email = labeling.user.email.split("@")[0][0:3] + "****" +\
-                 "@" + labeling.user.email.split("@")[1]
+                labeling.user.email = labeling.user.email.split("@")[0][0:3] + "****" + \
+                                      "@" + labeling.user.email.split("@")[1]
             if labeling.request.user is not None:
                 labeling.request.user.password = "*****"
                 labeling.request.user.email = labeling.request.user.email.split("@")[0][0:3] + "****" + "@" + labeling.request.user.email.split("@")[1]
