@@ -51,7 +51,7 @@ def transfer(_from,_to,_value):
     #     'gasPrice': w3.toWei('21', 'gwei')})
     # signed = acct.signTransaction(construct_txn)
     # w3.eth.sendRawTransaction(signed.rawTransaction)
-    return true;
+    return 'transfer';
 
 ## Point 생성
 def approve(_spender,_value):
@@ -64,7 +64,7 @@ def approve(_spender,_value):
     #     'gasPrice': w3.toWei('21', 'gwei')})
     # signed = acct.signTransaction(construct_txn)
     # w3.eth.sendRawTransaction(signed.rawTransaction)
-    return true;
+    return 'approve';
 
 ## Point 소멸
 # def transfer(_from,_to,_value):
