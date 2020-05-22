@@ -24,26 +24,36 @@ def find_mode_label(labels):
     return label_count[0][0]
 
 
-def temp_labeling(df):
-    df_temp_labeling = pd.DataFrame({'file_index' : [], 'path' : [], 'label_temp' : []})
+def temp_labeling(df, n):
     
-    file_indices = set(df.file_index.tolist())
+    temp_labeling_df = pd.DataFrame({'data_index' : [], 'data' : [], 'label_temp' : []})
     
-    for i in file_indices:
-        temp_df = df[df['file_index'] == i]
+    data_indicis = set(df.data_index.tolist())
+    
+    for i in data_indicis:
+        temp_df = df[df['data_index'] == i]
         
-        credibilities = temp_df.credibility.tolist()
+        credibilities = df.user_credibility.tolist()
         credibilities.sort()
         
-        if len(credibilities) > 2:
-            labels = temp_df[temp_df['credibility'] >= credibilities[-3]].label.tolist()
-            mode_label = find_mode_label(labels)
-        
-        
-        data = pd.Series([i, temp_df['path'].iloc[0], mode_label], index = ['file_index', 'path', 'label_temp'])  
-        df_temp_labeling = df_temp_labeling.append(data, ignore_index = True)
+        if len(credibilities) > n-1:
+            credibilities_n_df = temp_df[temp_df['user_credibility'] >= credibilities[-n]]
             
-    return df_temp_labeling
+            labels = credibilities_n_df.label_user.tolist()
+            
+            mode_label = find_mode_label(labels)
+            
+            credibilities_n = temp_df[temp_df['label_user'] == mode_label].user_credibility.tolist()
+            
+            credibility_label_temp = sum(credibilities_n) / len(credibilities_n)
+        
+        ##라벨러 n 명 이하일 때
+        ##추가##
+        
+        data = pd.Series([i, temp_df.data.iloc[0], mode_label, credibility_label_temp], index = ['data_index', 'data', 'label_temp', 'credibility_label_temp'])  
+        temp_labeling_df = temp_labeling_df.append(data, ignore_index = True)
+            
+    return temp_labeling_df
 
 
 def label_validate(df):
@@ -59,81 +69,81 @@ def label_validate(df):
     return kmeans_labels
 
 
-def cal_cor_pers(total_label_df, correct_df): 
+def cal_cor_pers(df, correct_df): 
     cor_pers = {}
     cor_id = {}
     
-    path_label = {}
-    total_paths = set(total_label_df.path.tolist())
+    index_label = {}
+    data_indices = set(df.data_index.tolist())
     
     for i in range(len(correct_df)):
-        path = correct_df.iloc[i].path
-        path_label[path] = correct_df.iloc[i].label
-#     일단 path로 
-    path_df = total_label_df.loc[:, ['path', 'label_user', 'id']]
+        index = correct_df.iloc[i].data_index
+        index_label[index] = correct_df.iloc[i].label_predicted
 
-    for path in path_label:
-        if path in total_paths:
-            cor_df = path_df[(path_df['path'] == path) & (path_df['label_user']== path_label[path])]
+    index_df = df.loc[:, ['data_index', 'label_user', 'user_id']]
+
+    for index in index_label:
+        if index in data_indices:
+            cor_df = index_df[(index_df['data_index'] == index) & (index_df['label_user']== index_label[index])]
             correct = len(cor_df)
 
-            cor_per = correct / len(path_df[path_df['path'] == path])
+            cor_per = correct / len(index_df[index_df['data_index'] == index])
 
-            cor_pers[path] = cor_per
-            cor_id[path] = cor_df.id.tolist()
+            cor_pers[index] = cor_per
+            cor_id[index] = cor_df.user_id.tolist()
         
     return cor_pers, cor_id
 
 
-def cal_credibility(total_label_df, cor_pers, right_id):
+def cal_credibility(df, cor_pers, right_id):
     new_cred = 0
     new_creds = {}
-    cred_df = total_label_df.loc[:, ['path', 'id', 'credibility']]
+    cred_df = df.loc[:, ['data_index', 'user_id', 'user_credibility']]
     
     for i in range(len(cred_df)):
         index = cred_df.iloc[i]
-        new_creds[index.id] = index.credibility
+        new_creds[index.user_id] = index.user_credibility
     
-    total_paths = set(cred_df.path.tolist())
-    total_ids = cred_df.id.tolist()
+    cor_data_indices = cor_pers.keys()
+    ids = cred_df.user_id.tolist()
     
-    for path in total_paths:
-        tmp_df = cred_df[cred_df['path']== path]
-        id_list = tmp_df.id.tolist()
+    for index in cor_data_indices:
+        tmp_df = cred_df[cred_df['data_index']== index]
+        id_list = tmp_df.user_id.tolist()
         for id in id_list:
-            if id in right_id[path]:
-                new_cred = 0.01 * cor_pers[path]
+            if id in right_id[index]:
+                new_cred = 0.01 * cor_pers[index] * (1-new_creds[id])
             else:
-                new_cred = -0.01 * cor_pers[path]
-            new_creds[id] += new_cred
+                new_cred = -0.01 * cor_pers[index] * (new_creds[id])
+            new_creds[id] += new_cred / ids.count(id)
     
-    new_cred_list = [new_creds[id] for id in total_ids]
-    total_label_df['new_cred'] = new_cred_list
-    return total_label_df
+    new_cred_list = [round(new_creds[id],4) if new_creds[id] < 1 else 0.9999 for id in ids]
+             
+    df['user_credibility_new_1'] = new_cred_list
+    
+    return df
 
 
-def second_labeling(df, rest_df):
-#     df_temp_labeling = pd.DataFrame({'file_index' : [], 'path' : [], 'label_temp' : []})
+def second_labeling(df, false_df, n):
     
-    total_paths = set(df.path.tolist())
+    data_indices = set(false_df.data_index.tolist())
+    
     mode_labels = []
     
-    for path in total_paths:
-        temp_df = df[df['path'] == path]
+    for index in data_indices:
+        temp_df = df[df['data_index'] == index]
         
-        credibilities = temp_df.new_cred.tolist()
+        credibilities = temp_df.user_credibility_new_1.tolist()
         credibilities.sort()
         
-        if len(credibilities) > 2:
-            labels = temp_df[temp_df['new_cred'] >= credibilities[-3]].label.tolist()
+        if len(credibilities) > n-1:
+            labels = temp_df[temp_df['user_credibility_new_1'] >= credibilities[-n]].label_user.tolist()
             mode_label = find_mode_label(labels)
             mode_labels.append(mode_label)
-#         data = pd.Series([i, temp_df['path'].iloc[0], mode_label], index = ['file_index', 'path', 'label_temp'])  
-#         df_temp_labeling = df_temp_labeling.append(data, ignore_index = True)
-
-    rest_df['second_label'] = mode_labels
+    
+    false_df['second_label'] = mode_labels
             
-    return rest_df
+    return false_df
 
 
 def main():
