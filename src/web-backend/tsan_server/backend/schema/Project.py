@@ -661,6 +661,11 @@ class Query(graphene.ObjectType):
                                      )
 
     def resolve_get_all_request(self, info, **kwargs):
+        requests = Request.objects.all()
+        if requests is not None:
+            for request in requests.iterator():
+                request.refresh_state()
+
         order = kwargs.get("orderby", None)
         offset = kwargs.get("offset", None)
         limit = kwargs.get("limit", None)
@@ -719,6 +724,11 @@ class Query(graphene.ObjectType):
     @only_user
     @only_requester
     def resolve_get_requester_request(self, info, token):
+        requests = Request.objects.all()
+        if requests is not None:
+            for request in requests.iterator():
+                request.refresh_state()
+
         res = jwt_decode_handler(token)
         users = User.objects.get(username=res['username'])
         request_rows = Request.objects.filter(user=users)
@@ -823,6 +833,11 @@ class Query(graphene.ObjectType):
     get_state_request = graphene.Field(Requests, state=graphene.String())
 
     def resolve_get_state_request(self, info, state):
+        requests = Request.objects.all()
+        if requests is not None:
+            for request in requests.iterator():
+                request.refresh_state()
+
         request_rows = Request.objects.filter(state=state)
         for request in request_rows:
             if request.user is not None:
@@ -867,6 +882,11 @@ class Query(graphene.ObjectType):
     get_idx_request = graphene.Field(Requests, idx=graphene.Int())
 
     def resolve_get_idx_request(self, info, idx):
+        requests = Request.objects.all()
+        if requests is not None:
+            for request in requests.iterator():
+                request.refresh_state()
+
         request_rows = Request.objects.filter(idx=idx)
         for request in request_rows:
             if request.user is not None:
@@ -913,6 +933,11 @@ class Query(graphene.ObjectType):
     get_subject_request = graphene.Field(Requests, keyword=graphene.String())
 
     def resolve_get_subject_request(self, info, keyword):
+        requests = Request.objects.all()
+        if requests is not None:
+            for request in requests.iterator():
+                request.refresh_state()
+
         request_rows = Request.objects.filter(subject__icontains=keyword)
         if request_rows:
             for request in request_rows:
@@ -959,6 +984,11 @@ class Query(graphene.ObjectType):
     get_subject_running_request = graphene.Field(Requests, keyword=graphene.String())
 
     def resolve_get_subject_running_request(self, info, keyword):
+        requests = Request.objects.all()
+        if requests is not None:
+            for request in requests.iterator():
+                request.refresh_state()
+
         request_rows = Request.objects.filter(state='RUN', subject__icontains=keyword)
         if request_rows:
             for request in request_rows:
@@ -1005,6 +1035,11 @@ class Query(graphene.ObjectType):
     get_subject_end_request = graphene.Field(Requests, keyword=graphene.String())
 
     def resolve_get_subject_end_request(self, info, keyword):
+        requests = Request.objects.all()
+        if requests is not None:
+            for request in requests.iterator():
+                request.refresh_state()
+
         request_rows = Request.objects.filter(state='END', subject__icontains=keyword)
         if request_rows:
             for request in request_rows:
@@ -1016,3 +1051,4 @@ class Query(graphene.ObjectType):
             return Requests(message=Message(status=True, message=message), requests=request_rows)
         else:
             return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
+

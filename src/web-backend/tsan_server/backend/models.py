@@ -3,6 +3,8 @@ import django.contrib.auth.models
 from backend.validation import validate_email, validate_phone, validate_category_type, validate_date, \
     validate_paymentlog_type
 from django.core.exceptions import ValidationError
+import datetime
+from django.utils import timezone
 
 
 # 데이터셋 테이블
@@ -88,7 +90,7 @@ class Request(models.Model):
     description = models.TextField(blank=True)  # 설명
     thumbnail = models.TextField(blank=True)
     oneline_description = models.TextField(blank=True)  # 설명
-    start_date = models.DateTimeField(auto_now_add=True, validators=[validate_date])  # 시작
+    start_date = models.DateTimeField(validators=[validate_date])  # 시작
     end_date = models.DateTimeField(validators=[validate_date])  # 마감
     current_cycle = models.IntegerField(default=0)  # 현재 사이클
     max_cycle = models.IntegerField(default=0)  # 최대 사이클
@@ -102,6 +104,17 @@ class Request(models.Model):
         ('END', 'end'),
     )
     state = models.CharField(max_length=3, choices=STATE_CHOICES, default='RED')
+
+    def refresh_state(self):
+        now = timezone.now()
+        if now > self.end_date:
+            self.state = 'END'
+            # print(self.idx, '번 상태 END으로 바뀜')
+        elif self.start_date <= now:
+            self.state = 'RUN'
+            # print(self.idx, '번 상태 RUN으로 바뀜')
+        self.save()
+        return
 
     def create(self, user, category, subject, thumbnail, description, end_date, max_cycle, is_captcha, total_point):
         self.user = user
