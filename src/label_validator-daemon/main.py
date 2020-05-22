@@ -112,39 +112,38 @@ def cal_credibility(df, cor_pers, right_id):
         id_list = tmp_df.user_id.tolist()
         for id in id_list:
             if id in right_id[index]:
-                new_cred = 0.01 * cor_pers[index]
+                new_cred = 0.01 * cor_pers[index] * (1-new_creds[id])
             else:
-                new_cred = -0.01 * cor_pers[index]
-            new_creds[id] += new_cred
+                new_cred = -0.01 * cor_pers[index] * (new_creds[id])
+            new_creds[id] += new_cred / ids.count(id)
     
-    new_cred_list = [new_creds[id] for id in ids]
+    new_cred_list = [round(new_creds[id],4) if new_creds[id] < 1 else 0.9999 for id in ids]
+             
     df['user_credibility_new_1'] = new_cred_list
     
     return df
 
 
-def second_labeling(df, rest_df):
-#     df_temp_labeling = pd.DataFrame({'file_index' : [], 'path' : [], 'label_temp' : []})
+def second_labeling(df, false_df, n):
     
-    total_paths = set(df.path.tolist())
+    data_indices = set(false_df.data_index.tolist())
+    
     mode_labels = []
     
-    for path in total_paths:
-        temp_df = df[df['path'] == path]
+    for index in data_indices:
+        temp_df = df[df['data_index'] == index]
         
-        credibilities = temp_df.new_cred.tolist()
+        credibilities = temp_df.user_credibility_new_1.tolist()
         credibilities.sort()
         
-        if len(credibilities) > 2:
-            labels = temp_df[temp_df['new_cred'] >= credibilities[-3]].label.tolist()
+        if len(credibilities) > n-1:
+            labels = temp_df[temp_df['user_credibility_new_1'] >= credibilities[-n]].label_user.tolist()
             mode_label = find_mode_label(labels)
             mode_labels.append(mode_label)
-#         data = pd.Series([i, temp_df['path'].iloc[0], mode_label], index = ['file_index', 'path', 'label_temp'])  
-#         df_temp_labeling = df_temp_labeling.append(data, ignore_index = True)
-
-    rest_df['second_label'] = mode_labels
+    
+    false_df['second_label'] = mode_labels
             
-    return rest_df
+    return false_df
 
 
 def main():

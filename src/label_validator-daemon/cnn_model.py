@@ -16,6 +16,9 @@ early_stopping = EarlyStopping(monitor='val_loss', patience=10)
 
 kf = KFold(n_splits=n_split, shuffle=True)
 
+le = LabelEncoder()
+dataset_df['label_encoding'] = list(map(str,le.fit_transform(dataset_df['label_temp'])))
+
 # +
 num_epochs = 300
 batch_size = 64
