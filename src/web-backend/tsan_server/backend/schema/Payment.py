@@ -1,5 +1,5 @@
 import graphene
-from backend.models import Dataset, User, PaymentLog, Request
+from backend.models import Dataset, User, PaymentLog, Request, Labeling
 from django.contrib.auth import login
 from django.core.exceptions import ValidationError
 from graphene_django.types import DjangoObjectType
