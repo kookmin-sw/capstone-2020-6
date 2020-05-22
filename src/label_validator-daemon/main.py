@@ -69,57 +69,58 @@ def label_validate(df):
     return kmeans_labels
 
 
-def cal_cor_pers(total_label_df, correct_df): 
+def cal_cor_pers(df, correct_df): 
     cor_pers = {}
     cor_id = {}
     
-    path_label = {}
-    total_paths = set(total_label_df.path.tolist())
+    index_label = {}
+    data_indices = set(df.data_index.tolist())
     
     for i in range(len(correct_df)):
-        path = correct_df.iloc[i].path
-        path_label[path] = correct_df.iloc[i].label
-#     일단 path로 
-    path_df = total_label_df.loc[:, ['path', 'label_user', 'id']]
+        index = correct_df.iloc[i].data_index
+        index_label[index] = correct_df.iloc[i].label_predicted
 
-    for path in path_label:
-        if path in total_paths:
-            cor_df = path_df[(path_df['path'] == path) & (path_df['label_user']== path_label[path])]
+    index_df = df.loc[:, ['data_index', 'label_user', 'user_id']]
+
+    for index in index_label:
+        if index in data_indices:
+            cor_df = index_df[(index_df['data_index'] == index) & (index_df['label_user']== index_label[index])]
             correct = len(cor_df)
 
-            cor_per = correct / len(path_df[path_df['path'] == path])
+            cor_per = correct / len(index_df[index_df['data_index'] == index])
 
-            cor_pers[path] = cor_per
-            cor_id[path] = cor_df.id.tolist()
+            cor_pers[index] = cor_per
+            cor_id[index] = cor_df.user_id.tolist()
         
     return cor_pers, cor_id
 
 
-def cal_credibility(total_label_df, cor_pers, right_id):
+def cal_credibility(df, cor_pers, right_id):
     new_cred = 0
     new_creds = {}
-    cred_df = total_label_df.loc[:, ['path', 'id', 'credibility']]
+    cred_df = df.loc[:, ['data_index', 'user_id', 'user_credibility']]
     
     for i in range(len(cred_df)):
         index = cred_df.iloc[i]
-        new_creds[index.id] = index.credibility
+        new_creds[index.user_id] = index.user_credibility
     
-    total_paths = set(cred_df.path.tolist())
-    total_ids = cred_df.id.tolist()
+    cor_data_indices = cor_pers.keys()
+    ids = cred_df.user_id.tolist()
     
-    for path in total_paths:
-        tmp_df = cred_df[cred_df['path']== path]
-        id_list = tmp_df.id.tolist()
+    for index in cor_data_indices:
+        tmp_df = cred_df[cred_df['data_index']== index]
+        id_list = tmp_df.user_id.tolist()
         for id in id_list:
-            if id in right_id[path]:
-                new_cred = 0.01 * cor_pers[path]
+            if id in right_id[index]:
+                new_cred = 0.01 * cor_pers[index]
             else:
-                new_cred = -0.01 * cor_pers[path]
+                new_cred = -0.01 * cor_pers[index]
             new_creds[id] += new_cred
     
-    new_cred_list = [new_creds[id] for id in total_ids]
-    total_label_df['new_cred'] = new_cred_list
-    return total_label_df
+    new_cred_list = [new_creds[id] for id in ids]
+    df['user_credibility_new_1'] = new_cred_list
+    
+    return df
 
 
 def second_labeling(df, rest_df):
