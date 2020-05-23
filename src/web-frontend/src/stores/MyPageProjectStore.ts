@@ -10,9 +10,7 @@ export default class ProjectListStore {
     @observable idx: string = '';
     constructor() {
         this.list = [];
-        this.getProjects();
-        this.setEndReq();
-        this.setStartReq();
+        this.idx = '';
     }
 
     /*       
@@ -43,51 +41,37 @@ export default class ProjectListStore {
     @action setStartReq = () => {
         client.mutate({
             mutation: gql`
-            mutation StartRequest(
-                $idx: Int!,
-                $token: String!
-            )
-            {
-             startRequest(
-                 idx: $idx,
-                 token: $token
-             ) {
-                message{
-                    status
-                    message
+            mutation StartRequest($idx: Int!, $token: String!) {
+                startRequest(idx: $idx, token: $token) {
+                    message{
+                        status
+                        message
+                    }
                 }
-             }
             }`
             ,
             variables: {
                 idx: parseInt(this.idx),
-                token: localStorage.token
+                token: localStorage.token,
             }
         }).then(({data}:any) => {
                 console.log(data);
             }
-        ).catch(e=>{
-            console.log(e)
+        ).catch((e) => {
+            console.log(e);
         })
     }
 
     @action setEndReq = () => {
         client.mutate({
             mutation: gql`
-            mutation EndRequest(
-                $idx: Int!,
-                $token: String!
-            )
-            {
-             endRequest(
-                 idx: $idx,
-                 token: $token
-             ) {
-                message{
-                    status
-                    message
+            mutation EndRequest($idx: Int!, $token: String!) {
+                endRequest(idx: $idx, token: $token) {
+                    message{
+                        status
+                        message
+                    }
                 }
-             }
             }`
             ,
             variables: {
