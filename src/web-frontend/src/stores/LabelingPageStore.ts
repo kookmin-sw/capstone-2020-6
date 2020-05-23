@@ -18,23 +18,6 @@ export default class LabelingPageStore {
     progressRate: '',
   }
 
-  // constructor() {
-    // this.request = {
-    //   labelingSubject: "",
-    //   thumbnailURL: "",
-    //   author: "",
-    //   startDate: "",
-    //   endDate: "",
-    //   labelingType: "",
-    //   oneLineDescription: "",
-    //   rewardPoints: "",
-    //   detailDescription: "",
-    //   progress: "",
-    //   totalProgress: "",
-    //   progressRate: ""
-    // }
-  // }
-
   @action getRequest = (postId: number) => {
     client.query({
       query: gql`
@@ -73,11 +56,10 @@ export default class LabelingPageStore {
       },
     }).then(({data}:any) => {
       const req = data.getIdxRequest.requests[0];
-      const authorTmp = req.user.fullname == null ? '' : req.user.fullname;
       this.request = {
         labelingSubject: req.subject,
         thumbnailURL: req.thumbnail,
-        author: authorTmp,
+        author: req.user ? req.user.fullname : '알 수 없음',
         startDate: req.startDate,
         endDate: req.endDate,
         labelingType: '[' + req.category.type.toUpperCase() + '] ' + req.category.name,

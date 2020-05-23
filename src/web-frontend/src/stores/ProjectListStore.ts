@@ -15,8 +15,6 @@ export default class ProjectListStore {
     this.listEnd = [];
     this.searchList = [];
     this.searchKeyword = '';
-    // this.getProjects('RUN');
-    // this.getProjects('END');
   }
   @action getSearchKeyword = () => {
     this.searchKeyword = '';
@@ -26,7 +24,6 @@ export default class ProjectListStore {
   };
   @action getProjects = (state: string) => {
     client.query({
-      // State 상태에 따라 리스트 저장해서 메인 페이지에서 lisRun, listEnd 따로 보여주기 위함.
       query: gql`
         query GetStateRequest($projectState: String!) {
           getStateRequest(state: $projectState) {
@@ -62,15 +59,13 @@ export default class ProjectListStore {
       },
     })
         .then(({data}: any) => {
-          console.log(data.getStateRequest.requests);
           var list: any = [];
           data.getStateRequest.requests.forEach((item: any) => {
             list.push({
               id: item.idx,
               thumbnail: item.thumbnail,
               title: item.subject,
-              // TODO: Fix length error.
-              author: item.user ? (item.user.fullname.length === 0 ? '익명' : item.user.fullname) : '알 수 없음',
+              author: item.user ? item.user.fullname : '알 수 없음',
               start_date: item.startDate,
               end_date: item.endDate,
               type: item.category.type.toUpperCase() + '-' + item.category.name,
@@ -81,8 +76,6 @@ export default class ProjectListStore {
               progress_rate: item.currentCycle / item.maxCycle,
             });
           });
-          console.log("ASDASd");
-          console.log(state);
           if (state === 'RUN') {
             console.log(1);
             this.listRun = list;
