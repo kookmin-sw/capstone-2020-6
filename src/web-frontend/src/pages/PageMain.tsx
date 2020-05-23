@@ -20,8 +20,8 @@ interface Props {
 class App extends React.Component<Props> {
   constructor(props: any) {
     super(props);
-    this.props.projectListStore!.getProjects('RUN');
-    this.props.projectListStore!.getProjects('END');
+    this.props.projectListStore!.getProjectsWithLimit('RUN');
+    this.props.projectListStore!.getProjectsWithLimit('END');
   }
   render() {
     return (
@@ -37,6 +37,7 @@ class App extends React.Component<Props> {
           </div>
           <Grid columns={4}>
             {this.props.projectListStore!.listRun.map((item: any, key:any) => {
+              console.log(item.author);
               return (
                 <Grid.Column key={key}>
                   <CardProject

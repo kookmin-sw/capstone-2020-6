@@ -24,7 +24,7 @@ class PageViewAllProjects extends React.Component<Props> {
   };
   constructor(props: any) {
     super(props);
-      this.props.projectListStore?.getProjects('RUN');
+      this.props.projectListStore?.getProjectsWithLimit('RUN');
       this.props.projectListStore?.getSearchKeyword();
   }
   // TODO: Resolve search error.

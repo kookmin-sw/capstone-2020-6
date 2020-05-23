@@ -22,11 +22,11 @@ export default class ProjectListStore {
   @action setSearchKeyword = (event: any) => {
     this.searchKeyword = event.target.value;
   };
-  @action getProjects = (state: string) => {
+  @action getProjectsWithLimit = (state: string) => {
     client.query({
       query: gql`
-        query GetStateRequest($projectState: String!) {
-          getStateRequest(state: $projectState) {
+        query GetStateRequest($projectState: String!, $offset: Int!, $limit: Int!) {
+          getStateRequest(state: $projectState, offset: $offset, limit: $limit) {
             message {
               status
               message
@@ -56,6 +56,8 @@ export default class ProjectListStore {
       `,
       variables: {
         projectState: state,
+        offset: 1,
+        limit: 4,
       },
     })
         .then(({data}: any) => {
@@ -77,10 +79,8 @@ export default class ProjectListStore {
             });
           });
           if (state === 'RUN') {
-            console.log(1);
             this.listRun = list;
           } else if (state === 'END') {
-            console.log(2);
             this.listEnd = list;
           }
         })
