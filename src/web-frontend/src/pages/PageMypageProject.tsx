@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link, withRouter} from 'react-router-dom';
-import {Container, Table, Icon, Grid} from 'semantic-ui-react';
+import {Container, Table, Icon} from 'semantic-ui-react';
 import './PageMypageProject.css';
 
 import {observer, inject} from 'mobx-react';
