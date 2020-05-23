@@ -20,11 +20,11 @@ interface Props extends RouteComponentProps<any> {
 @observer
 class PageViewAllProjectsFinished extends React.Component<Props> {
   state = {
-    list: this.props.projectListStore!.listRun,
+    list: this.props.projectListStore!.allListEnd,
   };
   constructor(props: any) {
     super(props);
-      this.props.projectListStore?.getProjectsWithLimit('END');
+      this.props.projectListStore?.getProjects('END');
       this.props.projectListStore?.getSearchKeyword();
   }
   // TODO: Resolve search error.
