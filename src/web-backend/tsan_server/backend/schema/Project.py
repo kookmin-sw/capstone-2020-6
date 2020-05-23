@@ -436,7 +436,7 @@ class EndRequest(graphene.Mutation):
             except ValidationError as e:
                 return EndRequest(message=Message(status=False, message=str(e)))
             else:
-                request.start_date = now
+                request.end_date = now
                 request.state = 'END'
                 request.save()
                 message = "'%s'주제가 정상적으로 종료되었습니다." % (request.subject)
