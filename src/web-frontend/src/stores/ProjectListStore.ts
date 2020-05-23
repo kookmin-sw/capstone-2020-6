@@ -8,15 +8,17 @@ import {gql} from 'apollo-boost';
 export default class ProjectListStore {
   @observable listRun: any = [];
   @observable listEnd: any = [];
+  @observable allListRun: any = [];
+  @observable allListEnd: any = [];
   @observable searchList: any = [];
   @observable searchKeyword: string = '';
   constructor() {
     this.listRun = [];
     this.listEnd = [];
+    this.allListRun = [];
+    this.allListEnd = [];
     this.searchList = [];
     this.searchKeyword = '';
-    // this.getProjects('RUN');
-    // this.getProjects('END');
   }
   @action getSearchKeyword = () => {
     this.searchKeyword = '';
@@ -62,15 +64,13 @@ export default class ProjectListStore {
       },
     })
         .then(({data}: any) => {
-          console.log(data.getStateRequest.requests);
           var list: any = [];
           data.getStateRequest.requests.forEach((item: any) => {
             list.push({
               id: item.idx,
               thumbnail: item.thumbnail,
               title: item.subject,
-              // TODO: Fix length error.
-              author: item.user ? (item.user.fullname.length === 0 ? '익명' : item.user.fullname) : '알 수 없음',
+              author: item.user ? item.user.fullname : '알 수 없음',
               start_date: item.startDate,
               end_date: item.endDate,
               type: item.category.type.toUpperCase() + '-' + item.category.name,
@@ -81,13 +81,75 @@ export default class ProjectListStore {
               progress_rate: item.currentCycle / item.maxCycle,
             });
           });
-          console.log("ASDASd");
-          console.log(state);
           if (state === 'RUN') {
-            console.log(1);
+            this.allListRun = list;
+          } else if (state === 'END') {
+            this.allListEnd = list;
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+  }
+  @action getProjectsWithLimit = (state: string) => {
+    client.query({
+      query: gql`
+        query GetStateRequest($projectState: String!, $offset: Int!, $limit: Int!) {
+          getStateRequest(state: $projectState, offset: $offset, limit: $limit) {
+            message {
+              status
+              message
+            }
+            requests {
+              idx
+              user {
+                id
+                username
+                password
+                email
+              }
+              category {
+                name
+                type
+              }
+              subject
+              description
+              startDate
+              endDate
+              currentCycle
+              maxCycle
+              totalPoint
+            }
+          }
+        }
+      `,
+      variables: {
+        projectState: state,
+        offset: 1,
+        limit: 4,
+      },
+    })
+        .then(({data}: any) => {
+          var list: any = [];
+          data.getStateRequest.requests.forEach((item: any) => {
+            list.push({
+              id: item.idx,
+              thumbnail: item.thumbnail,
+              title: item.subject,
+              author: item.user ? item.user.fullname : '알 수 없음',
+              start_date: item.startDate,
+              end_date: item.endDate,
+              type: item.category.type.toUpperCase() + '-' + item.category.name,
+              point: Math.floor(item.totalPoint / item.maxCycle),
+              description: item.onelineDescription,
+              progress: item.currentCycle,
+              all: item.maxCycle,
+              progress_rate: item.currentCycle / item.maxCycle,
+            });
+          });
+          if (state === 'RUN') {
             this.listRun = list;
           } else if (state === 'END') {
-            console.log(2);
             this.listEnd = list;
           }
         })

@@ -1,38 +1,21 @@
-import { action, observable } from 'mobx';
-import { gql } from 'apollo-boost';
-import { client } from '../tsan';
+import {action, observable} from 'mobx';
+import {gql} from 'apollo-boost';
+import {client} from '../tsan';
 
 export default class LabelingPageStore {
   @observable request: any = {
-    labelingSubject: "",
-    thumbnailURL: "",
-    author: "",
-    startDate: "",
-    endDate: "",
-    labelingType: "",
-    oneLineDescription: "",
-    rewardPoints: "",
-    detailDescription: "",
-    progress: "",
-    totalProgress: "",
-    progressRate: ""
-  }
-
-  constructor() {
-    this.request = {
-      labelingSubject: "",
-      thumbnailURL: "",
-      author: "",
-      startDate: "",
-      endDate: "",
-      labelingType: "",
-      oneLineDescription: "",
-      rewardPoints: "",
-      detailDescription: "",
-      progress: "",
-      totalProgress: "",
-      progressRate: ""
-    }
+    labelingSubject: '',
+    thumbnailURL: '',
+    author: '',
+    startDate: '',
+    endDate: '',
+    labelingType: '',
+    oneLineDescription: '',
+    rewardPoints: '',
+    detailDescription: '',
+    progress: '',
+    totalProgress: '',
+    progressRate: '',
   }
 
   @action getRequest = (postId: number) => {
@@ -69,26 +52,26 @@ export default class LabelingPageStore {
         }
       `,
       variables: {
-        idx: postId
-      }
+        idx: postId,
+      },
     }).then(({data}:any) => {
-      const req = data.getIdxRequest.requests[0]
+      const req = data.getIdxRequest.requests[0];
       this.request = {
         labelingSubject: req.subject,
         thumbnailURL: req.thumbnail,
-        author: req.user.fullname,
+        author: req.user ? req.user.fullname : '알 수 없음',
         startDate: req.startDate,
         endDate: req.endDate,
-        labelingType: "[" + req.category.type.toUpperCase() + "] " + req.category.name,
+        labelingType: '[' + req.category.type.toUpperCase() + '] ' + req.category.name,
         oneLineDescription: req.onelineDescription,
         rewardPoints: Math.floor(req.totalPoint / req.maxCycle),
         detailDescription: req.description,
         progress: req.cycle,
         totalProgress: req.maxCycle,
         progressRate: req.cycle / req.maxCycle
-      }
+      };
     }).catch(e => {
-      console.error(e)
-    })
+      console.error(e);
+    });
   }
 }

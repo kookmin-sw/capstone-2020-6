@@ -24,7 +24,8 @@ interface Props {
 class PageLabeling extends React.Component<Props, RouteComponentProps> {
   constructor(props: any) {
     super(props);
-    this.props.labelingPageStore!.getRequest(props.match.params.postId);
+    // props.match.params.postId *= 1 -> change string to number
+    this.props.labelingPageStore!.getRequest(props.match.params.postId *= 1);
   }
 
     // TODO: dataId, postId index 시작 통일하기 0 or 1.
@@ -32,16 +33,16 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
       let labelingType;
       switch (this.props.labelingPageStore?.request.labelingType) {
         case '[TEXT] 객관식':
-          labelingType = 'txtsel';
+          labelingType = 0;
           break;
         case '[TEXT] 단답식':
-          labelingType = 'txtwrite';
+          labelingType = 1;
           break;
         case '[IMAGE] 객관식':
-          labelingType = 'imgSel';
+          labelingType = 2;
           break;
         case '[IMAGE] 영역지정':
-          labelingType = 'imgCap';
+          labelingType = 3;
           break;
       }
       this.props.history.push(`${this.props.match.url}/${labelingType}/0`);

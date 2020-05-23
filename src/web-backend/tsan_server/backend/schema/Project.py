@@ -828,17 +828,58 @@ class Query(graphene.ObjectType):
         }
     }
     }
+    
+    
+    query {
+    getStateRequest(state:"END", offset:1, limit:5) {
+        message {
+        status
+        message
+        }
+        requests {
+        idx
+        user {
+            id
+            username
+            password
+            email
+        }
+        category {
+            name
+            type
+        }
+        subject
+        description
+        startDate
+        endDate
+        currentCycle
+        maxCycle
+        totalPoint
+        }
+    }
+    }
     """
     # 특정 state에 대한 주제 반환
-    get_state_request = graphene.Field(Requests, state=graphene.String())
+    get_state_request = graphene.Field(Requests,
+                                       state=graphene.String(),
+                                       offset=graphene.Int(required=False),
+                                       limit=graphene.Int(required=False)
+                                       )
 
-    def resolve_get_state_request(self, info, state):
+    def resolve_get_state_request(self, info, state, **kwargs):
         requests = Request.objects.all()
         if requests is not None:
             for request in requests.iterator():
                 request.refresh_state()
 
-        request_rows = Request.objects.filter(state=state)
+        offset = kwargs.get("offset", None)
+        limit = kwargs.get("limit", None)
+
+        if offset and limit:
+            request_rows = Request.objects.filter(state=state)[offset:offset + limit]
+        else:
+            request_rows = Request.objects.filter(state=state)
+
         for request in request_rows:
             if request.user is not None:
                 request.user.password = "*****"
@@ -846,12 +887,17 @@ class Query(graphene.ObjectType):
                                      request.user.email.split("@")[1]
         if request_rows:
             message = "'%s' 상태에 대한 주제 목록 반환" % (request.state)
-            return Requests(message=Message(status=True, message=message), requests=request_rows)
+            return Requests(message=Message(status=True, message=message),
+                            requests=request_rows
+                            )
         else:
-            return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
+            return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."),
+                            requests=request_rows
+                            )
 
     """
-    getIdxRequest(idx:4) {
+query{ 
+    getIdxRequest(idx:1) {
     message {
       status
       message
@@ -877,6 +923,7 @@ class Query(graphene.ObjectType):
       totalPoint
     }
   }
+}
     """
     # 특정 id에 대한 주제 반환
     get_idx_request = graphene.Field(Requests, idx=graphene.Int())
@@ -894,7 +941,7 @@ class Query(graphene.ObjectType):
                 request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + \
                                      request.user.email.split("@")[1]
         if request_rows:
-            message = "'%s' 상태에 대한 주제 목록 반환" % (request.state)
+            message = "'%d'번 주제 목록 반환" % (request.idx)
             return Requests(message=Message(status=True, message=message), requests=request_rows)
         else:
             return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
