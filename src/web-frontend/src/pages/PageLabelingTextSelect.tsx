@@ -21,8 +21,7 @@ interface MatchParams {
   dataId: string;
 }
 
-@inject('labelingTextSelectStore')
-@observer
+@inject('labelingTextSelectStore') @observer
 class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps<MatchParams>> {
   constructor(props: any) {
     super(props);

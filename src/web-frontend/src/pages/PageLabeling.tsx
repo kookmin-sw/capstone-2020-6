@@ -29,22 +29,9 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
 
     // TODO: dataId, postId index 시작 통일하기 0 or 1.
     handleLink = (e: any) => {
-      let labelingType;
-      switch (this.props.labelingPageStore?.request.labelingType) {
-        case '[TEXT] 객관식':
-          labelingType = 'txtsel';
-          break;
-        case '[TEXT] 단답식':
-          labelingType = 'txtwrite';
-          break;
-        case '[IMAGE] 선택형':
-          labelingType = 'imgSel';
-          break;
-        case '[IMAGE] 캡쳐형':
-          labelingType = 'imgCap';
-          break;
-      }
-      this.props.history.push(`${this.props.match.url}/${labelingType}/0`);
+        const labelingType = this.props.labelingPageStore?.request.labelingTypeValue
+        console.log(this.props)
+        // this.props.history.push(`${this.props.match.url}/${labelingType}`);
     }
     render() {
         return (

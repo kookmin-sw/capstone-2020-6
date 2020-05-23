@@ -48,6 +48,7 @@ export default class LabelingPageStore {
               state
               subject
               category {
+                idx
                 type
                 name
               }
@@ -80,6 +81,7 @@ export default class LabelingPageStore {
         startDate: new Date(),
         endDate: new Date(new Date().setUTCMinutes(59, 59)),
         labelingType: "[" + req.category.type.toUpperCase() + "] " + req.category.name,
+        labelingTypeValue: req.category.idx,
         oneLineDescription: req.onelineDescription,
         rewardPoints: req.totalPoint / req.maxCycle,
         detailDescription: req.description,
