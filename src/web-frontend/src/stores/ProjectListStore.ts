@@ -15,8 +15,8 @@ export default class ProjectListStore {
     this.listEnd = [];
     this.searchList = [];
     this.searchKeyword = '';
-    this.getProjects('RUN');
-    this.getProjects('END');
+    // this.getProjects('RUN');
+    // this.getProjects('END');
   }
   @action getSearchKeyword = () => {
     this.searchKeyword = '';
@@ -24,76 +24,12 @@ export default class ProjectListStore {
   @action setSearchKeyword = (event: any) => {
     this.searchKeyword = event.target.value;
   };
-  @action getProjects = (state:string) => {
+  @action getProjects = (state: string) => {
     client.query({
+      // State 상태에 따라 리스트 저장해서 메인 페이지에서 lisRun, listEnd 따로 보여주기 위함.
       query: gql`
-        query GetAllRequest{
-          getAllRequest {
-            message {
-              status
-              message
-            }
-            requests {
-              idx
-              user {
-                fullname
-              }
-              category {
-                idx
-                type
-                name
-              }
-              state
-              subject
-              description
-              thumbnail
-              onelineDescription
-              startDate
-              endDate
-              currentCycle
-              maxCycle
-              totalPoint
-              isCaptcha
-              countDataset
-            }
-          }
-        }
-      `,
-    })
-        .then(({data}:any) => {
-          var list:any = [];
-          data.getAllRequest.requests.forEach((item:any) => {
-            list.push({
-              id: item.idx,
-              thumbnail: item.thumbnail,
-              title: item.subject,
-              author: item.user ? (item.user.fullname.length === 0 ? '익명' : item.user.fullname) : '알 수 없음',
-              start_date: item.startDate,
-              end_date: item.endDate,
-              type: item.category.type.toUpperCase() + '-' + item.category.name,
-              point: Math.floor(item.totalPoint / item.maxCycle),
-              description: item.onelineDescription,
-              progress: item.currentCycle,
-              all: item.maxCycle,
-              progress_rate: item.currentCycle / item.maxCycle
-            });
-          });
-          if (state === 'RUN') {
-            this.listRun = list;
-          } else if (state === 'END') {
-            this.listEnd = list;
-          }
-        })
-        .catch(e => {
-          console.error(e);
-        });
-  }
-  @action searchProjects = (state: string) => {
-    if (state === 'RUN') {
-      client.query({
-        query: gql`
-        query GetSubjectRequest($keyword: String!) {
-          getSubjectRequest(keyword: $keyword) {
+        query GetStateRequest($projectState: String!) {
+          getStateRequest(state: $projectState) {
             message {
               status
               message
@@ -106,21 +42,92 @@ export default class ProjectListStore {
                 password
                 email
               }
-            category {
-              name
-              type
+              category {
+                name
+                type
+              }
+              subject
+              description
+              startDate
+              endDate
+              currentCycle
+              maxCycle
+              totalPoint
             }
-            subject
-            description
-            startDate
-            endDate
-            currentCycle
-            maxCycle
-            totalPoint
           }
         }
-      }
-    `,
+      `,
+      variables: {
+        projectState: state,
+      },
+    })
+        .then(({data}: any) => {
+          console.log(data.getStateRequest.requests);
+          var list: any = [];
+          data.getStateRequest.requests.forEach((item: any) => {
+            list.push({
+              id: item.idx,
+              thumbnail: item.thumbnail,
+              title: item.subject,
+              // TODO: Fix length error.
+              author: item.user ? (item.user.fullname.length === 0 ? '익명' : item.user.fullname) : '알 수 없음',
+              start_date: item.startDate,
+              end_date: item.endDate,
+              type: item.category.type.toUpperCase() + '-' + item.category.name,
+              point: Math.floor(item.totalPoint / item.maxCycle),
+              description: item.onelineDescription,
+              progress: item.currentCycle,
+              all: item.maxCycle,
+              progress_rate: item.currentCycle / item.maxCycle,
+            });
+          });
+          console.log("ASDASd");
+          console.log(state);
+          if (state === 'RUN') {
+            console.log(1);
+            this.listRun = list;
+          } else if (state === 'END') {
+            console.log(2);
+            this.listEnd = list;
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+  }
+  @action searchProjects = (state: string) => {
+    if (state === 'RUN') {
+      client.query({
+        query: gql`
+          query GetSubjectRequest($keyword: String!) {
+            getSubjectRequest(keyword: $keyword) {
+              message {
+                status
+                message
+              }
+              requests {
+                idx
+                user {
+                  id
+                  username
+                  password
+                  email
+                }
+              category {
+                name
+                type
+              }
+              subject
+              description
+              startDate
+              endDate
+              currentCycle
+              maxCycle
+              totalPoint
+            }
+          }
+        }
+      `,
         variables: {
           keyword: this.searchKeyword,
         },
@@ -139,6 +146,7 @@ export default class ProjectListStore {
                 progress_rate: item.currentCycle / item.maxCycle,
               });
             });
+            console.log('test');
             if (this.searchKeyword === '') {
               this.searchList = this.listRun;
             } else {
@@ -147,7 +155,7 @@ export default class ProjectListStore {
             // TODO: After fix search error.
             // this.searchKeyword = '';
           })
-          .catch(e => {
+          .catch((e) => {
             console.error(e);
           });
     } else {

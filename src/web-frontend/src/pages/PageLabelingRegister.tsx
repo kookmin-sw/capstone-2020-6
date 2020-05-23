@@ -10,7 +10,6 @@ import TsDropDown from '../components/TsDropDown';
 import FileUpload from "../components/FileUpload";
 
 import './PageLabelingRegister.css';
-import Confirm from "../components/TSANConfirm";
 
 interface Props extends RouteComponentProps<any> {
     navigate?: any,

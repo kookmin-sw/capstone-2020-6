@@ -80,9 +80,19 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
                         </Grid.Row>
                         <Grid.Row columns={2} className='labelingPageMain'>
                             <Grid.Column className='labelingPageThumbnailBox'>
-                                <img alt='thumbnail'
-                                     className='labelingPageThumbnail'
-                                     src={this.props.labelingPageStore?.request.thumbnailURL}/>
+                                {/* TODO: Set image location to center. */}
+                                <div style={{
+                                  backgroundImage: `url(${this.props.labelingPageStore?.request.thumbnailURL})`,
+                                  width: '100%',
+                                  height: '100%',
+                                  justifyContent: 'center',
+                                  alignContent: 'center',
+                                  backgroundRepeat: 'no-repeat',
+                                  border: '1px solid black',
+                                }}/>
+                                {/*<img alt='thumbnail'*/}
+                                {/*     className='labelingPageThumbnail'*/}
+                                {/*     src={this.props.labelingPageStore?.request.thumbnailURL}/>*/}
                             </Grid.Column>
                             <Grid.Column rows={5} className='labelingPageDescription'>
                                 <Grid.Row>
