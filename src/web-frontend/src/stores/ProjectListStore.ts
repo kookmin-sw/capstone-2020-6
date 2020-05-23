@@ -28,6 +28,7 @@ export default class ProjectListStore {
   };
   @action getProjects = (state: string) => {
     client.query({
+      // State 상태에 따라 리스트 저장해서 메인 페이지에서 lisRun, listEnd 따로 보여주기 위함.
       query: gql`
         query GetStateRequest($projectState: String!) {
           getStateRequest(state: $projectState) {

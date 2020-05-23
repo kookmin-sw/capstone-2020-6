@@ -36,8 +36,7 @@ class App extends React.Component<Props> {
             </Link>
           </div>
           <Grid columns={4}>
-            {this.props.projectListStore!.listRun.map((item: any, key:any) => {
-              console.log(item.author);
+            {this.props.projectListStore!.listRun.map((item: any, key: any) => {
               return (
                 <Grid.Column key={key}>
                   <CardProject
