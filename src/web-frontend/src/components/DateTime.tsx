@@ -5,9 +5,6 @@ interface Props {
 }
 
 class Datetime extends Component<Props> {
-  constructor(props: any) {
-    super(props);
-  }
   render() {
     const date = new Date(this.props.datetime);
     const year = date.getFullYear();

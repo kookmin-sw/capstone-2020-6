@@ -59,7 +59,13 @@ class App extends React.Component<Props> {
               );
             })}
           </Grid>
-          <h3>완료된 라벨링 프로젝트</h3>
+          <br/>
+          <div className='mainPageShowMore'>
+            <h3>완료된 라벨링 프로젝트</h3>
+            <Link to='allProjectsFinished'>
+              <div className='showMoreLink'>더보기</div>
+            </Link>
+          </div>
           <Grid columns={4}>
             {this.props.projectListStore!.listEnd.map((item: any, key:any) => {
               return (

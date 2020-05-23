@@ -6,9 +6,9 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import check_password
 from graphene_django.types import DjangoObjectType
 from rest_framework_jwt.serializers import (
-  JSONWebTokenSerializer,
-  RefreshJSONWebTokenSerializer,
-  jwt_decode_handler
+    JSONWebTokenSerializer,
+    RefreshJSONWebTokenSerializer,
+    jwt_decode_handler
 )
 from backend.utils import (
     only_user,
@@ -17,13 +17,16 @@ from backend.utils import (
     Message
 )
 
+
 class UserType(DjangoObjectType):
     class Meta:
         model = User
 
+
 class Users(graphene.ObjectType):
     message = graphene.Field(Message)
     users = graphene.List(UserType)
+
 
 """
 mutation {
@@ -45,6 +48,8 @@ mutation {
   }
 }
 """
+
+
 class CreateAccount(graphene.Mutation):
     message = graphene.Field(Message)
 
@@ -57,7 +62,7 @@ class CreateAccount(graphene.Mutation):
         phone = graphene.String()
         is_requester = graphene.Boolean()
         is_robot = graphene.Boolean()
-        
+
     def mutate(self, info, fullname, birthday, username, email, password, phone, is_requester=False, is_robot=False):
         try:
             res = User.objects.exclude().get(username=username)
@@ -67,14 +72,14 @@ class CreateAccount(graphene.Mutation):
             # message = "'%s'님 정상적으로 가입되었습니다."%(new_user.username)
             # return CreateAccount(message=Message(status=True, message=message))
             new_user = User(
-              username=username,
-              email=email,
-              password=password,
-              fullname=fullname,
-              birthday=datetime.datetime.strptime(birthday, "%Y-%m-%d"),
-              phone=phone,
-              is_requester=is_requester,
-              is_robot=is_robot
+                username=username,
+                email=email,
+                password=password,
+                fullname=fullname,
+                birthday=datetime.datetime.strptime(birthday, "%Y-%m-%d"),
+                phone=phone,
+                is_requester=is_requester,
+                is_robot=is_robot
             )
             try:
                 new_user.full_clean()
@@ -84,8 +89,9 @@ class CreateAccount(graphene.Mutation):
             else:
                 new_user.set_password(password)
                 new_user.save()
-                message = "'%s'님 정상적으로 가입되었습니다."%(new_user.username)
+                message = "'%s'님 정상적으로 가입되었습니다." % (new_user.username)
                 return CreateAccount(message=Message(status=True, message=message))
+
 
 """
 mutation {
@@ -105,6 +111,8 @@ mutation {
   }
 }
 """
+
+
 class UpdateAccount(graphene.Mutation):
     message = graphene.Field(Message)
 
@@ -118,31 +126,31 @@ class UpdateAccount(graphene.Mutation):
 
     @only_user
     def mutate(
-        self, 
-        info,
-        fullname,
-        birthday,
-        username, 
-        email, 
-        phone, 
-        token
+            self,
+            info,
+            fullname,
+            birthday,
+            username,
+            email,
+            phone,
+            token
     ):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
         update = User(
-                username=username,
-                email=email,
-                fullname=fullname,
-                birthday=datetime.datetime.strptime(birthday, "%Y-%m-%d"),
-                phone=phone,
-                is_requester=user.is_requester,
-                is_robot=user.is_robot,
-                password=user.password
-            )
+            username=username,
+            email=email,
+            fullname=fullname,
+            birthday=datetime.datetime.strptime(birthday, "%Y-%m-%d"),
+            phone=phone,
+            is_requester=user.is_requester,
+            is_robot=user.is_robot,
+            password=user.password
+        )
         try:
             update.clean()
         except ValidationError as e:
-                return UpdateAccount(message=Message(status=False, message=str(e)))
+            return UpdateAccount(message=Message(status=False, message=str(e)))
         else:
             user.fullname = fullname
             user.birthday = datetime.datetime.strptime(birthday, "%Y-%m-%d")
@@ -155,6 +163,7 @@ class UpdateAccount(graphene.Mutation):
             return UpdateAccount(
                 message=Message(status=True, message=message),
             )
+
 
 """
 mutation {
@@ -171,6 +180,8 @@ mutation {
   }
 }
 """
+
+
 class UpdatePassword(graphene.Mutation):
     message = graphene.Field(Message)
 
@@ -181,11 +192,11 @@ class UpdatePassword(graphene.Mutation):
 
     @only_user
     def mutate(
-        self, 
-        info, 
-        old_password, 
-        new_password, 
-        token
+            self,
+            info,
+            old_password,
+            new_password,
+            token
     ):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
@@ -203,17 +214,18 @@ class UpdatePassword(graphene.Mutation):
             try:
                 update.clean()
             except ValidationError as e:
-                    return UpdateAccount(message=Message(status=False, message=str(e)))
+                return UpdateAccount(message=Message(status=False, message=str(e)))
             else:
                 user.set_password(new_password)
                 user.save()
-                
+
                 message = "개인정보가 정상적으로 변경되었습니다."
                 return UpdateAccount(
                     message=Message(status=True, message=message)
                 )
         else:
             return UpdateAccount(message=Message(status=False, message="비밀번호가 일치하지 않습니다."))
+
 
 """
 mutation {
@@ -226,9 +238,11 @@ mutation {
   }
 }
 """
+
+
 class LoginAccount(graphene.Mutation):
     message = graphene.Field(Message)
-    jwt = graphene.String() # json web token
+    jwt = graphene.String()  # json web token
 
     class Arguments:
         username = graphene.String()
@@ -236,8 +250,8 @@ class LoginAccount(graphene.Mutation):
 
     def mutate(self, info, username, password):
         user = {
-          'username': username,
-          'password': password
+            'username': username,
+            'password': password
         }
         serializer = JSONWebTokenSerializer(data=user)
         if serializer.is_valid():
@@ -245,6 +259,7 @@ class LoginAccount(graphene.Mutation):
             user = serializer.object['user']
             return LoginAccount(message=Message(status=True, message="정상적으로 로그인 되었습니다."), jwt=token)
         return LoginAccount(message=Message(status=False, message="아이디 또는 비밀번호가 올바르지 않습니다."))
+
 
 class RefreshToken(graphene.Mutation):
     message = graphene.Field(Message)
@@ -260,6 +275,7 @@ class RefreshToken(graphene.Mutation):
             return RefreshToken(message=Message(), jwt=token)
         return RefreshToken(message=Message(status=False, message="토큰 재발급에 실패하였습니다."))
 
+
 """
 mutation{
   deleteUser(
@@ -273,11 +289,13 @@ mutation{
   }
 }
 """
+
+
 # DeleteUser는 회원계정을 삭제하는 함수이다.
 # user가 foreign key로 쓰이는 해당 record 값이 null로 변경됨.
 class DeleteUser(graphene.Mutation):
     message = graphene.Field(Message)
-    
+
     class Arguments:
         password = graphene.String()
         token = graphene.String()
@@ -289,7 +307,7 @@ class DeleteUser(graphene.Mutation):
         if check_password(password, user.password):
             username = user.username
             user.delete()
-            message="'%s'님 정상적으로 탈퇴되었습니다."%(username)
+            message = "'%s'님 정상적으로 탈퇴되었습니다." % (username)
             return DeleteUser(
                 message=Message(status=True, message=message)
             )
@@ -297,12 +315,13 @@ class DeleteUser(graphene.Mutation):
             message = "비밀번호가 일치하지 않습니다."
             return DeleteUser(
                 message=Message(status=False, message=message)
-                )
+            )
+
 
 class AddPoint(graphene.Mutation):
     message = graphene.Field(Message)
     point = graphene.Int()
-    
+
     class Arguments:
         token = graphene.String()
 
@@ -341,6 +360,7 @@ class Query(graphene.ObjectType):
     """
     # 모든 사용자 반환
     get_all_user = graphene.Field(Users, token=graphene.String())
+
     @only_user
     @only_admin
     def resolve_get_all_user(self, info, **kwargs):
@@ -351,6 +371,7 @@ class Query(graphene.ObjectType):
         return Users(message=Message(status=True, message=""), users=users)
 
     my = graphene.Field(UserType, token=graphene.String())
+
     @only_user
     def resolve_my(self, info, token):
         res = jwt_decode_handler(token)

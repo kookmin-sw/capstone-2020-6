@@ -85,7 +85,7 @@ class Mypage extends React.Component<Props> {
                                         프로젝트 관리
                                     </Card.Header>
                                     <Card.Description className="mycard_description">
-                                        T-SAN 에서 의로한 프로젝트를 한눈에 관리하세요. 완료된 프로젝트의 결과를 확인할 수 있습니다.
+                                        T-SAN 에서 작업한 프로젝트를 한눈에 관리하세요. 작업한 프로젝트의 결과를 확인할 수 있습니다.
                                     </Card.Description>
                                 </Card.Content>
                                 <Button className="mycard_btn" href="/mypage/projects" color="blue" fluid>

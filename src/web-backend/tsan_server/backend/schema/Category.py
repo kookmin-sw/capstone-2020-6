@@ -5,9 +5,9 @@ from backend.forms import CategoryForm
 from django.core.exceptions import ValidationError
 from graphene_django.types import DjangoObjectType
 from rest_framework_jwt.serializers import (
-  JSONWebTokenSerializer,
-  RefreshJSONWebTokenSerializer,
-  jwt_decode_handler
+    JSONWebTokenSerializer,
+    RefreshJSONWebTokenSerializer,
+    jwt_decode_handler
 )
 from backend.utils import (
     only_user,
@@ -16,13 +16,16 @@ from backend.utils import (
     Message
 )
 
+
 class CategoryType(DjangoObjectType):
     class Meta:
         model = Category
 
+
 class Categorys(graphene.ObjectType):
     message = graphene.Field(Message)
     categorys = graphene.List(CategoryType)
+
 
 """
 mutation{
@@ -35,6 +38,8 @@ mutation{
   }
 }
 """
+
+
 class CreateCategory(graphene.Mutation):
     message = graphene.Field(Message)
     idx = graphene.Int()
@@ -53,11 +58,13 @@ class CreateCategory(graphene.Mutation):
         except:
             category = Category()
             category.create(name=name, type=type)
-            message = "'%s'카테고리가 생성되었습니다."%(category.name)
+            message = "'%s'카테고리가 생성되었습니다." % (category.name)
             return CreateCategory(
                 message=Message(status=True, message=message),
                 idx=category.idx
             )
+
+
 """
 mutation {
   updateCategory(
@@ -74,6 +81,8 @@ mutation {
   }
 }
 """
+
+
 class UpdateCategory(graphene.Mutation):
     message = graphene.Field(Message)
     idx = graphene.Int()
@@ -98,7 +107,7 @@ class UpdateCategory(graphene.Mutation):
                 category.name = name
                 category.type = type
                 category.save()
-                message = "'%s'카테고리가 정상적으로 수정되었습니다."%(category.name)
+                message = "'%s'카테고리가 정상적으로 수정되었습니다." % (category.name)
                 return UpdateCategory(
                     message=Message(status=True, message=message),
                     idx=category.idx
@@ -125,6 +134,7 @@ class Query(graphene.ObjectType):
     """
     # 모든 카테코리 반환
     get_all_category = graphene.Field(Categorys, token=graphene.String())
+
     @only_user
     @only_requester
     def resolve_get_all_category(self, info, token):

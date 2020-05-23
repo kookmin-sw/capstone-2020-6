@@ -3,21 +3,24 @@ from graphene_django.types import DjangoObjectType
 
 from backend import models
 from backend import schema
-from backend.schema.User import CreateAccount, LoginAccount, Message, UpdateAccount, DeleteUser, AddPoint, UpdatePassword
+from backend.schema.User import CreateAccount, LoginAccount, Message, UpdateAccount, DeleteUser, AddPoint, \
+    UpdatePassword
 from backend.schema.Dataset import CreateDataset
 from backend.schema.Category import CreateCategory, UpdateCategory
-from backend.schema.Project import CreateRequest, UpdateRequest, StartRequest, EndRequest, TakeProject, DeleteLabelerTakenProject
+from backend.schema.Project import CreateRequest, UpdateRequest, StartRequest, EndRequest, TakeProject, \
+    DeleteLabelerTakenProject
 from backend.schema.Payment import CreatePaymentLog, UpdatePaymentLog, DeletePaymentLog
 
 from command_center.schema import Dataset
 
 from rest_framework_jwt.serializers import (
-  JSONWebTokenSerializer,
-  RefreshJSONWebTokenSerializer,
-  jwt_decode_handler
+    JSONWebTokenSerializer,
+    RefreshJSONWebTokenSerializer,
+    jwt_decode_handler
 )
 
 from backend.utils import only_user, only_admin, only_requester
+
 
 class Mutation(graphene.ObjectType):
     add_point = AddPoint.Field()
@@ -50,5 +53,6 @@ class Query(
     Dataset.Query
 ):
     pass
+
 
 schema = graphene.Schema(query=Query, mutation=Mutation)

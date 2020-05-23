@@ -3,6 +3,7 @@ from rangefilter.filter import DateRangeFilter, DateTimeRangeFilter
 from django.contrib.auth.admin import UserAdmin
 from .models import User, Category, Request, PaymentLog, Labeling, Dataset
 
+
 # Register your models here.
 # admin page filter에서 'is_required: 예/아니오'를 '사용자 구분: 의뢰자/참여자'로 표현
 class UserTypeFilter(admin.SimpleListFilter):
@@ -21,7 +22,8 @@ class UserTypeFilter(admin.SimpleListFilter):
         if self.value() == '참여자':
             return User.objects.filter(is_requester=False)
 
-# admin page filter에서 'payment.type: 0/1/2/3/4'를 
+
+# admin page filter에서 'payment.type: 0/1/2/3/4'를
 # '내역 구분: 0: 보상/1: 충전/2: 환급/3: 소비/4: 기타사유'로 표현
 class PaymentTypeFilter(admin.SimpleListFilter):
     title = "내역 구분"
@@ -48,10 +50,11 @@ class PaymentTypeFilter(admin.SimpleListFilter):
         if self.value() == '4: 기타사유':
             return PaymentLog.objects.filter(type=4)
 
+
 class CustomUserAdmin(UserAdmin):
     fieldsets = (
         *UserAdmin.fieldsets,  # original form fieldsets, expanded
-        (                      # new fieldset added on to the bottom
+        (  # new fieldset added on to the bottom
             'Custom Field Heading',  # group heading of your choice; set to None for a blank space instead of a header
             {
                 'fields': (
@@ -65,7 +68,7 @@ class CustomUserAdmin(UserAdmin):
     )
     list_display = (
         'username',
-        'id', # 나중에 지우기
+        'id',  # 나중에 지우기
         'email',
         'point',
         'reliability',
@@ -86,6 +89,7 @@ class CustomUserAdmin(UserAdmin):
         'phone'
     )
 
+
 class CategoryAdmin(admin.ModelAdmin):
     list_display = (
         'name',
@@ -99,6 +103,7 @@ class CategoryAdmin(admin.ModelAdmin):
         'name',
         'type'
     )
+
 
 class RequestAdmin(admin.ModelAdmin):
     list_display = (
@@ -120,6 +125,7 @@ class RequestAdmin(admin.ModelAdmin):
         'total_point'
     )
 
+
 class PaymentLogAdmin(admin.ModelAdmin):
     list_display = (
         'type',
@@ -137,6 +143,7 @@ class PaymentLogAdmin(admin.ModelAdmin):
         'request',
         'note',
     )
+
 
 class LabelingAdmin(admin.ModelAdmin):
     list_display = (
@@ -156,6 +163,7 @@ class LabelingAdmin(admin.ModelAdmin):
         'end_date',
     )
 
+
 class DatasetAdmin(admin.ModelAdmin):
     list_display = (
         'name',
@@ -167,6 +175,7 @@ class DatasetAdmin(admin.ModelAdmin):
     search_fields = (
         'name',
     )
+
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Category, CategoryAdmin)

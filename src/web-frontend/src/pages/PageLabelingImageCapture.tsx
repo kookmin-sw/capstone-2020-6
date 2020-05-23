@@ -38,7 +38,7 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
   }
 
   onCropChange = (crop: any) => {
-    this.setState({crop});
+    this.setState({crop: crop});
   }
 
   render() {
@@ -48,7 +48,7 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
           <h2>비문 인식을 위한 강아지 코 labeling</h2>
         </div>
         <Grid columns={2}>
-          <Grid.Column className='labelingImageCapture'>
+          <Grid.Column>
             <ReactCrop
               src={this.state.src}
               crop={this.state.crop}
@@ -56,15 +56,25 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
               onChange={this.onCropChange}
             />
           </Grid.Column>
-          <Grid.Column className='labelingCaptureResult'>
+          <Grid.Column>
             <div className='subTitle'>
               1. 강아지 코를 찾아서 캡쳐해주세요.
             </div>
             <Grid className='imagePreviewCanvas'>
-
+              <div
+                style={{
+                  backgroundImage: `url(${this.state.src})`,
+                  backgroundPositionX: `-${this.state.crop.x + 25}px`,
+                  backgroundPositionY: `-${this.state.crop.y + 10}px`,
+                  backgroundRepeat: 'no-repeat',
+                  width: this.state.crop.width,
+                  height: this.state.crop.height,
+                }}
+              />
             </Grid>
             <br/><br/>
             <Grid className='captureButtonGrid'>
+              {/* TODO: Implement onClick method */}
               <Button color={'blue'} className='captureButton'>
                 캡쳐
               </Button>
