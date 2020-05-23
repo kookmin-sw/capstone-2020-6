@@ -1,5 +1,6 @@
 import graphene
 import datetime
+from django.utils import timezone
 from mongodb import db
 from django.db.models import Q
 from backend.models import Dataset, User, Category, Request, Labeling, Keyword
@@ -371,7 +372,7 @@ class StartRequest(graphene.Mutation):
             now = datetime.datetime.now()
             update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject,
                              description=request.description,
-                             start_date=now, end_date=str(request.end_date),
+                             start_date=str(now), end_date=str(request.end_date),
                              max_cycle=request.max_cycle, total_point=request.total_point,
                              is_captcha=request.is_captcha, state='RUN')
             try:
@@ -427,7 +428,7 @@ class EndRequest(graphene.Mutation):
             now = datetime.datetime.now()
             update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject,
                              description=request.description,
-                             start_date=str(request.start_date), end_date=now,
+                             start_date=str(request.start_date), end_date=str(now),
                              max_cycle=request.max_cycle, total_point=request.total_point,
                              is_captcha=request.is_captcha, state='END')
             try:
@@ -435,7 +436,7 @@ class EndRequest(graphene.Mutation):
             except ValidationError as e:
                 return EndRequest(message=Message(status=False, message=str(e)))
             else:
-                request.start_date = now
+                request.end_date = now
                 request.state = 'END'
                 request.save()
                 message = "'%s'주제가 정상적으로 종료되었습니다." % (request.subject)
