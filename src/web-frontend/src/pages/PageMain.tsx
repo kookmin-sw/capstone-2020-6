@@ -20,9 +20,8 @@ interface Props {
 class App extends React.Component<Props> {
   constructor(props: any) {
     super(props);
-    // 답변 가능한 프로젝트 목록 요청
-    this.props.projectListStore!.getProjects('RUN');
-    this.props.projectListStore!.getProjects('END');
+    this.props.projectListStore!.getProjectsWithLimit('RUN');
+    this.props.projectListStore!.getProjectsWithLimit('END');
   }
   render() {
     return (
@@ -37,7 +36,7 @@ class App extends React.Component<Props> {
             </Link>
           </div>
           <Grid columns={4}>
-            {this.props.projectListStore!.listRun.map((item: any, key:any) => {
+            {this.props.projectListStore!.listRun.map((item: any, key: any) => {
               return (
                 <Grid.Column key={key}>
                   <CardProject
@@ -95,5 +94,4 @@ class App extends React.Component<Props> {
   }
 }
 
-// export default withRouter(App);
 export default App;
