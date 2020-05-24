@@ -877,9 +877,9 @@ class Query(graphene.ObjectType):
         limit = kwargs.get("limit", None)
 
         if offset and limit:
-            request_rows = Request.objects.filter(state=state)[offset:offset + limit]
+            request_rows = Request.objects.filter(state=state).order_by('-idx')[offset:offset + limit]
         else:
-            request_rows = Request.objects.filter(state=state)
+            request_rows = Request.objects.filter(state=state).order_by('-idx')
 
         for request in request_rows:
             if request.user is not None:
