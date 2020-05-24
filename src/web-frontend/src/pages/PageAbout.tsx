@@ -11,7 +11,7 @@ interface Props extends RouteComponentProps<any> {
 const members = [{
   img: '/images/최은미.png',
   name: '최은미',
-  role: '지도교수',
+  role: 'Professor',
 },
 {
   img: '/images/이정하.png',
