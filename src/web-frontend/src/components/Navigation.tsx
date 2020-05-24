@@ -41,13 +41,10 @@ class Navigation extends React.Component<Props> {
             {
               this.props.loginStore?.is_login ? (
                 <>
-                  <div className='menu_item'>
-                    <Link className='text' to='/mypage/points'>포인트</Link>
-                  </div>
                   {
                     (this.props.userStore?.isRequester) ? (
                       <div className='menu_item'>
-                        <Link className='text' to='/labelingRegister'>새로운 프로젝트</Link>
+                        <Link className='text' to='/labelingRegister'>프로젝트 등록</Link>
                       </div>
                     ) : <></>
                   }
