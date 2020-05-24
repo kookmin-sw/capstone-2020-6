@@ -61,7 +61,7 @@ class PageMypageProject extends React.Component<Props, State> {
             this.props.myPageProjectStore?.setEndReq();
 
         this.setState({open: false});
-        // window.location.reload();
+        window.location.reload();
 
     }
 
