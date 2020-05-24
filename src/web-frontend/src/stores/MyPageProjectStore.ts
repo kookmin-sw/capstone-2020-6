@@ -39,6 +39,7 @@ export default class ProjectListStore {
     }
 
     @action setStartReq = () => {
+        console.log('startReq');
         client.mutate({
             mutation: gql`
             mutation StartRequest($idx: Int!, $token: String!) {

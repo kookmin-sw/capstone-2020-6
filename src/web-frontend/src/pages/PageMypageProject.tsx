@@ -61,7 +61,7 @@ class PageMypageProject extends React.Component<Props, State> {
             this.props.myPageProjectStore?.setEndReq();
 
         this.setState({open: false});
-        window.location.reload();
+        // window.location.reload();
 
     }
 
@@ -76,34 +76,31 @@ class PageMypageProject extends React.Component<Props, State> {
                 <h3>내 프로젝트 관리</h3>
                 <ProjectListTable header={this.header} body={this.props.myPageProjectStore!.list.map((item: any, idx: number) => {
                     return (
-                        <React.Fragment key={0}>
-                            <Table.Row key={1}>
-                                <Table.Cell>{idx+1}</Table.Cell>
-                                <Table.Cell><Link to={`/labeling/${item.id}`}>{item.title}</Link></Table.Cell>
-                                <Table.Cell>{item.type}</Table.Cell>
-                                <Table.Cell>
-                                    <Datetime datetime={item.start_date}/>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <Datetime datetime={item.end_date}/>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <div onClick={()=>this.show('start', item.idx)}>
-                                        <Icon name="sign-in alternate"/>
-                                    </div>
-                                </Table.Cell>
-                                <Table.Cell>
-                                    <div onClick={()=>this.show('end', item.idx)}>
-                                        <Icon name="sign-out alternate"/>
-                                    </div>
-                                </Table.Cell>
-                                <Table.Cell>{item.status}</Table.Cell>
-                            </Table.Row>
-                        </React.Fragment>
+                        <Table.Row key={idx}>
+                            <Table.Cell>{idx+1}</Table.Cell>
+                            <Table.Cell><Link to={`/labeling/${item.id}`}>{item.title}</Link></Table.Cell>
+                            <Table.Cell>{item.type}</Table.Cell>
+                            <Table.Cell>
+                                <Datetime datetime={item.start_date}/>
+                            </Table.Cell>
+                            <Table.Cell>
+                                <Datetime datetime={item.end_date}/>
+                            </Table.Cell>
+                            <Table.Cell>
+                                <div onClick={()=>this.show('start', item.id)}>
+                                    <Icon name="sign-in alternate"/>
+                                </div>
+                            </Table.Cell>
+                            <Table.Cell>
+                                <div onClick={()=>this.show('end', item.id)}>
+                                    <Icon name="sign-out alternate"/>
+                                </div>
+                            </Table.Cell>
+                            <Table.Cell>{item.status}</Table.Cell>
+                        </Table.Row>
                     );
                 })}/>
                 <Confirm
-                    key={2}
                     header={'안내'}
                     contents={this.state.type==='start'?['지금 시작하시겠습니까?']:['지금 종료하시겠습니까?']}
                     open={open}
