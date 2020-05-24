@@ -48,6 +48,7 @@ export default class ProjectListStore {
                 name
                 type
               }
+              thumbnail
               subject
               description
               startDate
@@ -112,6 +113,7 @@ export default class ProjectListStore {
                 name
                 type
               }
+              thumbnail
               subject
               description
               startDate
@@ -208,7 +210,6 @@ export default class ProjectListStore {
                 progress_rate: item.currentCycle / item.maxCycle,
               });
             });
-            console.log('test');
             if (this.searchKeyword === '') {
               this.searchList = this.listRun;
             } else {
