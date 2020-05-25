@@ -16,7 +16,7 @@ class ProgressBar extends React.Component<Props> {
         return (
             <div className="progress_container">
                 <Progress
-                    percent={this.props.progress_rate}
+                    percent={parseFloat(this.props.progress_rate as string)*100}
                     label={this.props.progress + '/' + this.props.all}
                     size={this.props.size}
                 />
