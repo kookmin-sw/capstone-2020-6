@@ -56,6 +56,7 @@ class CardProject extends React.Component<Props> {
     super(props);
     this.handleLink = this.handleLink.bind(this);
   }
+
   handleLink = (status: string) => {
     if(status !== 'client')
       this.props.history.push(`/labeling/${this.props.id}`);
@@ -74,14 +75,14 @@ class CardProject extends React.Component<Props> {
             <Card.Header className="card_project_title">
               [{this.props.type}] {this.props.title}
             </Card.Header>
-            <Card.Meta>
+            <Card.Meta className="card_meta">
               {this.props.author}
               &nbsp;|&nbsp;
               {this.props.point}P
               &nbsp;|&nbsp;
               {calcAgo(this.props.start_date, this.props.end_date)}종료
             </Card.Meta>
-            <Card.Description className="card_description">{this.props.description}</Card.Description>
+            <Card.Description className="card_description">{this.props.description!.length < 40 ? this.props.description : this.props.description?.slice(0,38) + '...'}</Card.Description>
             <ProgressBar
               progress={this.props.progress}
               all={this.props.all}

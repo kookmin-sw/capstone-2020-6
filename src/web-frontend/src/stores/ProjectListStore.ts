@@ -115,6 +115,7 @@ export default class ProjectListStore {
               }
               thumbnail
               subject
+              onelineDescription
               description
               startDate
               endDate
