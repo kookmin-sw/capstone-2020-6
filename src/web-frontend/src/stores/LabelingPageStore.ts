@@ -66,9 +66,9 @@ export default class LabelingPageStore {
         oneLineDescription: req.onelineDescription,
         rewardPoints: Math.floor(req.totalPoint / req.maxCycle),
         detailDescription: req.description,
-        progress: req.cycle,
+        progress: req.currentCycle,
         totalProgress: req.maxCycle,
-        progressRate: req.cycle / req.maxCycle
+        progressRate: req.currentCycle / req.maxCycle * 100,
       };
     }).catch(e => {
       console.error(e);

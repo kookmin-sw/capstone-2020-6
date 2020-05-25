@@ -14,10 +14,20 @@
 .labelingPageThumbnail {
     width: 100%;
     height: 300px;
-    object-fit: "cover";
+    object-fit: cover;
     background-size: cover;
     background-position: center center;
     text-align: center;
+}
+
+.labelingMainThumbnail {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    background-size: cover;
+    background-position: center center;
+    text-align: center;
+    border: 1px solid black;
 }
 
 .labelingPageDescription {
