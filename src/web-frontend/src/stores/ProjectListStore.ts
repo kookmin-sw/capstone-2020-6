@@ -71,7 +71,7 @@ export default class ProjectListStore {
               id: item.idx,
               thumbnail: item.thumbnail,
               title: item.subject,
-              author: item.user.username ? item.user.username : '알 수 없음',
+              author: item.user ? item.user.fullname : '알 수 없음',
               start_date: item.startDate,
               end_date: item.endDate,
               type: item.category.type.toUpperCase() + '-' + item.category.name,
