@@ -47,7 +47,7 @@ function calcAgo(start: string, end: string) {
   ago += parseInt(''+hour) ? hour + '시간 ' : '';
   ago += parseInt(''+min) ? min + '분 ' : '';
 
-  return ago;
+  if (ago.length > 0) return ago + '뒤 ';
 }
 
 class CardProject extends React.Component<Props> {
@@ -79,7 +79,7 @@ class CardProject extends React.Component<Props> {
               &nbsp;|&nbsp;
               {this.props.point}P
               &nbsp;|&nbsp;
-              {calcAgo(this.props.start_date, this.props.end_date)} 뒤 종료
+              {calcAgo(this.props.start_date, this.props.end_date)}종료
             </Card.Meta>
             <Card.Description className="card_description">{this.props.description}</Card.Description>
             <ProgressBar
