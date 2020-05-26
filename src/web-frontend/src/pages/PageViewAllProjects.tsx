@@ -19,17 +19,13 @@ interface Props extends RouteComponentProps<any> {
 @inject('projectListStore')
 @observer
 class PageViewAllProjects extends React.Component<Props> {
-  state = {
-    list: this.props.projectListStore!.allListRun,
-  };
   constructor(props: any) {
     super(props);
       this.props.projectListStore?.getProjects('RUN');
       this.props.projectListStore?.getSearchKeyword();
   }
-  // TODO: Resolve search error.
   search = () => {
-    this.props.projectListStore?.searchProjects('RUN');
+    this.props.projectListStore?.searchProjectsRun();
   }
   render() {
     return (
@@ -62,7 +58,6 @@ class PageViewAllProjects extends React.Component<Props> {
           ]}
           body={this.props.projectListStore!.searchList.map((item: any, idx: number) => {
             return (
-              // TODO: Sort projects by id.
               <Table.Row key={idx+1}>
                 <Table.Cell>{idx+1}</Table.Cell>
                 <Table.Cell>
@@ -81,7 +76,7 @@ class PageViewAllProjects extends React.Component<Props> {
           })}
         />
         <Dimmer active={this.props.projectListStore?.loading}>
-          <Loader />
+          <Loader/>
         </Dimmer>
       </Container>
     );

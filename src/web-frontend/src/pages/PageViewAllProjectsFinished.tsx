@@ -1,6 +1,6 @@
 import React from 'react';
 import {RouteComponentProps, withRouter, Link} from 'react-router-dom';
-import {Button, Container, Table} from 'semantic-ui-react';
+import {Button, Container, Dimmer, Loader, Table} from 'semantic-ui-react';
 import './PageViewAllProjectsFinished.css';
 
 // Components
@@ -19,20 +19,13 @@ interface Props extends RouteComponentProps<any> {
 @inject('projectListStore')
 @observer
 class PageViewAllProjectsFinished extends React.Component<Props> {
-  state = {
-    list: this.props.projectListStore!.allListEnd,
-  };
   constructor(props: any) {
     super(props);
       this.props.projectListStore?.getProjects('END');
       this.props.projectListStore?.getSearchKeyword();
   }
-  // TODO: Resolve search error.
   search = () => {
-    this.props.projectListStore?.searchProjects('END');
-    this.setState({
-      list: this.props.projectListStore!.searchList,
-    });
+    this.props.projectListStore?.searchProjectsEnd();
   }
   render() {
     return (
@@ -63,9 +56,8 @@ class PageViewAllProjectsFinished extends React.Component<Props> {
             {id: 5, headerItem: '마감일'},
             {id: 6, headerItem: '진행 상황'},
           ]}
-          body={this.state.list.map((item: any, idx: number) => {
+          body={this.props.projectListStore!.searchList.map((item: any, idx: number) => {
             return (
-              // TODO: Sort projects by id.
               <Table.Row key={idx+1}>
                 <Table.Cell>{idx+1}</Table.Cell>
                 <Table.Cell>
@@ -83,6 +75,9 @@ class PageViewAllProjectsFinished extends React.Component<Props> {
             );
           })}
         />
+        <Dimmer active={this.props.projectListStore?.loading}>
+          <Loader/>
+        </Dimmer>
       </Container>
     );
   }

@@ -58,9 +58,10 @@ class CardProject extends React.Component<Props> {
   }
 
   handleLink = (status: string) => {
-    if(status !== 'client')
+    if (status !== 'client') {
       this.props.history.push(`/labeling/${this.props.id}`);
-      window.scroll(0,0);
+    }
+    window.scroll(0, 0);
   }
 
   render() {
@@ -79,15 +80,15 @@ class CardProject extends React.Component<Props> {
               {this.props.author}
               &nbsp;|&nbsp;
               {this.props.point}P
-              &nbsp;|&nbsp;
+              |&nbsp;
               {calcAgo(this.props.start_date, this.props.end_date)}종료
             </Card.Meta>
-            <Card.Description className="card_description">{this.props.description!.length < 40 ? this.props.description : this.props.description?.slice(0,38) + '...'}</Card.Description>
+            <Card.Description className="card_description">{this.props.description!.length < 40 ? this.props.description : this.props.description?.slice(0, 38) + '...'}</Card.Description>
             <ProgressBar
               progress={this.props.progress}
               all={this.props.all}
               progress_rate={this.props.progress_rate}
-              size={"small"}
+              size={'small'}
             />
           </Card.Content>
         </Card>
