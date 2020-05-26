@@ -39,3 +39,13 @@
 .captureButton {
     width: 100px;
 }
+
+.finishButtonLocation {
+    text-align: right;
+    margin-top: 30px;
+    margin-bottom: 20px;
+}
+
+.capture_box{
+    margin-bottom: 40px;
+}

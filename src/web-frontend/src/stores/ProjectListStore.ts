@@ -8,16 +8,12 @@ import { gql } from 'apollo-boost';
 export default class ProjectListStore {
   @observable listRun: any = [];
   @observable listEnd: any = [];
-  @observable allListRun: any = [];
-  @observable allListEnd: any = [];
   @observable searchList: any = [];
   @observable searchKeyword: string = '';
   @observable loading: boolean = false;
   constructor() {
     this.listRun = [];
     this.listEnd = [];
-    this.allListRun = [];
-    this.allListEnd = [];
     this.searchList = [];
     this.searchKeyword = '';
     this.loading = false;
@@ -29,9 +25,8 @@ export default class ProjectListStore {
     this.searchKeyword = event.target.value;
   };
   @action getProjects = (state: string) => {
-    this.loading = true
+    this.loading = true;
     client.query({
-      // State 상태에 따라 리스트 저장해서 메인 페이지에서 lisRun, listEnd 따로 보여주기 위함.
       query: gql`
         query GetStateRequest($projectState: String!) {
           getStateRequest(state: $projectState) {
@@ -87,9 +82,9 @@ export default class ProjectListStore {
           });
         });
         if (state === 'RUN') {
-          this.allListRun = list;
+          this.searchList = list;
         } else if (state === 'END') {
-          this.allListEnd = list;
+          this.searchList = list;
         }
       })
       .catch((e) => {
@@ -165,16 +160,12 @@ export default class ProjectListStore {
         console.error(e);
       });
   }
-  @action searchProjects = (state: string) => {
-    if (state !== 'RUN') {
-      console.log('state End');
-      return
-    }
+  @action searchProjectsRun = () => {
     this.loading = true;
     client.query({
       query: gql`
-        query GetSubjectRequest($keyword: String!) {
-          getSubjectRequest(keyword: $keyword) {
+        query GetSubjectRunningRequest($keyword: String!) {
+          getSubjectRunningRequest(keyword: $keyword) {
             message {
               status
               message
@@ -209,7 +200,7 @@ export default class ProjectListStore {
     .then(({ data }: any) => {
       this.loading = false;
       var list: any = [];
-      data.getSubjectRequest.requests.forEach((item: any) => {
+      data.getSubjectRunningRequest.requests.forEach((item: any) => {
         list.push({
           id: item.idx,
           title: item.subject,
@@ -226,12 +217,77 @@ export default class ProjectListStore {
       } else {
         this.searchList = list;
       }
-      // TODO: After fix search error.
-      // this.searchKeyword = '';
+      this.searchKeyword = '';
     })
     .catch((e) => {
       this.loading = false;
       console.error(e);
     });
   }
+  @action searchProjectsEnd = () => {
+    this.loading = true;
+    client.query({
+      query: gql`
+        query GetSubjectEndRequest($keyword: String!) {
+          getSubjectEndRequest(keyword: $keyword) {
+            message {
+              status
+              message
+            }
+            requests {
+              idx
+              user {
+                id
+                username
+                password
+                email
+              }
+            category {
+              name
+              type
+            }
+            subject
+            description
+            startDate
+            endDate
+            currentCycle
+            maxCycle
+            totalPoint
+          }
+        }
+      }
+    `,
+      variables: {
+        keyword: this.searchKeyword,
+      },
+    })
+        .then(({ data }: any) => {
+          this.loading = false;
+          var list: any = [];
+          data.getSubjectEndRequest.requests.forEach((item: any) => {
+            list.push({
+              id: item.idx,
+              title: item.subject,
+              type: item.category.type.toUpperCase() + '-' + item.category.name,
+              start_date: item.startDate,
+              end_date: item.endDate,
+              progress: item.currentCycle,
+              all: item.maxCycle,
+              progress_rate: item.currentCycle / item.maxCycle,
+            });
+          });
+          if (this.searchKeyword === '') {
+            this.searchList = this.listEnd;
+          } else {
+            this.searchList = list;
+          }
+          this.searchKeyword = '';
+        })
+        .catch((e) => {
+          this.loading = false;
+          console.error(e);
+        });
+  }
 }
+
+

@@ -13,6 +13,10 @@ export default class LabelingTextSelectStore {
       this.labelingSubject = '';
     }
 
+    @action resetActiveButton = () => {
+      this.activeButton = -1;
+    }
+
     @action setActiveButton = (id: any) => {
       this.activeButton = id;
     }

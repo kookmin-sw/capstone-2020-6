@@ -8,9 +8,11 @@ import MyPageProjectStore from '../stores/MyPageProjectStore';
 import Confirm from '../components/TSANConfirm';
 import ProjectListTable from '../components/ProjectListTable';
 import Datetime from '../components/DateTime';
+import UserStore from "../stores/UserStore";
 
 interface Props {
     myPageProjectStore?: MyPageProjectStore;
+    userStore?: UserStore;
 }
 interface State {
     open: boolean;
@@ -19,6 +21,7 @@ interface State {
 }
 
 @inject('myPageProjectStore')
+@inject('userStore')
 @observer
 
 
@@ -35,7 +38,7 @@ class PageMypageProject extends React.Component<Props, State> {
         this.show = this.show.bind(this);
         this.handleConfirm = this.handleConfirm.bind(this);
     }
-    header = [
+    client_header = [
         {id: 1, headerItem: '#'},
         {id: 2, headerItem: '주제명'},
         {id: 3, headerItem: '레이블링 유형'},
@@ -45,6 +48,14 @@ class PageMypageProject extends React.Component<Props, State> {
         {id: 7, headerItem: '종료'},
         {id: 8, headerItem: '비고'},
     ];
+    user_header = [
+        {id: 1, headerItem: '#'},
+        {id: 2, headerItem: '주제명'},
+        {id: 3, headerItem: '레이블링 유형'},
+        {id: 4, headerItem: '시작일'},
+        {id: 5, headerItem: '마감일'},
+        {id: 6, headerItem: '비고'},
+    ]
 
     show = (_type:string, idx:string) => {
         this.setState({projectID: idx});
@@ -74,7 +85,7 @@ class PageMypageProject extends React.Component<Props, State> {
         return (
             <Container className="project_cont">
                 <h3>내 프로젝트 관리</h3>
-                <ProjectListTable header={this.header} body={this.props.myPageProjectStore!.list.map((item: any, idx: number) => {
+                <ProjectListTable header={this.props.userStore?.isRequester ? this.client_header : this.user_header} body={this.props.myPageProjectStore!.list.map((item: any, idx: number) => {
                     return (
                         <Table.Row key={idx}>
                             <Table.Cell>{idx+1}</Table.Cell>
@@ -86,16 +97,21 @@ class PageMypageProject extends React.Component<Props, State> {
                             <Table.Cell>
                                 <Datetime datetime={item.end_date}/>
                             </Table.Cell>
-                            <Table.Cell>
-                                <div onClick={()=>this.show('start', item.id)}>
+                            {this.props.userStore?.isRequester &&
+                                <>
+                                    <Table.Cell>
+                                    <div onClick={()=>this.show('start', item.id)}>
                                     <Icon name="sign-in alternate"/>
-                                </div>
-                            </Table.Cell>
-                            <Table.Cell>
-                                <div onClick={()=>this.show('end', item.id)}>
+                                    </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                    <div onClick={()=>this.show('end', item.id)}>
                                     <Icon name="sign-out alternate"/>
-                                </div>
-                            </Table.Cell>
+                                    </div>
+                                    </Table.Cell>
+                                </>
+                            }
+
                             <Table.Cell>{item.status}</Table.Cell>
                         </Table.Row>
                     );

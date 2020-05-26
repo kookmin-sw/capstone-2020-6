@@ -33,7 +33,7 @@ class PageLabelingTextWrite extends React.Component<Props & RouteComponentProps<
   handleLink = (e: any) => {
     // TODO: 입력한 내용 API 로 보내기
     var num = parseInt(this.props.match.params.dataId) + 1;
-    this.props.history.push(`/labeling/${this.props.match.params.postId}/1/${num}`);
+    this.props.history.push(`/labeling/${this.props.match.params.postId}/0/${num}`);
   }
 
   render() {
