@@ -604,11 +604,11 @@ class DeleteRequest(graphene.Mutation):
 class GetItem(graphene.Mutation):
     message = graphene.Field(Message)
     data = graphene.String()
+    left = graphene.Int()
 
     class Arguments:
         idx = graphene.Int()
         token = graphene.String()
-        left = graphene.Int()
 
     @only_user
     def mutate(self, info, idx, token):

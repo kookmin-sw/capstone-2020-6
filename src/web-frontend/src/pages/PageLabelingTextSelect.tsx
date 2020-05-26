@@ -30,15 +30,11 @@ class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps
     this.props.labelingTextSelectStore?.getRequest()
     this.props.labelingTextSelectStore?.getKeywords()
     this.props.labelingTextSelectStore?.getItem()
-    // this.props.labelingTextSelectStore!.getButtons();
-    // this.props.labelingTextSelectStore!.getTextLabelingContents();
   }
 
   handleLink = (e: any) => {
-    // TODO: 선택한 버튼 API 로 보내기
-    this.props.labelingTextSelectStore?.resetActiveButton();
-    var num = parseInt(this.props.match.params.dataId) + 1;
-    this.props.history.push(`/labeling/${this.props.match.params.postId}/1/${num}`);
+    this.props.labelingTextSelectStore?.resetActiveButton()
+    this.props.labelingTextSelectStore?.getItem()
   }
 
   render() {
@@ -66,10 +62,13 @@ class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps
                 onClick={this.props.labelingTextSelectStore?.setActiveButton}
               />
               <div className='finishButtonLocation'>
-                {this.props.labelingTextSelectStore?.leftItems == 0 ?
+                {this.props.labelingTextSelectStore?.leftItems ?
                 <LabelingNextBtn handleLink={this.handleLink}/> :
                 <LabelingFinishButton/>
                 }
+              </div>
+              <div style={{textAlign: "right", color: "#777"}}>
+                남은 라벨링: {this.props.labelingTextSelectStore?.leftItems}
               </div>
             </Grid.Column>
           </Grid>

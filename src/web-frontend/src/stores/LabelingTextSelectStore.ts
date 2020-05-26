@@ -88,6 +88,7 @@ export default class LabelingTextSelectStore {
                 message
               }
               data
+              left
             }
           }
         `,
@@ -98,6 +99,7 @@ export default class LabelingTextSelectStore {
       })
       .then(({data}:any) => {
         this.data = data.getItem.data
+        this.leftItems = data.getItem.left
       })
       .catch(e => {
         console.error(e)
@@ -111,34 +113,5 @@ export default class LabelingTextSelectStore {
 
     @action setActiveButton = (id: any) => {
       this.activeButton = id;
-    }
-
-    @action getLabelingSubject = () => {
-      this.labelingSubject = '광고 문자 필터링을 위한 Labeling';
-    }
-
-    @action getButtons = () => {
-      this.buttonList = [
-        {
-          id: 1,
-          category: '일반 광고',
-        },
-        {
-          id: 2,
-          category: '선거 홍보',
-        },
-        {
-          id: 3,
-          category: '사기 범죄',
-        },
-        {
-          id: 4,
-          category: '개인 문자',
-        },
-        {
-          id: 5,
-          category: '택배 안내',
-        },
-      ];
     }
 }
