@@ -1,5 +1,6 @@
 import graphene
 import datetime
+import random
 from django.utils import timezone
 from mongodb import db
 from django.db.models import Q
@@ -598,6 +599,7 @@ class DeleteRequest(graphene.Mutation):
 
 class GetItem(graphene.Mutation):
     message = graphene.Field(Message)
+    data = graphene.String()
 
     class Arguments:
         idx = graphene.Int()
@@ -610,8 +612,15 @@ class GetItem(graphene.Mutation):
             user = User.objects.get(username=res['username'])
             request = Request.objects.get(idx=idx)
             labeling = Labeling.objects.get(user=user, request=request)
-            rows = db.assigned_dataset.find({"request": idx})
-            print([x for x in rows])
+            dataset = db.user_assigned.find_one({"request": idx})
+            xlabeled = [x for x in dataset['dataset'] if x['label'] == None]
+            item = random.choice(xlabeled)
+            data = db.text_dataset.find_one({"_id": item['data']}, {"text": 1})
+            return GetItem(
+                message = Message(status=True, message=""),
+                data = data['text']
+            )
+            print(data.text)
         except Exception as e:
             print(e)
             return GetItem(
