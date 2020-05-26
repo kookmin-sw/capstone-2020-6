@@ -32,14 +32,15 @@ class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps
 
   handleLink = (e: any) => {
     // TODO: 선택한 버튼 API 로 보내기
+    this.props.labelingTextSelectStore?.resetActiveButton();
     var num = parseInt(this.props.match.params.dataId) + 1;
-    this.props.history.push(`/labeling/${this.props.match.params.postId}/0/${num}`);
+    this.props.history.push(`/labeling/${this.props.match.params.postId}/1/${num}`);
   }
 
   render() {
     return (
       <Container className='container'>
-        <div style={{width: 600, margin: "100px auto"}}>
+        <div style={{width: 600, margin: '100px auto'}}>
           <div className='labelingTitle'>
             <h2>{this.props.labelingTextSelectStore?.labelingSubject}</h2>
           </div>
