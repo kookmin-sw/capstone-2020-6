@@ -1,7 +1,7 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {Grid, Container, Button, Card, Icon} from 'semantic-ui-react';
-import './PageMyPage.css'
+import './PageMyPage.css';
 
 // for Mobx
 import {observer, inject} from 'mobx-react';
@@ -34,7 +34,6 @@ class Mypage extends React.Component<Props> {
     // end
 
     render() {
-        console.log(this.props.myPageListStore!.list);
         // Popup test
         // const { open } = this.state;
 
@@ -42,22 +41,6 @@ class Mypage extends React.Component<Props> {
 
             <div className="page">
                 <Container>
-
-                    {/*confirm test*/}
-                    {/* <Button
-                        content='confirm test'
-                        positive
-                        onClick={this.show}
-                    />
-                    <Confirm
-                        header={'경고'}
-                        contents={this.contents}
-                        open={open}
-                        handleConfirm={this.handleConfirm}
-                        handleCancel={this.handleCancel}
-                    /> */}
-                    {/*end*/}
-
                     <Grid columns={3}>
                         <Grid.Column width={16}><div className="page-title">마이페이지</div></Grid.Column>
                         <Grid.Column className="_grid">

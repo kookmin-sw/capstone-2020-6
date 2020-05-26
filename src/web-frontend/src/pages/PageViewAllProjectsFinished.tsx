@@ -20,7 +20,7 @@ interface Props extends RouteComponentProps<any> {
 @observer
 class PageViewAllProjectsFinished extends React.Component<Props> {
   state = {
-    list: this.props.projectListStore!.listRun,
+    list: this.props.projectListStore!.allListEnd,
   };
   constructor(props: any) {
     super(props);

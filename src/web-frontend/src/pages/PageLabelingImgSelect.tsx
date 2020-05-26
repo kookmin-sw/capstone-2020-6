@@ -56,7 +56,7 @@ class PageLabelingImgSel extends React.Component<Props, State, RouteComponentPro
     handleLink = (e: any) => {
       // TODO: 선택한 사진 API로 보내기
       var num = parseInt(this.props.match.params.dataId) + 1;
-      this.props.history.push(`/labeling/${this.props.match.params.postId}/imgsel/${num}`);
+      this.props.history.push(`/labeling/${this.props.match.params.postId}/2/${num}`);
     }
 
     render() {

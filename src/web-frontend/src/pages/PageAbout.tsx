@@ -11,7 +11,7 @@ interface Props extends RouteComponentProps<any> {
 const members = [{
   img: '/images/최은미.png',
   name: '최은미',
-  role: '지도교수',
+  role: 'Professor',
 },
 {
   img: '/images/이정하.png',
@@ -80,9 +80,9 @@ class App extends React.Component<Props> {
             </Grid.Column>
             <Grid.Column>
               <Header as='h2' className="about_h2">프로젝트 개요</Header>
-              {description.map((item:any)=>{
+              {description.map((item:any, idx:any)=>{
                 return (
-                  <p style={{fontSize: 16, textAlign: 'justify', lineHeight: '25px'}}>&nbsp;&nbsp;{item}</p>
+                  <p key={idx} style={{fontSize: 16, textAlign: 'justify', lineHeight: '25px'}}>&nbsp;&nbsp;{item}</p>
                 );
               })}
             </Grid.Column>

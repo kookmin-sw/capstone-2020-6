@@ -78,17 +78,17 @@ class App extends React.Component<Props> {
           <Route path='/register'>
             <PageRegister/>
           </Route>
-          <Route path='/labeling/:postId/3'>
-            <PageLabelingImageCapture/>
-          </Route>
-          <Route path="/labeling/:postId/2">
-            <PageLabelingImgSelect/>
-          </Route>
-          <Route path="/labeling/:postId/1">
+          <Route path="/labeling/:postId/0/:dataId">
             <PageLabelingTextSelect/>
           </Route>
-          <Route path='/labeling/:postId/4'>
+          <Route path='/labeling/:postId/1/:dataId'>
             <PageLabelingTextWrite/>
+          </Route>
+          <Route path="/labeling/:postId/2/:dataId">
+            <PageLabelingImgSelect/>
+          </Route>
+          <Route path='/labeling/:postId/3/:dataId'>
+            <PageLabelingImageCapture/>
           </Route>
           <Route path='/labeling/:postId/result'>
             <PageLabelingResult/>

@@ -33,7 +33,7 @@ class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps
   handleLink = (e: any) => {
     // TODO: 선택한 버튼 API 로 보내기
     var num = parseInt(this.props.match.params.dataId) + 1;
-    this.props.history.push(`/labeling/${this.props.match.params.postId}/txtSel/${num}`);
+    this.props.history.push(`/labeling/${this.props.match.params.postId}/0/${num}`);
   }
 
   render() {
