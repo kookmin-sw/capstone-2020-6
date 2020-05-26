@@ -1,6 +1,6 @@
 import React from 'react';
 import {RouteComponentProps, withRouter, Link} from 'react-router-dom';
-import {Button, Container, Table} from 'semantic-ui-react';
+import {Button, Container, Table, Dimmer, Loader} from 'semantic-ui-react';
 import './PageViewAllProjects.css';
 
 // Components
@@ -30,9 +30,6 @@ class PageViewAllProjects extends React.Component<Props> {
   // TODO: Resolve search error.
   search = () => {
     this.props.projectListStore?.searchProjects('RUN');
-    this.setState({
-      list: this.props.projectListStore!.searchList,
-    });
   }
   render() {
     return (
@@ -63,7 +60,7 @@ class PageViewAllProjects extends React.Component<Props> {
             {id: 5, headerItem: '마감일'},
             {id: 6, headerItem: '진행 상황'},
           ]}
-          body={this.state.list.map((item: any, idx: number) => {
+          body={this.props.projectListStore!.searchList.map((item: any, idx: number) => {
             return (
               // TODO: Sort projects by id.
               <Table.Row key={idx+1}>
@@ -83,6 +80,9 @@ class PageViewAllProjects extends React.Component<Props> {
             );
           })}
         />
+        <Dimmer active={this.props.projectListStore?.loading}>
+          <Loader />
+        </Dimmer>
       </Container>
     );
   }
