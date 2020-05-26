@@ -53,6 +53,10 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
     .then(({data}:any) => {
       alert(data.takeProject.message.message)
       if(!data.takeProject.message.status) {
+        if(data.takeProject.message.message === "이미 등록하신 프로젝트입니다.") {
+          alert("의뢰를 계속해서 진행합니다.")
+          this.props.history.push(`${this.props.match.url}/${labelingTypeValue}/0`);      
+        }
         return
       }
       this.props.history.push(`${this.props.match.url}/${labelingTypeValue}/0`);      
