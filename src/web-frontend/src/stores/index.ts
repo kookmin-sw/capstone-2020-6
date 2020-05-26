@@ -12,6 +12,7 @@ import LabelingRegisterStore from './LabelingRegisterStore';
 import UserStore from './UserStore';
 import RegisterStore from './RegisterStore';
 import LabelingResultStore from "./LabelingResultStore";
+import LabelingImgCapStore from  './LabelingImgCapStore';
 
 export default {
   navigationStore: new NavigationStore(),
@@ -28,4 +29,5 @@ export default {
   userStore: new UserStore(),
   registerStore: new RegisterStore(),
   labelingResultStore : new LabelingResultStore(),
+  labelingImgCapStore : new LabelingImgCapStore(),
 };
