@@ -608,6 +608,7 @@ class GetItem(graphene.Mutation):
     class Arguments:
         idx = graphene.Int()
         token = graphene.String()
+        left = graphene.Int()
 
     @only_user
     def mutate(self, info, idx, token):
@@ -622,7 +623,8 @@ class GetItem(graphene.Mutation):
             data = db.text_dataset.find_one({"_id": item['data']}, {"text": 1})
             return GetItem(
                 message = Message(status=True, message=""),
-                data = data['text']
+                data = data['text'],
+                left = len(xlabeled) - 1
             )
             print(data.text)
         except Exception as e:
