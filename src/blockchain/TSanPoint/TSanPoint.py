@@ -27,43 +27,17 @@ def totalSupply():
 def balanceOf(_user):
     return contract.functions.balanceOf(_user).call({'from': '0xA364820C7268C805604Fe7C98E613c4E17F68d21'})
 
-
 ## Point 전송
 def transfer(_from,_to,_value):
-    # acct = w3.eth.account.privateKeyToAccount('a96580eb08a2a600911fa5b98a00fb6faf7417834131f81c070d804c45bc2729')
-    #
-    # construct_txn = contract.functions.transfer(_from,_to,_value).buildTransaction({
-    #     'from': acct.address,
-    #     'nonce': w3.eth.getTransactionCount(acct.address),
-    #     'gas': 4700000000000,
-    #     'gasPrice': w3.toWei('21', 'gwei')})
-    # signed = acct.signTransaction(construct_txn)
-    # w3.eth.sendRawTransaction(signed.rawTransaction)
+    acct = w3.eth.account.privateKeyToAccount('1EBA152E3D8A5CFDD002E203368A739D7CB6267A79B35322399700E5D9FE67E0')
+    gas = contract.functions.transfer(_from,_to,_value).estimateGas()
+
+    construct_txn = contract.functions.transfer(_from,_to,_value).buildTransaction({
+        'from': acct.address,
+        'nonce': w3.eth.getTransactionCount(acct.address),
+        'gas': gas,
+        'gasPrice': w3.toWei('21', 'gwei')})
+    signed = acct.signTransaction(construct_txn)
+    w3.eth.sendRawTransaction(signed.rawTransaction)
+
     return 'transfer';
-
-## Point 생성
-def approve(_spender,_value):
-    # acct = w3.eth.account.privateKeyToAccount('a96580eb08a2a600911fa5b98a00fb6faf7417834131f81c070d804c45bc2729')
-    #
-    # construct_txn = contract.functions.approve(_spender,_value).buildTransaction({
-    #     'from': acct.address,
-    #     'nonce': w3.eth.getTransactionCount(acct.address),
-    #     'gas': 4700000000000,
-    #     'gasPrice': w3.toWei('21', 'gwei')})
-    # signed = acct.signTransaction(construct_txn)
-    # w3.eth.sendRawTransaction(signed.rawTransaction)
-    return 'approve';
-
-## Point 소멸
-# def transfer(_from,_to,_value):
-#     acct = w3.eth.account.privateKeyToAccount('a96580eb08a2a600911fa5b98a00fb6faf7417834131f81c070d804c45bc2729')
-#
-#     construct_txn = contract.functions.transfer(_from,_to,_value).buildTransaction({
-#         'from': acct.address,
-#         'nonce': w3.eth.getTransactionCount(acct.address),
-#         'gas': 4700000000000,
-#         'gasPrice': w3.toWei('21', 'gwei')})
-#     signed = acct.signTransaction(construct_txn)
-#     w3.eth.sendRawTransaction(signed.rawTransaction)
-
-#     return true;
