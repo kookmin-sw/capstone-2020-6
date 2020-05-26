@@ -584,6 +584,23 @@ class DeleteRequest(graphene.Mutation):
                 message=Message(status=True, message=message)
             )
 
+class GetItem(graphene.Mutation):
+    message = graphene.Field(Message)
+
+    class Arguments:
+        idx = graphene.Int()
+        token = graphene.String()
+
+    @only_user
+    def mutate(self, info, idx, token):
+        try:
+            labeling = Labeling.objects.get(user=user, request=request)
+            rows = db.assigned_dataset.find({"request": idx})
+            console.log([x for x in rows])
+        except:
+            return GetItem(
+                message=Message(status=False, message="참가신청을 하지 않은 의뢰입니다.\\n참가신청을 우선 해주세요.")
+            )
 
 class Query(graphene.ObjectType):
     """
