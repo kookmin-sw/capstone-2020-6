@@ -9,12 +9,40 @@ export default class LabelingTextSelectStore {
     @observable data: string = "";
     @observable labelingSubject: any = '';
     @observable leftItems: number = 0;
+    @observable labelingText: string = "";
 
     constructor() {
       this.buttonList = [];
       this.activeButton = -1;
       this.data = "";
       this.labelingSubject = '';
+    }
+
+    @action getRequest = () => {
+      client.query({
+        query: gql`
+          query ($idx: Int!) {
+            getIdxRequest(idx: $idx) {
+              requests {
+                subject
+                onelineDescription
+                keywords
+              }
+            }
+          }
+        `,
+        variables: {
+          idx: this.idx
+        }
+      })
+      .then(({data}:any) => {
+          this.labelingSubject = data.getIdxRequest.requests[0].subject
+          this.labelingText = data.getIdxRequest.requests[0].onelineDescription
+      })
+      .catch(e => {
+        console.error(e)
+        alert("라벨링 정보를 가져오는데 에러가 발생하였습니다.")
+      })
     }
 
     @action setIdx = (idx:number) => {

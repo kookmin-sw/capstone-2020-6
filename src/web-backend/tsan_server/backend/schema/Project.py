@@ -25,6 +25,9 @@ class RequestType(DjangoObjectType):
     class Meta:
         model = Request
 
+class KeywordType(DjangoObjectType):
+    class Meta:
+        model = Keyword
 
 class Requests(graphene.ObjectType):
     message = graphene.Field(Message)
@@ -182,7 +185,8 @@ class CreateRequest(graphene.Mutation):
                 total_point=total_point,
                 is_captcha=is_captcha,
                 dataset=dataset,
-                count_dataset=count_dataset
+                count_dataset=count_dataset,
+                keywords=keywords
             )
             request.save()
 
@@ -1142,3 +1146,9 @@ query{
         else:
             return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
 
+
+    get_keywords = graphene.List(KeywordType, request_idx=graphene.Int())
+    def resolve_get_keywords(self, info, request_idx):
+        request = Request.objects.get(idx=request_idx)
+        keywords = [x for x in Keyword.objects.filter(request=request) if x.name]
+        return keywords

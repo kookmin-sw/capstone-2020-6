@@ -27,9 +27,9 @@ class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps
     super(props);
     let idx = parseInt(this.props.match.params.postId)
     this.props.labelingTextSelectStore?.setIdx(idx)
+    this.props.labelingTextSelectStore?.getRequest();
     this.props.labelingTextSelectStore?.getItem()
-    this.props.labelingTextSelectStore!.getLabelingSubject();
-    this.props.labelingTextSelectStore!.getButtons();
+    // this.props.labelingTextSelectStore!.getButtons();
     // this.props.labelingTextSelectStore!.getTextLabelingContents();
   }
 
@@ -52,8 +52,8 @@ class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps
               {this.props.labelingTextSelectStore?.data}
             </Grid.Column>
             <Grid.Column className='textSelectGrid'>
-              <div className='subTitle'>
-                {Number(this.props.match.params.dataId) + 1}. 다음 글의 유형을 선택하시오.
+              <div className='subTitle' style={{fontWeight: "bold"}}>
+                {this.props.labelingTextSelectStore?.labelingText}
               </div>
               <LabelingTextButton
                 category={
