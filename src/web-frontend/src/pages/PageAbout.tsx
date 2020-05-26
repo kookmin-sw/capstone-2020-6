@@ -89,9 +89,9 @@ class App extends React.Component<Props> {
           </Grid>
           <Header as='h2' className="about_h2">지도교수 및 팀원 소개</Header>
           <Grid columns={7}>
-            {members.map((item: any) => {
+            {members.map((item: any, idx: any) => {
               return (
-                <>
+                <React.Fragment key={idx}>
                   <Grid.Column className="about_memberCard">
                     <img
                       src={item.img}
@@ -101,7 +101,7 @@ class App extends React.Component<Props> {
                     <div className="about_memberName">{item.name}</div>
                     <div className="about_memberRole">{item.role}</div>
                   </Grid.Column>
-                </>
+                </React.Fragment>
               );
             })}
           </Grid>
