@@ -11,4 +11,4 @@ print(TSanPoint.balanceOf('kookmin'))
 print(TSanPoint.transfer('owner','kookmin',100))
 
 ##'owner'에 1000포인트 생성
-print(TSanPoint.approve('owner',1000))
+print(TSanPoint.supply('owner',1000))
