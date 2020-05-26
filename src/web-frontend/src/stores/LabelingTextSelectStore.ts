@@ -1,6 +1,9 @@
 import {action, observable} from 'mobx';
+import { client } from '../tsan';
+import { gql } from 'apollo-boost';
 
 export default class LabelingTextSelectStore {
+    @observable idx: number = -1;
     @observable buttonList: any = [];
     @observable activeButton: any = -1;
     @observable textLabelingContentList: any = [];
@@ -11,6 +14,29 @@ export default class LabelingTextSelectStore {
       this.activeButton = -1;
       this.textLabelingContentList = [];
       this.labelingSubject = '';
+    }
+
+    @action setIdx = (idx:number) => {
+      this.idx = idx;
+    }
+
+    @action getItem = () => {
+      client.mutate({
+        mutation: gql`
+          mutation ($idx: Int!, $token: String!) {
+            getItem(idx: $idx, token: $token) {
+              message {
+                status
+                message
+              }
+            }
+          }
+        `,
+        variables: {
+          idx: this.idx,
+          token: localStorage.token
+        }
+      })
     }
 
     @action resetActiveButton = () => {

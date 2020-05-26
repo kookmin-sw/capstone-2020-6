@@ -25,6 +25,9 @@ interface MatchParams {
 class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps<MatchParams>> {
   constructor(props: any) {
     super(props);
+    let idx = parseInt(this.props.match.params.postId)
+    this.props.labelingTextSelectStore?.setIdx(idx)
+    this.props.labelingTextSelectStore?.getItem()
     this.props.labelingTextSelectStore!.getLabelingSubject();
     this.props.labelingTextSelectStore!.getButtons();
     this.props.labelingTextSelectStore!.getTextLabelingContents();
