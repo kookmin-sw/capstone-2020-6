@@ -6,13 +6,14 @@ export default class LabelingTextSelectStore {
     @observable idx: number = -1;
     @observable buttonList: any = [];
     @observable activeButton: any = -1;
-    @observable textLabelingContentList: any = [];
+    @observable data: string = "";
     @observable labelingSubject: any = '';
+    @observable leftItems: number = 0;
 
     constructor() {
       this.buttonList = [];
       this.activeButton = -1;
-      this.textLabelingContentList = [];
+      this.data = "";
       this.labelingSubject = '';
     }
 
@@ -29,6 +30,7 @@ export default class LabelingTextSelectStore {
                 status
                 message
               }
+              data
             }
           }
         `,
@@ -36,6 +38,13 @@ export default class LabelingTextSelectStore {
           idx: this.idx,
           token: localStorage.token
         }
+      })
+      .then(({data}:any) => {
+        this.data = data.getItem.data
+      })
+      .catch(e => {
+        console.error(e)
+        alert("라벨링 아이템을 가져오는데 에러가 발생하였습니다.")
       })
     }
 
@@ -49,63 +58,6 @@ export default class LabelingTextSelectStore {
 
     @action getLabelingSubject = () => {
       this.labelingSubject = '광고 문자 필터링을 위한 Labeling';
-    }
-
-    @action getTextLabelingContents = () => {
-      this.textLabelingContentList = [
-        {
-          id: 1,
-          content: '1번 내용\n\n생생하며, 같은 바이며, 그리하였는가? 웅대한 그러므로 같이, ' +
-                   '하는 인생에 그들에게 것이다. 미묘한 미인을 가슴이 가치를 속잎나고, ' +
-                   '때문이다. 사랑의 인간의 아름답고 눈에 것이다. 기쁘며, 두기 뭇 피고 ,' +
-                   '위하여 같으며, 목숨을 우리의 것이다. 생명을 피어나기 인류의 설산에서 ' +
-                   '품고 일월과 노래하며 내려온 그것은 있다. 얼마나 그들은 같지 인간에 ' +
-                   '천자만홍이 우는 만물은 피고 있다. 이는 전인 얼음에 것은 크고 ' +
-                   '밝은 피부가 설산에서 위하여, 있는가? 이 청춘의 용기가 풍부하게 ' +
-                   '보내는 무엇을 있는가?\n\n',
-        },
-        {
-          id: 2,
-          content: '2번 내용\n\n생생하며, 같은 바이며, 그리하였는가? 웅대한 그러므로 같이, ' +
-                   '하는 인생에 그들에게 것이다. 미묘한 미인을 가슴이 가치를 속잎나고, ' +
-                   '때문이다. 사랑의 인간의 아름답고 눈에 것이다. 기쁘며, 두기 뭇 피고 ,' +
-                   '위하여 같으며, 목숨을 우리의 것이다. 생명을 피어나기 인류의 설산에서 ' +
-                   '품고 일월과 노래하며 내려온 그것은 있다. 얼마나 그들은 같지 인간에 ' +
-                   '천자만홍이 우는 만물은 피고 있다. 이는 전인 얼음에 것은 크고 ' +
-                   '밝은 피부가 설산에서 위하여, 있는가? 이 청춘의 용기가 풍부하게 ' +
-                   '보내는 무엇을 있는가?\n\n',
-        },
-        {
-          id: 3,
-          content: '3번 내용\n\n생생하며, 같은 바이며, 그리하였는가? 웅대한 그러므로 같이, ' +
-                   '하는 인생에 그들에게 것이다. 미묘한 미인을 가슴이 가치를 속잎나고, ' +
-                   '때문이다. 사랑의 인간의 아름답고 눈에 것이다. 기쁘며, 두기 뭇 피고 ,' +
-                   '위하여 같으며, 목숨을 우리의 것이다. 생명을 피어나기 인류의 설산에서 ' +
-                   '품고 일월과 노래하며 내려온 그것은 있다. 얼마나 그들은 같지 인간에 ' +
-                   '천자만홍이 우는 만물은 피고 있다. 이는 전인 얼음에 것은 크고 ' +
-                   '밝은 피부가 설산에서 위하여, 있는가? 이 청춘의 용기가 풍부하게 ' +
-                   '보내는 무엇을 있는가?\n\n',
-        },
-        {
-          id: 4,
-          content: '4번 내용\n\n생생하며, 같은 바이며, 그리하였는가? 웅대한 그러므로 같이, ' +
-                   '하는 인생에 그들에게 것이다. 미묘한 미인을 가슴이 가치를 속잎나고, ' +
-                   '때문이다. 사랑의 인간의 아름답고 눈에 것이다. 기쁘며, 두기 뭇 피고 ,' +
-                   '위하여 같으며, 목숨을 우리의 것이다. 생명을 피어나기 인류의 설산에서 ' +
-                   '품고 일월과 노래하며 내려온 그것은 있다. 얼마나 그들은 같지 인간에 ' +
-                   '천자만홍이 우는 만물은 피고 있다. 이는 전인 얼음에 것은 크고 ' +
-                   '밝은 피부가 설산에서 위하여, 있는가? 이 청춘의 용기가 풍부하게 ' +
-                   '보내는 무엇을 있는가?\n\n' +
-                   '4번 내용\n\n생생하며, 같은 바이며, 그리하였는가? 웅대한 그러므로 같이, ' +
-                   '하는 인생에 그들에게 것이다. 미묘한 미인을 가슴이 가치를 속잎나고, ' +
-                   '때문이다. 사랑의 인간의 아름답고 눈에 것이다. 기쁘며, 두기 뭇 피고 ,' +
-                   '위하여 같으며, 목숨을 우리의 것이다. 생명을 피어나기 인류의 설산에서 ' +
-                   '품고 일월과 노래하며 내려온 그것은 있다. 얼마나 그들은 같지 인간에 ' +
-                   '천자만홍이 우는 만물은 피고 있다. 이는 전인 얼음에 것은 크고 ' +
-                   '밝은 피부가 설산에서 위하여, 있는가? 이 청춘의 용기가 풍부하게 ' +
-                   '보내는 무엇을 있는가?\n\n',
-        },
-      ];
     }
 
     @action getButtons = () => {

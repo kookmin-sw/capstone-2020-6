@@ -30,7 +30,7 @@ class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps
     this.props.labelingTextSelectStore?.getItem()
     this.props.labelingTextSelectStore!.getLabelingSubject();
     this.props.labelingTextSelectStore!.getButtons();
-    this.props.labelingTextSelectStore!.getTextLabelingContents();
+    // this.props.labelingTextSelectStore!.getTextLabelingContents();
   }
 
   handleLink = (e: any) => {
@@ -49,8 +49,7 @@ class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps
           </div>
           <Grid columns={1}>
             <Grid.Column className='textLabelingContents'>
-              {this.props.labelingTextSelectStore?.
-              textLabelingContentList[this.props.match.params.dataId].content}
+              {this.props.labelingTextSelectStore?.data}
             </Grid.Column>
             <Grid.Column className='textSelectGrid'>
               <div className='subTitle'>
@@ -66,10 +65,7 @@ class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps
                 onClick={this.props.labelingTextSelectStore?.setActiveButton}
               />
               <div className='finishButtonLocation'>
-                {/* TODO: 버튼 눌렀을 때 선택된 값 저장 + 버튼 눌린 상태 초기화 해줘야함 */}
-                {Number(this.props.match.params.dataId) + 1 !==
-                this.props.labelingTextSelectStore?.
-                textLabelingContentList.length ?
+                {this.props.labelingTextSelectStore?.leftItems == 0 ?
                 <LabelingNextBtn handleLink={this.handleLink}/> :
                 <LabelingFinishButton/>
                 }
