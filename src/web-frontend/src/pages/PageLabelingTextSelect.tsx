@@ -39,38 +39,40 @@ class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps
   render() {
     return (
       <Container className='container'>
-        <div className='labelingTitle'>
-          <h2>{this.props.labelingTextSelectStore?.labelingSubject}</h2>
+        <div style={{width: 600, margin: "100px auto"}}>
+          <div className='labelingTitle'>
+            <h2>{this.props.labelingTextSelectStore?.labelingSubject}</h2>
+          </div>
+          <Grid columns={1}>
+            <Grid.Column className='textLabelingContents'>
+              {this.props.labelingTextSelectStore?.
+              textLabelingContentList[this.props.match.params.dataId].content}
+            </Grid.Column>
+            <Grid.Column className='textSelectGrid'>
+              <div className='subTitle'>
+                {Number(this.props.match.params.dataId) + 1}. 다음 글의 유형을 선택하시오.
+              </div>
+              <LabelingTextButton
+                category={
+                  this.props.labelingTextSelectStore!.buttonList
+                }
+                value={
+                  this.props.labelingTextSelectStore?.activeButton
+                }
+                onClick={this.props.labelingTextSelectStore?.setActiveButton}
+              />
+              <div className='finishButtonLocation'>
+                {/* TODO: 버튼 눌렀을 때 선택된 값 저장 + 버튼 눌린 상태 초기화 해줘야함 */}
+                {Number(this.props.match.params.dataId) + 1 !==
+                this.props.labelingTextSelectStore?.
+                textLabelingContentList.length ?
+                <LabelingNextBtn handleLink={this.handleLink}/> :
+                <LabelingFinishButton/>
+                }
+              </div>
+            </Grid.Column>
+          </Grid>
         </div>
-        <Grid columns={2}>
-          <Grid.Column className='textLabelingContents'>
-            {this.props.labelingTextSelectStore?.
-             textLabelingContentList[this.props.match.params.dataId].content}
-          </Grid.Column>
-          <Grid.Column className='textSelectGrid'>
-            <div className='subTitle'>
-              {Number(this.props.match.params.dataId) + 1}. 다음 글의 유형을 선택하시오.
-            </div>
-            <LabelingTextButton
-              category={
-                this.props.labelingTextSelectStore!.buttonList
-              }
-              value={
-                this.props.labelingTextSelectStore?.activeButton
-              }
-              onClick={this.props.labelingTextSelectStore?.setActiveButton}
-            />
-            <div className='finishButtonLocation'>
-              {/* TODO: 버튼 눌렀을 때 선택된 값 저장 + 버튼 눌린 상태 초기화 해줘야함 */}
-              {Number(this.props.match.params.dataId) + 1 !==
-               this.props.labelingTextSelectStore?.
-               textLabelingContentList.length ?
-               <LabelingNextBtn handleLink={this.handleLink}/> :
-               <LabelingFinishButton/>
-              }
-            </div>
-          </Grid.Column>
-        </Grid>
       </Container>
     );
   }

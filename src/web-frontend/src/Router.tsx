@@ -78,10 +78,10 @@ class App extends React.Component<Props> {
           <Route path='/register'>
             <PageRegister/>
           </Route>
-          <Route path="/labeling/:postId/0/:dataId">
+          <Route path="/labeling/:postId/1/:dataId">
             <PageLabelingTextSelect/>
           </Route>
-          <Route path='/labeling/:postId/1/:dataId'>
+          <Route path='/labeling/:postId/0/:dataId'>
             <PageLabelingTextWrite/>
           </Route>
           <Route path="/labeling/:postId/2/:dataId">
