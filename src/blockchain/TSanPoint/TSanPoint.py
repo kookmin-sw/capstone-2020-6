@@ -41,3 +41,17 @@ def transfer(_from,_to,_value):
     w3.eth.sendRawTransaction(signed.rawTransaction)
 
     return 'transfer';
+
+## Point 생성
+def supply(_value):
+    acct = w3.eth.account.privateKeyToAccount('1EBA152E3D8A5CFDD002E203368A739D7CB6267A79B35322399700E5D9FE67E0')
+    gas = contract.functions.supply(_spender,_value).estimateGas()
+
+    construct_txn = contract.functions.approve(_spender,_value).buildTransaction({
+        'from': acct.address,
+        'nonce': w3.eth.getTransactionCount(acct.address),
+        'gas': gas,
+        'gasPrice': w3.toWei('21', 'gwei')})
+    signed = acct.signTransaction(construct_txn)
+    w3.eth.sendRawTransaction(signed.rawTransaction)
+    return 'approve';
