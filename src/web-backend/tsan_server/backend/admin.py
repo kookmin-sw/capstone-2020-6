@@ -111,6 +111,7 @@ class RequestAdmin(admin.ModelAdmin):
         'idx',
         'user',
         'category',
+        'current_cycle',
         'max_cycle',
         'total_point',
         'state',

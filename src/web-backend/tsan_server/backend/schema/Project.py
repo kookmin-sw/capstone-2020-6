@@ -447,6 +447,21 @@ class EndRequest(graphene.Mutation):
         except Exception as ex:
             return EndRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다." + str(ex)))
 
+"""
+mutation{
+  test(
+    idx:51
+    cycle: 45
+    token:"의뢰자/관리"
+  ) {
+    message{
+      status자
+      message
+    }
+    idx
+  }
+}
+"""
 class EndUpdate(graphene.Mutation):
     message = graphene.Field(Message)
     idx = graphene.Int()
@@ -1148,4 +1163,60 @@ query{
             return Requests(message=Message(status=True, message=message), requests=request_rows)
         else:
             return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
+
+
+    # 나의 프로젝트 반환
+    get_my_request = graphene.Field(Requests,
+                                       token=graphene.String(),
+                                       offset=graphene.Int(required=False),
+                                       limit=graphene.Int(required=False)
+                                       )
+
+    @only_user
+    def resolve_get_my_request(self, info, token, **kwargs):
+        requests = Request.objects.all()
+        if requests is not None:
+            for request in requests.iterator():
+                request.refresh_state()
+
+        offset = kwargs.get("offset", None)
+        limit = kwargs.get("limit", None)
+
+        res = jwt_decode_handler(token)
+        users = User.objects.get(username=res['username'])
+
+        # 의뢰자
+        if users.is_requester:
+
+            if offset and limit:
+                request_rows = Request.objects.filter(user=users).order_by('-idx')[offset:offset + limit]
+            else:
+                request_rows = Request.objects.filter(user=users).order_by('-idx')
+
+            for request in request_rows:
+                if request.user is not None:
+                    request.user.password = "*****"
+                    request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + \
+                                         request.user.email.split("@")[1]
+            if request_rows:
+                return Requests(message=Message(status=True, message=""), requests=request_rows)
+            else:
+                return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
+        else:
+            # 참여자
+            if offset and limit:
+                request_rows = Request.objects.filter(labeling__user=users).order_by('-idx')[offset:offset + limit]
+            else:
+                request_rows = Request.objects.filter(labeling__user=users).order_by('-idx')
+
+            for request in request_rows:
+                if request.user is not None:
+                    request.user.password = "*****"
+                    request.user.email = request.user.email.split("@")[0][0:3] + "****" + "@" + \
+                                         request.user.email.split("@")[1]
+
+            if request_rows:
+                return Requests(message=Message(status=True, message=""), requests=request_rows)
+            else:
+                return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
 
