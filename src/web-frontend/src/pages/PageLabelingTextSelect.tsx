@@ -27,7 +27,8 @@ class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps
     super(props);
     let idx = parseInt(this.props.match.params.postId)
     this.props.labelingTextSelectStore?.setIdx(idx)
-    this.props.labelingTextSelectStore?.getRequest();
+    this.props.labelingTextSelectStore?.getRequest()
+    this.props.labelingTextSelectStore?.getKeywords()
     this.props.labelingTextSelectStore?.getItem()
     // this.props.labelingTextSelectStore!.getButtons();
     // this.props.labelingTextSelectStore!.getTextLabelingContents();

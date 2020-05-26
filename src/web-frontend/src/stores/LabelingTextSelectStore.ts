@@ -17,6 +17,35 @@ export default class LabelingTextSelectStore {
       this.data = "";
       this.labelingSubject = '';
     }
+    
+    @action getKeywords = () => {
+      client.query({
+        query: gql`
+          query ($idx: Int!){
+            getKeywords(requestIdx: $idx) {
+              name
+            }
+          }
+        `,
+        variables: {
+          idx: this.idx
+        }
+      })
+      .then(({data}:any) => {
+        const btn: any = []
+        data.getKeywords.forEach(({name}:any) => {
+          btn.push({
+            id: name,
+            category: name
+          })          
+        });
+        this.buttonList = btn;
+      })
+      .catch(e => {
+        console.error(e)
+        alert("키워드를 불러오는데 에러가 발생하였습니다.")
+      })
+    }
 
     @action getRequest = () => {
       client.query({
