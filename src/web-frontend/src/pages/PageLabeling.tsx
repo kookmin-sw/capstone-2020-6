@@ -9,24 +9,31 @@ import Datetime from '../components/DateTime';
 
 // for mobx
 import LabelingPageStore from '../stores/LabelingPageStore';
+import UserStore from '../stores/UserStore';
 import { inject, observer } from 'mobx-react';
 import { client } from '../tsan';
 import { gql } from 'apollo-boost';
 
 interface Props {
   labelingPageStore?: LabelingPageStore,
+  userStore?: UserStore,
   someOfYourOwnProps: any;
   history: History<LocationState>;
   someMorePropsIfNeedIt: any;
   match: any;
 }
 
-@inject('labelingPageStore')
+@inject('labelingPageStore', 'userStore')
 @observer
 class PageLabeling extends React.Component<Props, RouteComponentProps> {
   constructor(props: any) {
     super(props);
+    this.props.userStore?.getMyInfo()
     this.props.labelingPageStore!.getRequest(parseInt(props.match.params.postId));
+  }
+
+  setting = () => {
+    this.props.history.push('/setting/' + this.props.match.params.postId);
   }
 
   // TODO: dataId, postId index 시작 통일하기 0 or 1.
@@ -143,7 +150,14 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
             <Grid.Row style={{ justifyContent: 'flex-end' }}>
               <Button color={'blue'} onClick={this.handleLink}>
                 시작하기
-                </Button>
+              </Button>
+              {
+                (this.props.labelingPageStore?.request.author === this.props.userStore?.username) ? (
+                  <Button color={'red'} onClick={this.setting}>
+                    설정
+                  </Button>
+                ) : <></>
+              }
             </Grid.Row>
           </Grid>
         </Container>
