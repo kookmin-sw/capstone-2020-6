@@ -1,6 +1,7 @@
 import graphene
 import datetime
 import random
+import bson
 from django.utils import timezone
 from mongodb import db
 from django.db.models import Q
@@ -601,8 +602,42 @@ class DeleteRequest(graphene.Mutation):
                 message=Message(status=True, message=message)
             )
 
+class SubmitLabel(graphene.Mutation):
+    message = graphene.Field(Message)
+    class Arguments:
+        request_idx = graphene.Int()
+        data = graphene.String()
+        label = graphene.String()
+        token = graphene.String()
+    @only_user
+    def mutate(self, info, request_idx, data, label, token):
+        try:
+            res = jwt_decode_handler(token)
+            user = User.objects.get(username=res['username'])
+            request = Request.objects.get(idx=request_idx)
+            labeling = Labeling.objects.get(user=user, request=request)
+            dataset = db.user_assigned.find_one({"request": request_idx, "username": user.username})
+            print({"request": request_idx, "user": user.username})
+            print(dataset)
+            for x in dataset['dataset']:
+                print(x)
+                if x['data'] == bson.ObjectId(data):
+                    print(x)
+                    x['label'] = label
+                    break
+            db.user_assigned.update_one({"request": request_idx, "username": user.username}, {"$set": {"dataset": dataset['dataset']}})
+            return SubmitLabel(
+                message = Message(status=True, message="")
+            )
+        except Exception as e:
+            print(e)
+            return SubmitLabel(
+                message=Message(status=False, message="참가신청을 하지 않은 의뢰입니다.\\n참가신청을 우선 해주세요.")
+            )
+
 class GetItem(graphene.Mutation):
     message = graphene.Field(Message)
+    idx = graphene.String()
     data = graphene.String()
     left = graphene.Int()
 
@@ -617,14 +652,15 @@ class GetItem(graphene.Mutation):
             user = User.objects.get(username=res['username'])
             request = Request.objects.get(idx=idx)
             labeling = Labeling.objects.get(user=user, request=request)
-            dataset = db.user_assigned.find_one({"request": idx})
+            dataset = db.user_assigned.find_one({"request": idx, "username": user.username})
             xlabeled = [x for x in dataset['dataset'] if x['label'] == None]
             item = random.choice(xlabeled)
-            data = db.text_dataset.find_one({"_id": item['data']}, {"text": 1})
+            data = db.text_dataset.find_one({"_id": item['data']}, {"text": 1, "_id": 1})
             return GetItem(
                 message = Message(status=True, message=""),
                 data = data['text'],
-                left = len(xlabeled) - 1
+                left = len(xlabeled) - 1,
+                idx = data['_id']
             )
             print(data.text)
         except Exception as e:

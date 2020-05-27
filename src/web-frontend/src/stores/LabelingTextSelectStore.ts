@@ -10,12 +10,41 @@ export default class LabelingTextSelectStore {
     @observable labelingSubject: any = '';
     @observable leftItems: number = 0;
     @observable labelingText: string = "";
+    @observable labelingItem: string = "";
 
     constructor() {
       this.buttonList = [];
       this.activeButton = -1;
       this.data = "";
       this.labelingSubject = '';
+    }
+
+    @action submitLabel = (callback:any) => {
+      client.mutate({
+        mutation: gql`
+          mutation ($request: Int!, $data: String!, $label: String!, $token: String!) {
+            submitLabel(requestIdx:$request, data:$data, label:$label, token:$token) {
+              message {
+                status
+                message
+              }
+            }
+          }
+        `,
+        variables: {
+          request: this.idx,
+          data: this.labelingItem,
+          label: this.activeButton,
+          token: localStorage.token
+        }
+      })
+      .then(({data}:any) => {
+        callback()
+      })
+      .catch(e => {
+        console.error(e)
+        alert("제출에 문제가 생겼습니다.")
+      })
     }
     
     @action getKeywords = () => {
@@ -89,6 +118,7 @@ export default class LabelingTextSelectStore {
               }
               data
               left
+              idx
             }
           }
         `,
@@ -100,6 +130,7 @@ export default class LabelingTextSelectStore {
       .then(({data}:any) => {
         this.data = data.getItem.data
         this.leftItems = data.getItem.left
+        this.labelingItem = data.getItem.idx
       })
       .catch(e => {
         console.error(e)
