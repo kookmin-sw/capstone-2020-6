@@ -72,10 +72,13 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
           <Grid columns={2}>
               <Grid.Column>
               <ReactCrop
-              src={this.props.labelingImgCapStore?.data || ""}
-              crop={this.state.crop}
-              onComplete={this.onCropComplete}
-              onChange={this.onCropChange}
+                src={this.props.labelingImgCapStore?.data || ""}
+                crop={this.state.crop}
+                onComplete={this.onCropComplete}
+                onChange={this.onCropChange}
+                style={{
+                  backgroundColor: "#eee"
+                }}
               />
               </Grid.Column>
               <Grid.Column>
@@ -86,8 +89,8 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
               <div
                 style={{
                   backgroundImage: `url(${this.props.labelingImgCapStore?.data || ""})`,
-                  backgroundPositionX: `-${this.state.crop.x + 25}px`,
-                  backgroundPositionY: `-${this.state.crop.y + 10}px`,
+                  backgroundPositionX: `-${this.state.crop.x}px`,
+                  backgroundPositionY: `-${this.state.crop.y}px`,
                   backgroundRepeat: 'no-repeat',
                   width: this.state.crop.width,
                   height: this.state.crop.height,
