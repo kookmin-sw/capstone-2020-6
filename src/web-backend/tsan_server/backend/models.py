@@ -10,6 +10,7 @@ from django.utils import timezone
 # 데이터셋 테이블
 class Dataset(models.Model):
     idx = models.AutoField(primary_key=True)  # PK, MongoDB에서 해당 키를 기반으로 데이터셋을 저장함
+    type = models.CharField(max_length=100)  # 타입, image / text
     name = models.CharField(max_length=100)  # 데이터셋의 이름
 
     def create(self, name):
