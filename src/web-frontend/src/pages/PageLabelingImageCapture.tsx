@@ -35,10 +35,10 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
     this.state = {
       src: '',
       crop: {
-        x: 205,
-        y: 111,
-        width: 120,
-        height: 120,
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
       },
     };
   }
@@ -69,17 +69,14 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
         <div className='labelingTitle'>
           <h2>{this.props.labelingImgCapStore?.labelingSubject}</h2>
         </div>
-          <Grid columns={2}>
-              <Grid.Column>
-              <ReactCrop
-                src={this.props.labelingImgCapStore?.data || ""}
-                crop={this.state.crop}
-                onComplete={this.onCropComplete}
-                onChange={this.onCropChange}
-                style={{
-                  backgroundColor: "#eee"
-                }}
-              />
+          <Grid columns={1}>
+              <Grid.Column textAlign="center" style={{backgroundColor: "#f2f2f2"}}>
+                <ReactCrop
+                  src={this.props.labelingImgCapStore?.data || ""}
+                  crop={this.state.crop}
+                  onComplete={this.onCropComplete}
+                  onChange={this.onCropChange}
+                />
               </Grid.Column>
               <Grid.Column>
               <div className='subTitle'>
