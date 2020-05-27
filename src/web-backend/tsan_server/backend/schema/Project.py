@@ -715,6 +715,13 @@ class GetItem(graphene.Mutation):
             labeling = Labeling.objects.get(user=user, request=request)
             dataset = db.user_assigned.find_one({"request": idx, "username": user.username})
             xlabeled = [x for x in dataset['dataset'] if x['label'] == None]
+            if len(xlabeled) == 0:
+                return GetItem(
+                    message = Message(status=True, message=""),
+                    data = "COMPLETE",
+                    left = -1,
+                    idx = "COMPLETE"
+                )
             item = random.choice(xlabeled)
             data = {}
             if request.dataset.type == "text":
