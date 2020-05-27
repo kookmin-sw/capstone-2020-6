@@ -960,7 +960,7 @@ class Query(graphene.ObjectType):
         offset = kwargs.get("offset", None)
         limit = kwargs.get("limit", None)
 
-        if offset and limit:
+        if offset or limit:
             request_rows = Request.objects.filter(state=state).order_by('-idx')[offset:offset + limit]
         else:
             request_rows = Request.objects.filter(state=state).order_by('-idx')
