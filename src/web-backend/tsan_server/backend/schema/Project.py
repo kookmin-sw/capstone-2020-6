@@ -196,19 +196,27 @@ class CreateRequest(graphene.Mutation):
                 k = Keyword(request=request, name=keyword)
                 k.save()
 
-            rows = db.text_dataset.aggregate(
-                [{
-                    "$sample": {
-                        "size": 1000
-                    }
-                }, {
-                    "$project": {
-                        "_id": True
-                    }
-                }]
-            )
+            rows = []
+            if dataset.type == "text":
+                rows = db.text_dataset.aggregate(
+                    [{
+                        "$sample": {
+                            "size": count_dataset
+                        }
+                    }, {
+                        "$project": {
+                            "_id": True
+                        }
+                    }]
+                )
+            else:
+                rows = db.image_dataset.find({"dataset": dataset.idx}, {"_id": 1}).limit(count_dataset)
 
-            db.assigned_dataset.insert_one({"request": request.idx, "dataset": [x['_id'] for x in rows]})
+            db.assigned_dataset.insert_one({
+                "request": request.idx,
+                "type": dataset.type,
+                "dataset": [x['_id'] for x in rows]
+            })
 
             # 같은 주제가 이미 등록되어있는 경우
             # 다른 사람이 시도할 경우: 등록 가능
