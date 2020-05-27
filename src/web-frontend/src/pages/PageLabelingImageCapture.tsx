@@ -28,7 +28,10 @@ interface State {
 class PageLabelingImageCapture extends React.Component<Props, State> {
   constructor(props: any) {
     super(props);
-    this.props.labelingImgCapStore?.getImgList();
+    let idx = parseInt(this.props.match.params.postId)
+    this.props.labelingImgCapStore?.setIdx(idx)
+    this.props.labelingImgCapStore?.getRequest()
+    this.props.labelingImgCapStore?.getItem()
     this.state = {
       src: '',
       crop: {
@@ -64,12 +67,12 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
     return (
       <Container className='capture_box'>
         <div className='labelingTitle'>
-          <h2>사진에서 침대찾기</h2>
+          <h2>{this.props.labelingImgCapStore?.labelingSubject}</h2>
         </div>
           <Grid columns={2}>
               <Grid.Column>
               <ReactCrop
-              src={this.props.labelingImgCapStore?.imgList[parseInt(this.props.match.params.dataId)].img}
+              src={this.props.labelingImgCapStore?.data || ""}
               crop={this.state.crop}
               onComplete={this.onCropComplete}
               onChange={this.onCropChange}
@@ -77,17 +80,17 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
               </Grid.Column>
               <Grid.Column>
               <div className='subTitle'>
-                {parseInt(this.props.match.params.dataId)+1}. 침대를 캡처해주세요.
+                {this.props.labelingImgCapStore?.labelingText}
               </div>
               <Grid className='imagePreviewCanvas'>
               <div
-              style={{
-              backgroundImage: `url(${this.props.labelingImgCapStore?.imgList[parseInt(this.props.match.params.dataId)].img})`,
-              backgroundPositionX: `-${this.state.crop.x + 25}px`,
-              backgroundPositionY: `-${this.state.crop.y + 10}px`,
-              backgroundRepeat: 'no-repeat',
-              width: this.state.crop.width,
-              height: this.state.crop.height,
+                style={{
+                  backgroundImage: `url(${this.props.labelingImgCapStore?.data || ""})`,
+                  backgroundPositionX: `-${this.state.crop.x + 25}px`,
+                  backgroundPositionY: `-${this.state.crop.y + 10}px`,
+                  backgroundRepeat: 'no-repeat',
+                  width: this.state.crop.width,
+                  height: this.state.crop.height,
                 }}
               />
               </Grid>

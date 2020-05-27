@@ -2,6 +2,7 @@ import graphene
 import datetime
 import random
 import bson
+import base64
 from django.utils import timezone
 from mongodb import db
 from django.db.models import Q
@@ -132,22 +133,22 @@ class CreateRequest(graphene.Mutation):
     @only_user
     @only_requester
     def mutate(
-            self,
-            info,
-            token,
-            category,
-            subject,
-            thumbnail,
-            description,
-            oneline_description,
-            start_date,
-            end_date,
-            max_cycle,
-            total_point,
-            is_captcha,
-            dataset,
-            count_dataset,
-            keywords
+        self,
+        info,
+        token,
+        category,
+        subject,
+        thumbnail,
+        description,
+        oneline_description,
+        start_date,
+        end_date,
+        max_cycle,
+        total_point,
+        is_captcha,
+        dataset,
+        count_dataset,
+        keywords
     ):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
@@ -715,14 +716,25 @@ class GetItem(graphene.Mutation):
             dataset = db.user_assigned.find_one({"request": idx, "username": user.username})
             xlabeled = [x for x in dataset['dataset'] if x['label'] == None]
             item = random.choice(xlabeled)
-            data = db.text_dataset.find_one({"_id": item['data']}, {"text": 1, "_id": 1})
+            data = {}
+            if request.dataset.type == "text":
+                data = db.text_dataset.find_one({"_id": item['data']}, {"text": 1, "_id": 1})
+                data = {
+                    "data": data['text'],
+                    "_id": data['_id']
+                }
+            elif request.dataset.type == "image":
+                data = db.image_dataset.find_one({"_id": item['data']}, {"data": 1, "_id": 1})
+                data = {
+                    "data": "data://text/plain;base64," + base64.b64encode(data['data']).decode(),
+                    "_id": data['_id']
+                }
             return GetItem(
                 message = Message(status=True, message=""),
-                data = data['text'],
+                data = data['data'],
                 left = len(xlabeled) - 1,
                 idx = data['_id']
             )
-            print(data.text)
         except Exception as e:
             print(e)
             return GetItem(
