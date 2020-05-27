@@ -91,8 +91,8 @@ export default class ProjectListStore {
     @action getProjects = () => {
         client.query({
             query: gql`
-                query GetMyRequest($token: String!) {
-                        getMyRequest(token: $token) {
+                query GetRequesterRequest($token: String!) {
+                        getRequesterRequest(token: $token) {
                             message {
                               status
                               message
@@ -129,7 +129,7 @@ export default class ProjectListStore {
                 "RUN": "진행중",
                 "END": "종료"
             }
-            data.getMyRequest.requests.forEach((item:any) => {
+            data.getRequesterRequest.requests.forEach((item:any) => {
                 list.push({
                     id: item.idx,
                     title: item.subject,
@@ -140,7 +140,9 @@ export default class ProjectListStore {
                     status: status[item.state],
                 })
             });
+            console.log(list);
             this.list = list
+            console.log(this.list);
         })
         .catch(e => {
             console.error(e)
