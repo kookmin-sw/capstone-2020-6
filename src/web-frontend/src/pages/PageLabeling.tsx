@@ -33,7 +33,7 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
   }
 
   setting = () => {
-    this.props.history.push('/setting/' + this.props.match.params.postId);
+    this.props.history.push(this.props.match.url + "/result");
   }
 
   // TODO: dataId, postId index 시작 통일하기 0 or 1.

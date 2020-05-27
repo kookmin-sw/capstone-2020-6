@@ -25,6 +25,7 @@ import PageMypageProject from './pages/PageMypageProject';
 import PageCaptcha from './pages/PageCaptcha';
 import PageViewAllProjects from './pages/PageViewAllProjects';
 import PageViewAllProjectsFinished from './pages/PageViewAllProjectsFinished';
+import PageLabelingSetting from './pages/PageViewAllProjectsFinished';
 
 // for Components
 import Navigation from './components/Navigation';
@@ -77,6 +78,9 @@ class App extends React.Component<Props> {
           </Route>
           <Route path='/register'>
             <PageRegister/>
+          </Route>
+          <Route path='/setting/:postId'>
+            <PageLabelingSetting/>
           </Route>
           <Route path='/labeling/:postId/0/:dataId'>
             <PageLabelingTextWrite/>
