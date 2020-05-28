@@ -40,15 +40,15 @@ class PaymentTypeFilter(admin.SimpleListFilter):
 
     def queryset(self, request, model_admin):
         if self.value() == '0: 보상':
-            return PaymentLog.objects.filter(type=0)
+            return PaymentLog.objects.filter(type="0")
         if self.value() == '1: 충전':
-            return PaymentLog.objects.filter(type=1)
+            return PaymentLog.objects.filter(type="1")
         if self.value() == '2: 환급':
-            return PaymentLog.objects.filter(type=2)
+            return PaymentLog.objects.filter(type="2")
         if self.value() == '3: 소비':
-            return PaymentLog.objects.filter(type=3)
+            return PaymentLog.objects.filter(type="3")
         if self.value() == '4: 기타사유':
-            return PaymentLog.objects.filter(type=4)
+            return PaymentLog.objects.filter(type="4")
 
 
 class CustomUserAdmin(UserAdmin):
@@ -134,6 +134,7 @@ class PaymentLogAdmin(admin.ModelAdmin):
         'user',
         'request',
         'note',
+        'log_time',
     )
     list_filter = (
         (PaymentTypeFilter),
@@ -143,6 +144,7 @@ class PaymentLogAdmin(admin.ModelAdmin):
         'user',
         'request',
         'note',
+        'log_time',
     )
 
 
