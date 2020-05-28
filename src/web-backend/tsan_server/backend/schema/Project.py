@@ -194,7 +194,7 @@ class CreateRequest(graphene.Mutation):
             )
             request.save()
 
-            # 현 데이터베이스에 로깅하는 부분 제작해야함
+            # DB 지급 로그 저장
             # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
             paymentlogs = PaymentLog()
             note = "프로젝트 등록으로 %d 포인트 소비" % (total_point)
@@ -472,6 +472,71 @@ class EndRequest(graphene.Mutation):
 
 
 """
+mutation {
+  reward(
+    idx:10
+    token:"의뢰자/관리자"
+    
+  ) {
+    message {
+      status
+      message
+    }
+  }
+}
+"""
+class Reward(graphene.Mutation):
+    message = graphene.Field(Message)
+
+    class Arguments:
+        idx = graphene.Int()
+        token = graphene.String()
+
+    @only_user
+    @only_requester
+    def mutate(self, info, idx, token):
+        res = jwt_decode_handler(token)
+        user = User.objects.get(username=res['username'])
+        try:
+            request = Request.objects.get(idx=idx)
+        except Exception as ex:
+            return Reward(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다." + str(ex)))
+        else:
+            if user.username == request.user.username or user.is_superuser:
+                if request.state == "END":
+                    labelers = Labeling.objects.filter(request__idx=idx).distinct()
+
+                    for labeler in labelers:
+                        # TODO: ML 모듈과 연동 후 신뢰도 기반으로 보상 나눔
+                        reward_point = request.total_point // len(labelers) # 임시: 1/N
+                        print("total_point: ", request.total_point, "len(laberlers); ", len(labelers))
+                        # reward_point = request.total_point * 신뢰도 # 계획
+
+                        # TODO: 블록체인 API 연동 (tsan -> labeler)
+
+                        # DB 포인트 업데이트
+                        labeler.user.point += reward_point
+                        print("labeler.user.username:",labeler.user.username, "labeler.user.point", labeler.user.point)
+                        labeler.user.save()
+
+                        # DB 지급 로그 저장
+                        # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유여
+                        paymentlogs = PaymentLog()
+                        note = "%s 프로젝트 %d 포인트 보상 수여" % (request.subject, reward_point)
+                        paymentlogs.create(type="0", user=labeler.user, request=request, note=note)
+
+
+                    message = "'%s'주제에 대해 '%d'명의 참여자에게 정상적으로 보상처리 되었습니다." % (request.subject, len(labelers))
+                    return Reward(
+                        message=Message(status=True, message=message)
+                    )
+                else:
+                    return Reward(message=Message(status=False, message="종료된 프로젝트만 보상을 진행할 수 있습니다."))
+            else:
+                return Reward(message=Message(status=False, message="관리자 또는 해당 프로젝트의 의뢰자만 보상을 진행할 수 있습니다."))
+
+
+"""
 mutation{
   takeProject(
     requestIdx:25
@@ -674,19 +739,20 @@ mutation{
 }
 """
 
-
+# 서버 개발 test용 API입니다.
 class EndUpdate(graphene.Mutation):
     message = graphene.Field(Message)
     idx = graphene.Int()
 
     class Arguments:
         idx = graphene.Int()
-        cycle = graphene.Int()
+        # cycle = graphene.Int()
+        # state = graphene.String()
         token = graphene.String()
 
     @only_user
     @only_requester
-    def mutate(self, info, idx, cycle, token):
+    def mutate(self, info, idx, token):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
         try:
@@ -696,13 +762,13 @@ class EndUpdate(graphene.Mutation):
                              start_date=str(request.start_date), end_date=str(request.end_date),
                              max_cycle=request.max_cycle, total_point=request.total_point,
                              is_captcha=request.is_captcha, state='END',
-                             current_cycle=cycle)
+                             current_cycle=request.current_cycle)
             try:
                 update.clean()
             except ValidationError as e:
                 return EndRequest(message=Message(status=False, message=str(e)))
             else:
-                request.current_cycle = cycle
+                request.state = "END"
                 request.save()
 
                 message = "수정 완료"
