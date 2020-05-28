@@ -27,9 +27,11 @@ class RequestType(DjangoObjectType):
     class Meta:
         model = Request
 
+
 class KeywordType(DjangoObjectType):
     class Meta:
         model = Keyword
+
 
 class Requests(graphene.ObjectType):
     message = graphene.Field(Message)
@@ -133,22 +135,22 @@ class CreateRequest(graphene.Mutation):
     @only_user
     @only_requester
     def mutate(
-        self,
-        info,
-        token,
-        category,
-        subject,
-        thumbnail,
-        description,
-        oneline_description,
-        start_date,
-        end_date,
-        max_cycle,
-        total_point,
-        is_captcha,
-        dataset,
-        count_dataset,
-        keywords
+            self,
+            info,
+            token,
+            category,
+            subject,
+            thumbnail,
+            description,
+            oneline_description,
+            start_date,
+            end_date,
+            max_cycle,
+            total_point,
+            is_captcha,
+            dataset,
+            count_dataset,
+            keywords
     ):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
@@ -528,6 +530,7 @@ class TakeProject(graphene.Mutation):
                     message = "'%s'님 '%%s' 주제가 정상적으로 등록되었습니다." % (user.username) % (request.subject)
                     return TakeProject(message=Message(status=True, message=message))
 
+
 """
 mutation{
   deleteLabelerTakenProject(
@@ -611,13 +614,16 @@ class DeleteRequest(graphene.Mutation):
                 message=Message(status=True, message=message)
             )
 
+
 class SubmitLabel(graphene.Mutation):
     message = graphene.Field(Message)
+
     class Arguments:
         request_idx = graphene.Int()
         data = graphene.String()
         label = graphene.String()
         token = graphene.String()
+
     @only_user
     def mutate(self, info, request_idx, data, label, token):
         try:
@@ -634,15 +640,17 @@ class SubmitLabel(graphene.Mutation):
                     print(x)
                     x['label'] = label
                     break
-            db.user_assigned.update_one({"request": request_idx, "username": user.username}, {"$set": {"dataset": dataset['dataset']}})
+            db.user_assigned.update_one({"request": request_idx, "username": user.username},
+                                        {"$set": {"dataset": dataset['dataset']}})
             return SubmitLabel(
-                message = Message(status=True, message="")
+                message=Message(status=True, message="")
             )
         except Exception as e:
             print(e)
             return SubmitLabel(
                 message=Message(status=False, message="참가신청을 하지 않은 의뢰입니다.\\n참가신청을 우선 해주세요.")
             )
+
 
 """
 mutation{
@@ -659,6 +667,8 @@ mutation{
   }
 }
 """
+
+
 class EndUpdate(graphene.Mutation):
     message = graphene.Field(Message)
     idx = graphene.Int()
@@ -695,6 +705,32 @@ class EndUpdate(graphene.Mutation):
                 )
         except Exception as ex:
             return EndRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다." + str(ex)))
+
+
+class IncCurrentCycle(graphene.Mutation):
+    message = graphene.Field(Message)
+
+    class Arguments:
+        idx = graphene.Int()
+        token = graphene.String()
+
+    @only_user
+    def mutate(self, info, idx, token):
+        res = jwt_decode_handler(token)
+        user = User.objects.get(username=res['username'])
+        try:
+            request = Request.objects.get(idx=idx)
+        except Exception as ex:
+            return IncCurrentCycle(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다." + str(ex)))
+        else:
+            request.current_cycle += 1
+            request.save()
+            message = "%s 프로젝트 진도수가 1 증가하였습니다. 현재 진도율은 %d 입니다." % (request.subject, request.current_cycle)
+            return IncCurrentCycle(
+                message=Message(status=True, message=message)
+            )
+
+
 
 class GetItem(graphene.Mutation):
     message = graphene.Field(Message)
@@ -737,10 +773,10 @@ class GetItem(graphene.Mutation):
                     "_id": data['_id']
                 }
             return GetItem(
-                message = Message(status=True, message=""),
-                data = data['data'],
-                left = len(xlabeled) - 1,
-                idx = data['_id']
+                message=Message(status=True, message=""),
+                data=data['data'],
+                left=len(xlabeled) - 1,
+                idx=data['_id']
             )
         except Exception as e:
             print(e)
@@ -748,14 +784,14 @@ class GetItem(graphene.Mutation):
                 message=Message(status=False, message="참가신청을 하지 않은 의뢰입니다.\\n참가신청을 우선 해주세요.")
             )
 
-class Query(graphene.ObjectType):
 
+class Query(graphene.ObjectType):
     # 나의 프로젝트 반환
     get_my_request = graphene.Field(Requests,
-                                       token=graphene.String(),
-                                       offset=graphene.Int(required=False),
-                                       limit=graphene.Int(required=False)
-                                       )
+                                    token=graphene.String(),
+                                    offset=graphene.Int(required=False),
+                                    limit=graphene.Int(required=False)
+                                    )
 
     @only_user
     def resolve_get_my_request(self, info, token, **kwargs):
@@ -1319,8 +1355,8 @@ query{
         else:
             return Requests(message=Message(status=True, message="해당 주제 목록이 없습니다."), requests=request_rows)
 
-
     get_keywords = graphene.List(KeywordType, request_idx=graphene.Int())
+
     def resolve_get_keywords(self, info, request_idx):
         request = Request.objects.get(idx=request_idx)
         keywords = [x for x in Keyword.objects.filter(request=request) if x.name]
