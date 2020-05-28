@@ -59,7 +59,7 @@ class CreatePaymentLog(graphene.Mutation):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
         # 보상일 때
-        if type == 0:
+        if type == "0":
             try:
                 request = Request.objects.get(idx=request_idx)
             except:
