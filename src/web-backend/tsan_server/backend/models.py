@@ -166,9 +166,20 @@ class PaymentLog(models.Model):
     user = models.ForeignKey("User", on_delete=models.DO_NOTHING, null=True, blank=True)  # 사용자
     request = models.ForeignKey("Request", on_delete=models.DO_NOTHING, null=True, blank=True)  # 보상을 주는 의뢰
     note = models.CharField(max_length=300)  # 사유
+    log_time = models.DateTimeField(auto_now=True)  # 시행 시
 
     def clean(self):
         if validate_paymentlog_type(self.type):
             pass
 
         return self
+
+    def create(self, type="4", user=None, request=None, note="", log_time=timezone.now()):
+        self.type = type
+        self.user = user
+        self.request = request
+        self.note = note
+        self.log_time = log_time
+        self.save()
+        return self
+

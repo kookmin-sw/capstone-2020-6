@@ -134,6 +134,7 @@ class PaymentLogAdmin(admin.ModelAdmin):
         'user',
         'request',
         'note',
+        'log_time',
     )
     list_filter = (
         (PaymentTypeFilter),
@@ -143,6 +144,7 @@ class PaymentLogAdmin(admin.ModelAdmin):
         'user',
         'request',
         'note',
+        'log_time',
     )
 
 

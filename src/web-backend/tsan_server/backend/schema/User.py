@@ -1,6 +1,6 @@
 import graphene
 import datetime
-from backend.models import Dataset, User
+from backend.models import Dataset, User, PaymentLog
 from django.contrib.auth import login
 from django.core.exceptions import ValidationError
 from django.contrib.auth.hashers import check_password
@@ -329,10 +329,16 @@ class AddPoint(graphene.Mutation):
     def mutate(self, info, token):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
-        user.point = user.point + 100000
+        new_point = 100000
+        user.point = user.point + new_point
         user.save()
         # 블록체인에 추가하는 부분 제작 해야함
         # 현 데이터베이스에 로깅하는 부분 제작해야함
+        # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
+        paymentlogs = PaymentLog()
+        note = "%d 포인트 충전" % (new_point)
+        paymentlogs.create(type="1", user=user, note=note)
+
         return AddPoint(
             message=Message(status=True, message="포인트 충전을 성공하였습니다."),
             point=user.point

@@ -6,7 +6,7 @@ import base64
 from django.utils import timezone
 from mongodb import db
 from django.db.models import Q
-from backend.models import Dataset, User, Category, Request, Labeling, Keyword
+from backend.models import Dataset, User, Category, Request, Labeling, Keyword, PaymentLog
 from django.contrib.auth import login
 from django.core.exceptions import ValidationError
 from graphene_django.types import DjangoObjectType
@@ -193,6 +193,12 @@ class CreateRequest(graphene.Mutation):
                 keywords=keywords
             )
             request.save()
+
+            # 현 데이터베이스에 로깅하는 부분 제작해야함
+            # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
+            paymentlogs = PaymentLog()
+            note = "프로젝트 등록으로 %d 포인트 소비" % (total_point)
+            paymentlogs.create(type="3", user=user, request=request, note=note)
 
             keywords = [x.strip().strip("#") for x in keywords.split("#")]
             for keyword in keywords:
@@ -657,8 +663,8 @@ mutation{
   test(
     idx:51
     cycle: 45
-    token:"의뢰자/관리"
-  ) {
+    token:"의뢰자/관리자"
+ ) {
     message{
       status자
       message
@@ -698,7 +704,8 @@ class EndUpdate(graphene.Mutation):
             else:
                 request.current_cycle = cycle
                 request.save()
-                message = "수정 완"
+
+                message = "수정 완료"
                 return EndRequest(
                     message=Message(status=True, message=message),
                     idx=request.idx
