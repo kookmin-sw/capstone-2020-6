@@ -337,7 +337,7 @@ class AddPoint(graphene.Mutation):
         # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
         paymentlogs = PaymentLog()
         note = "%d 포인트 충전" % (new_point)
-        paymentlogs.create(type="1", user=user, note=note)
+        paymentlogs.create(type="1", user=user, request=None, note=note)
 
         return AddPoint(
             message=Message(status=True, message="포인트 충전을 성공하였습니다."),
