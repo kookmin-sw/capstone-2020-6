@@ -34,8 +34,7 @@ export default class ProjectListStore {
         paymentlogSet: [PaymentLogType!]!
     */
 
-    @action reward = (idx: string) => {
-
+    @action reward = () => {
         client.mutate({
             mutation: gql`
                 mutation Reward($idx: Int!, $token: String!) {
@@ -62,7 +61,6 @@ export default class ProjectListStore {
     }
 
     @action setStartReq = () => {
-        console.log('startReq');
         client.mutate({
             mutation: gql`
             mutation StartRequest($idx: Int!, $token: String!) {
@@ -79,7 +77,7 @@ export default class ProjectListStore {
                 token: localStorage.token,
             }
         }).then(({data}:any) => {
-                console.log(data);
+            alert(data.startRequest.message.message);
             }
         ).catch((e) => {
             console.log(e);
@@ -103,7 +101,7 @@ export default class ProjectListStore {
                 token: localStorage.token
             }
         }).then(({data}:any) => {
-                console.log(data);
+            alert(data.endRequest.message.message);
             }
         ).catch(e=>{
             console.log(e)
@@ -163,12 +161,10 @@ export default class ProjectListStore {
                     status: status[item.state],
                 })
             });
-            console.log(list);
-            this.list = list
-            console.log(this.list);
+            this.list = list;
         })
         .catch(e => {
-            console.error(e)
+            console.error(e);
         })
     }
 }

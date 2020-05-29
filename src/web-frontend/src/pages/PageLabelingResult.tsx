@@ -1,6 +1,6 @@
 import React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { Container, Header, Grid, Table } from 'semantic-ui-react';
+import {RouteComponentProps, withRouter} from 'react-router-dom';
+import {Container, Button, Header, Grid, Table} from 'semantic-ui-react';
 import Datetime from '../components/DateTime';
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
@@ -10,18 +10,20 @@ import {
 import './PageLabelingResult.css';
 import LabelingResultStore from '../stores/LabelingResultStore';
 import LabelingPageStore from '../stores/LabelingPageStore';
+import MyPageProjectStore from '../stores/MyPageProjectStore';
 import { inject, observer } from "mobx-react";
 import ProjectListTable from "../components/ProjectListTable";
 
 interface Props {
   labelingPageStore?: LabelingPageStore;
   labelingResultStore?: LabelingResultStore;
+  myPageProjectStore?: MyPageProjectStore;
   match: any;
   history: any;
   location: any;
 }
 
-@inject('labelingResultStore', 'labelingPageStore')
+@inject('labelingResultStore', 'labelingPageStore', 'myPageProjectStore')
 @observer
 class PageLabelingResult extends React.Component<Props, RouteComponentProps> {
 
@@ -29,6 +31,7 @@ class PageLabelingResult extends React.Component<Props, RouteComponentProps> {
 
   constructor(props: Props) {
     super(props);
+    this.props.myPageProjectStore!.getProjects();
     this.props.labelingResultStore!.getLevelData();
     this.props.labelingResultStore!.getLabelingResult();
   }
@@ -39,6 +42,12 @@ class PageLabelingResult extends React.Component<Props, RouteComponentProps> {
     { id: 1, headerItem: '종류' },
     { id: 2, headerItem: '결과' },
   ]
+  handleConfirm = (type: string) => {
+    this.props.myPageProjectStore?.setId(this.props.match.params.postId);
+    if (type === 'start') this.props.myPageProjectStore?.setStartReq();
+    else if (type === 'end') this.props.myPageProjectStore?.setEndReq();
+    else if (type === 'reward') this.props.myPageProjectStore?.reward();
+  }
   download() {
 
   }
@@ -105,19 +114,25 @@ class PageLabelingResult extends React.Component<Props, RouteComponentProps> {
                 <Header as={'h4'}>의뢰하신 레이블링된 결과는 다음과 같습니다.</Header>
                 <ProjectListTable header={this.header} body={this.props.labelingResultStore?.labelingResult.map((item: any, idx: number) => {
                   return (
-                    <>
-                      <Table.Row key={idx}>
-                        <Table.Cell>{item.name}</Table.Cell>
-                        <Table.Cell>{item.value}</Table.Cell>
-                      </Table.Row>
-                    </>
-                  )
+                    <Table.Row key={idx}>
+                      <Table.Cell>{item.name}</Table.Cell>
+                      <Table.Cell>{item.value}</Table.Cell>
+                    </Table.Row>
+                  );
                 })} />
               </Grid.Column>
               <Grid.Column className={'result_level'}>
                 <em style={{ color: "#1D3B98" }}><b>푸른 선</b></em>은 T-SAN의 <b>모든 레이블링 참여자</b>의 신뢰도 분포도입니다.<br />
                 <em style={{ color: "#98301D" }}><b>붉은 선</b></em>은 <b>이 프로젝트에 참여한 레이블링 참여자</b>의 신뢰도 분포도입니다. <br />
                 <Header as={'h3'}>이 프로젝트는 에베레스트 등급의 참여자가 많이 참여하였습니다.</Header>
+                <div className='resultPageButtonsBox'>
+                  <h4 className='resultPageButtonsHeader'>[프로젝트 진행사항 변경]</h4>
+                  <div className='resultPageButtons'>
+                    <Button color='blue' onClick={() => this.handleConfirm('start')}>시작하기</Button>
+                    <Button color='red' onClick={() => this.handleConfirm('end')}>종료하기</Button>
+                    <Button color='green' onClick={() => this.handleConfirm('reward')}>보상하기</Button>
+                  </div>
+                </div>
               </Grid.Column>
             </Grid.Row>
           </Grid>
