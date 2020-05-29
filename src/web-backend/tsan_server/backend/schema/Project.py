@@ -187,6 +187,7 @@ class CreateRequest(graphene.Mutation):
                 current_cycle=0,
                 max_cycle=max_cycle,
                 total_point=total_point,
+                is_rewarded=False,
                 is_captcha=is_captcha,
                 dataset=dataset,
                 count_dataset=count_dataset,

@@ -98,6 +98,7 @@ class Request(models.Model):
     keywords = models.TextField(blank=True)
     total_point = models.IntegerField(default=0)  # 총 가격
     is_captcha = models.BooleanField(default=False)  # 디폴트 reCAPTCHA 비허용
+    is_rewarded = models.BooleanField(default=False)
     dataset = models.ForeignKey("Dataset", on_delete=models.DO_NOTHING, null=True, blank=True)  # 데이터셋
     count_dataset = models.IntegerField(default=0)
     STATE_CHOICES = (
