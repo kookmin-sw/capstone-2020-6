@@ -47,7 +47,7 @@ class PageLabelingTextSelectByImage extends React.Component<Props & RouteCompone
     render() {
       return (
         <Container className='container'>
-          <div style={{width: 600, margin: '100px auto'}}>
+          <div style={{width: 600, margin: '100px auto'}}>s
             <div className='labelingTitle'>
               <h2>{this.props.labelingTextSelectByImageStore?.labelingSubject}</h2>
             </div>
