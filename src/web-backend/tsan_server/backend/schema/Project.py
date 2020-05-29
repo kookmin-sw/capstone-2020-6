@@ -584,6 +584,11 @@ class TakeProject(graphene.Mutation):
                 if request.state != 'RUN':
                     message = "승인전/마감된 프로젝트 입니다."
                     return TakeProject(message=Message(status=False, message=message))
+
+                if request.max_cycle <= request.current_cycle:
+                    message = "인원이 모두 충족되어 참여할 수 없는 프로젝트 입니다."
+                    return TakeProject(message=Message(status=False, message=message))
+
                 new_labeling = Labeling(request=request, user=user, end_date=request.end_date)
                 try:
                     new_labeling.clean()
@@ -817,7 +822,10 @@ class EndUpdate(graphene.Mutation):
             except ValidationError as e:
                 return EndRequest(message=Message(status=False, message=str(e)))
             else:
-                request.is_rewarded = True
+                # request.is_rewarded = False
+                request.state = "RUN"
+                end_date = "2020-06-20"
+                request.end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
                 request.save()
 
                 message = "수정 완료"
@@ -875,6 +883,12 @@ class GetItem(graphene.Mutation):
             dataset = db.user_assigned.find_one({"request": idx, "username": user.username})
             xlabeled = [x for x in dataset['dataset'] if x['label'] == None]
             if len(xlabeled) == 0:
+                # 해당 회원 모든 라벨링 완료로 바꾸고, 진도완료 명 수 1 올리기
+                labeling = Labelings.objects.filter(user=user)
+                labeling.is_done = True
+                labeling.save()
+                request.current_cycle += 1
+                request.save()
                 return GetItem(
                     message = Message(status=True, message=""),
                     data = ["COMPLETE",],

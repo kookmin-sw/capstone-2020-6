@@ -115,6 +115,7 @@ class RequestAdmin(admin.ModelAdmin):
         'max_cycle',
         'total_point',
         'state',
+        'is_rewarded',
     )
     list_filter = (
         'category',
@@ -123,7 +124,8 @@ class RequestAdmin(admin.ModelAdmin):
         'subject',
         'user',
         'category',
-        'total_point'
+        'total_point',
+        'is_rewarded',
     )
 
 
