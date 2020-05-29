@@ -585,7 +585,8 @@ class TakeProject(graphene.Mutation):
                     message = "승인전/마감된 프로젝트 입니다."
                     return TakeProject(message=Message(status=False, message=message))
 
-                if request.max_cycle <= request.current_cycle:
+                print(len(Labeling.objects.filter(request=request)))
+                if request.max_cycle <= len(Labeling.objects.filter(request=request)):
                     message = "인원이 모두 충족되어 참여할 수 없는 프로젝트 입니다."
                     return TakeProject(message=Message(status=False, message=message))
 
@@ -596,6 +597,8 @@ class TakeProject(graphene.Mutation):
                     return TakeProject(message=Message(status=False, message=str(e)))
                 else:
                     new_labeling.save()
+                    request.current_cycle += 1
+                    request.save()
                     row = db.assigned_dataset.find_one({"request": request_idx})
                     dataset = row['dataset'] or []
                     user_assigned = []
@@ -823,9 +826,10 @@ class EndUpdate(graphene.Mutation):
                 return EndRequest(message=Message(status=False, message=str(e)))
             else:
                 # request.is_rewarded = False
-                request.state = "RUN"
-                end_date = "2020-06-20"
-                request.end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+                # request.state = "RUN"
+                request.max_cycle = 8
+                # end_date = "2020-06-20"
+                # request.end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
                 request.save()
 
                 message = "수정 완료"
@@ -885,6 +889,8 @@ class GetItem(graphene.Mutation):
             if len(xlabeled) == 0:
                 # 해당 회원 모든 라벨링 완료로 바꾸고, 진도완료 명 수 1 올리기
                 labeling = Labelings.objects.filter(user=user)
+                if labeling.is_done == True:
+                    return GetItem(Message(state=False, message="이미 완료한 프로젝트입니다."))
                 labeling.is_done = True
                 labeling.save()
                 request.current_cycle += 1

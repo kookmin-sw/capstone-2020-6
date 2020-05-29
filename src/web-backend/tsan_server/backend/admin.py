@@ -156,6 +156,7 @@ class LabelingAdmin(admin.ModelAdmin):
         'request',
         'start_date',
         'end_date',
+        'is_done',
     )
     list_filter = (
         'start_date',
