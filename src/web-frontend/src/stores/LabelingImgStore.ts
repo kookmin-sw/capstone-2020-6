@@ -11,6 +11,7 @@ export default class LabelingImgStore {
     @observable labelingItem: any = [];
     @observable imgList: any = [];
     @observable selectList: any = [];
+    @observable isLoading: boolean = false;
 
     constructor() {
         this.imgList = [];
@@ -22,6 +23,7 @@ export default class LabelingImgStore {
     }
 
     @action getRequest = () => {
+        this.isLoading = true
         client.query({
             query: gql`
             query ($idx: Int!) {
@@ -39,10 +41,12 @@ export default class LabelingImgStore {
             }
         })
             .then(({ data }: any) => {
+                this.isLoading = false
                 this.labelingSubject = data.getIdxRequest.requests[0].subject
                 this.labelingText = data.getIdxRequest.requests[0].onelineDescription
             })
             .catch(e => {
+                this.isLoading = false
                 console.error(e)
                 alert("라벨링 정보를 가져오는데 에러가 발생하였습니다.")
             })
@@ -53,21 +57,28 @@ export default class LabelingImgStore {
     }
 
     @action submit = (items:any[]) => {
+        const data:any = []
+        const labels:any = []
         this.imgList.forEach((item:any) => {
-            if(!items.find(elem => elem == item.value)) {
-                this.submitLabel(0, item.value, () => {})
+            data.push(item.value)
+            if(items.find(elem => elem == item.value)) {
+                labels.push("1")
             } else {
-                this.submitLabel(1, item.value, () => {})
+                labels.push("0")
             }
         })
-        setTimeout(this.getItem, 1500)
+        this.submitLabel(labels, data, () => {
+            this.selectList = []
+            this.getItem()
+        })
     }
 
-    @action submitLabel = (label: any, data: any, callback: any) => {
+    @action submitLabel = (labels: any, data: any, callback: any) => {
+        this.isLoading = true
         client.mutate({
             mutation: gql`
-            mutation ($request: Int!, $data: String!, $label: String!, $token: String!) {
-              submitLabel(requestIdx:$request, data:$data, label:$label, token:$token) {
+            mutation ($request: Int!, $data: [String]!, $labels: [String]!, $token: String!) {
+              submitLabels(requestIdx:$request, data:$data, labels:$labels, token:$token) {
                 message {
                   status
                   message
@@ -78,20 +89,23 @@ export default class LabelingImgStore {
             variables: {
                 request: this.idx,
                 data: data,
-                label: label,
+                labels: labels,
                 token: localStorage.token
             }
         })
         .then(({ data }: any) => {
+            this.isLoading = false
             callback()
         })
         .catch(e => {
+            this.isLoading = false
             console.error(e)
             alert("제출에 문제가 생겼습니다.")
         })
     }
 
     @action getItem = () => {
+        this.isLoading = true
         client.mutate({
             mutation: gql`
             mutation ($idx: Int!, $token: String!, $limit: Int!) {
@@ -113,6 +127,7 @@ export default class LabelingImgStore {
             }
         })
         .then(({ data }: any) => {
+            this.isLoading = false
             const imgList = []
             for(let i=0;i<data.getItem.data.length;i++) {
                 imgList.push({
@@ -130,6 +145,7 @@ export default class LabelingImgStore {
             }
         })
         .catch(e => {
+            this.isLoading = false
             console.error(e)
             alert("라벨링 아이템을 가져오는데 에러가 발생하였습니다.")
         })

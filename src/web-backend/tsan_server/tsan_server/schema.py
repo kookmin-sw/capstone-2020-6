@@ -8,7 +8,7 @@ from backend.schema.User import CreateAccount, LoginAccount, Message, UpdateAcco
 from backend.schema.Dataset import CreateDataset
 from backend.schema.Category import CreateCategory, UpdateCategory
 from backend.schema.Project import CreateRequest, UpdateRequest, StartRequest, EndRequest, TakeProject, \
-    DeleteLabelerTakenProject, GetItem, SubmitLabel, EndUpdate, IncCurrentCycle, Reward
+    DeleteLabelerTakenProject, GetItem, SubmitLabel, EndUpdate, IncCurrentCycle, Reward, SubmitLabels
 from backend.schema.Payment import CreatePaymentLog, UpdatePaymentLog, DeletePaymentLog
 
 from command_center.schema import Dataset
@@ -38,6 +38,7 @@ class Mutation(graphene.ObjectType):
     take_project = TakeProject.Field()
     start_request = StartRequest.Field()
     end_request = EndRequest.Field()
+    submit_labels = SubmitLabels.Field()
     delete_user = DeleteUser.Field()
     delete_paymentlog = DeletePaymentLog.Field()
     delete_labeler_taken_project = DeleteLabelerTakenProject.Field()

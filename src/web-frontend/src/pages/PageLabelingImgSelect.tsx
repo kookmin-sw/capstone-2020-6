@@ -1,6 +1,6 @@
 import React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { Header, Grid, Container, Button } from 'semantic-ui-react';
+import { Header, Grid, Container, Button, Dimmer, Loader } from 'semantic-ui-react';
 import './PageLabelingImgSelect.css';
 
 // Components
@@ -96,6 +96,9 @@ class PageLabelingImgSel extends React.Component<Props, State, RouteComponentPro
             </Grid.Column>
           </Grid>
         </div>
+        <Dimmer active={this.props.labelingImgStore?.isLoading}>
+          <Loader />
+        </Dimmer>
       </Container>
     );
   }

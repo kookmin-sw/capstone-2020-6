@@ -722,6 +722,53 @@ class SubmitLabel(graphene.Mutation):
                 message=Message(status=False, message="참가신청을 하지 않은 의뢰입니다.\\n참가신청을 우선 해주세요.")
             )
 
+
+class SubmitLabels(graphene.Mutation):
+    message = graphene.Field(Message)
+
+    class Arguments:
+        request_idx = graphene.Int()
+        data = graphene.List(graphene.String)
+        labels = graphene.List(graphene.String)
+        token = graphene.String()
+
+    @only_user
+    def mutate(self, info, request_idx, data, labels, token):
+        try:
+            res = jwt_decode_handler(token)
+            user = User.objects.get(username=res['username'])
+            request = Request.objects.get(idx=request_idx)
+            labeling = Labeling.objects.get(user=user, request=request)
+            dataset = db.user_assigned.find_one({"request": request_idx, "username": user.username})
+            print({"request": request_idx, "user": user.username})
+            print(dataset)
+            labeled_data = [bson.ObjectId(x) for x in data]
+            for x in dataset['dataset']:
+                print(x)
+                for i, d in enumerate(labeled_data):
+                    if x['data'] == d:
+                        x['label'] = labels[i]
+                        break
+            db.user_assigned.update_one(
+                {
+                    "request": request_idx,
+                    "username": user.username
+                },
+                {
+                    "$set": {
+                        "dataset": dataset['dataset']
+                    }
+                }
+            )
+            return SubmitLabel(
+                message=Message(status=True, message="")
+            )
+        except Exception as e:
+            print(e)
+            return SubmitLabel(
+                message=Message(status=False, message="참가신청을 하지 않은 의뢰입니다.\\n참가신청을 우선 해주세요.")
+            )
+
 """
 mutation{
   test(
@@ -831,7 +878,9 @@ class GetItem(graphene.Mutation):
                     left = -1,
                     idx = ["COMPLETE",]
                 )
-            items = random.choices(xlabeled, k=limit)
+            print(xlabeled)
+            random.shuffle(xlabeled)
+            items = xlabeled[:limit]
             dataset = []
             if request.dataset.type == "text":
                 for item in items:
