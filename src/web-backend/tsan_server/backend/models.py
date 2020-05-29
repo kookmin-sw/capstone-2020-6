@@ -158,6 +158,7 @@ class Labeling(models.Model):
     user = models.ForeignKey("User", on_delete=models.DO_NOTHING, null=True, blank=True)  # 생성자
     start_date = models.DateTimeField(auto_now=True)  # 시작 시간
     end_date = models.DateTimeField(blank=False)  # 종료 시간 = 해당 프로젝트 종료시간
+    is_done = models.BooleanField(default=False) # 모든 라벨링 문제 완료
 
 
 # 금액 지급 내역 테이블
