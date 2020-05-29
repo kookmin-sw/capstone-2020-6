@@ -505,32 +505,35 @@ class Reward(graphene.Mutation):
         else:
             if user.username == request.user.username or user.is_superuser:
                 if request.state == "END":
-                    labelers = Labeling.objects.filter(request__idx=idx).distinct()
+                    if request.is_rewarded == False:
+                        labelers = Labeling.objects.filter(request__idx=idx).distinct()
 
-                    for labeler in labelers:
-                        # TODO: ML 모듈과 연동 후 신뢰도 기반으로 보상 나눔
-                        reward_point = request.total_point // len(labelers) # 임시: 1/N
-                        print("total_point: ", request.total_point, "len(laberlers); ", len(labelers))
-                        # reward_point = request.total_point * 신뢰도 # 계획
+                        for labeler in labelers:
+                            # TODO: ML 모듈과 연동 후 신뢰도 기반으로 보상 나눔
+                            reward_point = request.total_point // len(labelers) # 임시: 1/N
+                            print("total_point: ", request.total_point, "len(laberlers); ", len(labelers))
+                            # reward_point = request.total_point * 신뢰도 # 계획
 
-                        # TODO: 블록체인 API 연동 (tsan -> labeler)
+                            # TODO: 블록체인 API 연동 (tsan -> labeler)
 
-                        # DB 포인트 업데이트
-                        labeler.user.point += reward_point
-                        print("labeler.user.username:",labeler.user.username, "labeler.user.point", labeler.user.point)
-                        labeler.user.save()
+                            # DB 포인트 업데이트
+                            labeler.user.point += reward_point
+                            print("labeler.user.username:",labeler.user.username, "labeler.user.point", labeler.user.point)
+                            labeler.user.save()
 
-                        # DB 지급 로그 저장
-                        # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유여
-                        paymentlogs = PaymentLog()
-                        note = "%s 프로젝트 %d 포인트 보상 수여" % (request.subject, reward_point)
-                        paymentlogs.create(type="0", user=labeler.user, request=request, note=note)
+                            # DB 지급 로그 저장
+                            # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유여
+                            paymentlogs = PaymentLog()
+                            note = "%s 프로젝트 %d 포인트 보상 수여" % (request.subject, reward_point)
+                            paymentlogs.create(type="0", user=labeler.user, request=request, note=note)
 
 
-                    message = "'%s'주제에 대해 '%d'명의 참여자에게 정상적으로 보상처리 되었습니다." % (request.subject, len(labelers))
-                    return Reward(
-                        message=Message(status=True, message=message)
-                    )
+                        message = "'%s'주제에 대해 '%d'명의 참여자에게 정상적으로 보상처리 되었습니다." % (request.subject, len(labelers))
+                        return Reward(
+                            message=Message(status=True, message=message)
+                        )
+                    else:
+                        return Reward(message=Message(status=False, message="이미 해당 프로젝트에 대해 보상 진행이 완료되었습니다."))
                 else:
                     return Reward(message=Message(status=False, message="종료된 프로젝트만 보상을 진행할 수 있습니다."))
             else:
@@ -812,7 +815,7 @@ class EndUpdate(graphene.Mutation):
             except ValidationError as e:
                 return EndRequest(message=Message(status=False, message=str(e)))
             else:
-                request.state = "END"
+                request.is_rewarded = True
                 request.save()
 
                 message = "수정 완료"

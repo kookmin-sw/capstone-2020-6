@@ -209,7 +209,7 @@ class DeletePaymentLog(graphene.Mutation):
 class Query(graphene.ObjectType):
     """
     query{
-    getAllPaymentlog(token:""){
+    getAllPaymentlog(token:"관리"){
         message{
         status
         message
@@ -234,7 +234,7 @@ class Query(graphene.ObjectType):
             }
             subject
             description
-            dueDate
+            endDate
         }
         note
         }
@@ -248,15 +248,44 @@ class Query(graphene.ObjectType):
     @only_admin
     def resolve_get_all_paymentlog(self, info, token):
         paymentlogs = PaymentLog.objects.all()
+
         for paymentlog in paymentlogs:
             if paymentlog.user is not None:
                 # paymentlog의 user 개인 정보 마스킹 처리
                 paymentlog.user.password = "*****"
                 paymentlog.user.email = paymentlog.user.email.split("@")[0][0:3] + "****" + \
                                         "@" + paymentlog.user.email.split("@")[1]
-            if paymentlog.request.user is not None:
-                # paymentlog.request의 user 개인 정보 마스킹 처리
-                paymentlog.request.user.password = "*****"
-                paymentlog.request.user.email = paymentlog.request.user.email.split("@")[0][0:3] + "****" + \
-                                                "@" + paymentlog.request.user.email.split("@")[1]
+            if paymentlog.request is not None:
+                if paymentlog.request.user is not None:
+                    # paymentlog.request의 user 개인 정보 마스킹 처리
+                    paymentlog.request.user.password = "*****"
+                    paymentlog.request.user.email = paymentlog.request.user.email.split("@")[0][0:3] + "****" + \
+                                                    "@" + paymentlog.request.user.email.split("@")[1]
         return PaymentLogs(message=Message(status=True, message=""), paymentlogs=paymentlogs)
+
+
+    # 나의 지급 내역 보기
+    get_my_paymentlog = graphene.Field(PaymentLogs, token=graphene.String())
+
+    @only_user
+    def resolve_get_my_paymentlog(self, info, token):
+        res = jwt_decode_handler(token)
+        users = User.objects.get(username=res['username'])
+        paymentlogs = PaymentLog.objects.filter(user=users)
+
+        for paymentlog in paymentlogs:
+            if paymentlog.user is not None:
+                # paymentlog의 user 개인 정보 마스킹 처리
+                paymentlog.user.password = "*****"
+                paymentlog.user.email = paymentlog.user.email.split("@")[0][0:3] + "****" + \
+                                        "@" + paymentlog.user.email.split("@")[1]
+            if paymentlog.request is not None:
+                if paymentlog.request.user is not None:
+                    # paymentlog.request의 user 개인 정보 마스킹 처리
+                    paymentlog.request.user.password = "*****"
+                    paymentlog.request.user.email = paymentlog.request.user.email.split("@")[0][0:3] + "****" + \
+                                                    "@" + paymentlog.request.user.email.split("@")[1]
+        return PaymentLogs(message=Message(status=True, message=""), paymentlogs=paymentlogs)
+
+
+
