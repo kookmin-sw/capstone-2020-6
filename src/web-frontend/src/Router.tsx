@@ -26,6 +26,7 @@ import PageCaptcha from './pages/PageCaptcha';
 import PageViewAllProjects from './pages/PageViewAllProjects';
 import PageViewAllProjectsFinished from './pages/PageViewAllProjectsFinished';
 import PageLabelingSetting from './pages/PageViewAllProjectsFinished';
+import PageLabelingTextSelectByImage from './pages/PageLabelingTextSelectByImage';
 
 // for Components
 import Navigation from './components/Navigation';
@@ -93,6 +94,9 @@ class App extends React.Component<Props> {
           </Route>
           <Route path='/labeling/:postId/3/:dataId'>
             <PageLabelingImageCapture/>
+          </Route>
+          <Route path='/labeling/:postId/4/:dataId'>
+            <PageLabelingTextSelectByImage/>
           </Route>
           <Route path='/labeling/:postId/result'>
             <PageLabelingResult/>
