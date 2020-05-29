@@ -8,9 +8,12 @@ import { gql } from "apollo-boost";
 export default class ProjectListStore {
     @observable list: any = [];
     @observable idx: string = '';
+    @observable loading: boolean = false;
+
     constructor() {
         this.list = [];
         this.idx = '';
+        this.loading = false;
     }
 
     /*       
@@ -35,6 +38,7 @@ export default class ProjectListStore {
     */
 
     @action reward = () => {
+        this.loading = true;
         client.mutate({
             mutation: gql`
                 mutation Reward($idx: Int!, $token: String!) {
@@ -50,8 +54,11 @@ export default class ProjectListStore {
                 token: localStorage.token,
             },
         }).then(({data}: any) => {
+            this.loading = false;
             alert(data.reward.message.message);
         }).catch((e) => {
+            this.loading = false;
+
             console.log(e);
         });
     }
@@ -61,6 +68,8 @@ export default class ProjectListStore {
     }
 
     @action setStartReq = () => {
+        this.loading = true;
+
         client.mutate({
             mutation: gql`
             mutation StartRequest($idx: Int!, $token: String!) {
@@ -77,14 +86,20 @@ export default class ProjectListStore {
                 token: localStorage.token,
             }
         }).then(({data}:any) => {
+            this.loading = false;
+
             alert(data.startRequest.message.message);
             }
         ).catch((e) => {
+            this.loading = false;
+
             console.log(e);
         })
     }
 
     @action setEndReq = () => {
+        this.loading = true;
+
         client.mutate({
             mutation: gql`
             mutation EndRequest($idx: Int!, $token: String!) {
@@ -101,15 +116,21 @@ export default class ProjectListStore {
                 token: localStorage.token
             }
         }).then(({data}:any) => {
+            this.loading = false;
+
             alert(data.endRequest.message.message);
             }
         ).catch(e=>{
+            this.loading = false;
+
             console.log(e)
         })
     }
 
 
     @action getProjects = () => {
+        this.loading = true;
+
         client.query({
             query: gql`
                 query GetMyRequest($token: String!) {
@@ -144,6 +165,8 @@ export default class ProjectListStore {
             }
         })
         .then(({data}:any) => {
+            this.loading = false;
+
             var list:any = []
             var status:any = {
                 'RED': "준비중",
@@ -164,6 +187,8 @@ export default class ProjectListStore {
             this.list = list;
         })
         .catch(e => {
+            this.loading = false;
+
             console.error(e);
         })
     }
