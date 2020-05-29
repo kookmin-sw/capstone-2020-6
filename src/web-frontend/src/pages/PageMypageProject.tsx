@@ -84,7 +84,7 @@ class PageMypageProject extends React.Component<Props, State> {
     handleReward = (idx: string) => {
         this.setState({projectID: idx});
         this.props.myPageProjectStore?.setId(idx);
-        this.props.myPageProjectStore?.reward(idx);
+        this.props.myPageProjectStore?.reward();
     }
 
 

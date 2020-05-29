@@ -1,7 +1,6 @@
 import {action, observable} from 'mobx';
 
 export default class LabelingResultStore {
-    // @observable labelingSubject: any = '';
     @observable levelData: any = [];
     @observable labelingResult: any = [];
 
