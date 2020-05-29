@@ -134,6 +134,8 @@ class PaymentLogAdmin(admin.ModelAdmin):
         'type',
         'idx',
         'user',
+        'balance',
+        'amount',
         'request',
         'note',
         'log_time',
