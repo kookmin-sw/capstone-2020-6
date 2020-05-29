@@ -1,3 +1,5 @@
+import sys
+import os
 import graphene
 import datetime
 import random
@@ -22,6 +24,10 @@ from backend.utils import (
     Message
 )
 
+sys.path.append(os.path.dirname(
+    os.path.abspath(os.path.dirname(
+        os.path.abspath(os.path.dirname("__file__")))))+ "/blockchain/TSanPoint")
+import TSanPoint
 
 class RequestType(DjangoObjectType):
     class Meta:
@@ -174,6 +180,9 @@ class CreateRequest(graphene.Mutation):
             # 의뢰자 포인트 차감
             user.point = user.point - total_point
             user.save()
+
+            # TODO: 블록체인 API 연동
+            # TSanPoint.transferFrom(user.username, 'owner', total_point) # owner -> tsan
 
             request = Request(
                 user=user,
@@ -516,6 +525,7 @@ class Reward(graphene.Mutation):
                             # reward_point = request.total_point * 신뢰도 # 계획
 
                             # TODO: 블록체인 API 연동 (tsan -> labeler)
+                            # TSanPoint.transferFrom('owner',labeler.user.username, reward_point) # owner -> tsan
 
                             # DB 포인트 업데이트
                             labeler.user.point += reward_point
@@ -829,10 +839,14 @@ class EndUpdate(graphene.Mutation):
             else:
                 # request.is_rewarded = False
                 # request.state = "RUN"
-                request.max_cycle = 8
+                # request.max_cycle = 8
+                # request.current_cycle = 5
                 # end_date = "2020-06-20"
                 # request.end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
-                request.save()
+                # request.save()
+                print(TSanPoint.balanceOf('owner'))
+                # TSanPoint.supply(1000)
+                # print(TSanPoint.balanceOf('owner'))
 
                 message = "수정 완료"
                 return EndRequest(
@@ -888,9 +902,10 @@ class GetItem(graphene.Mutation):
             labeling = Labeling.objects.get(user=user, request=request)
             dataset = db.user_assigned.find_one({"request": idx, "username": user.username})
             xlabeled = [x for x in dataset['dataset'] if x['label'] == None]
+            print(labeling)
             if len(xlabeled) == 0:
                 # 해당 회원 모든 라벨링 완료로 바꾸고, 진도완료 명 수 1 올리기
-                labeling = Labelings.objects.filter(user=user)
+                # labeling = Labelings.objects.filter(user=user)
                 if labeling.is_done == True:
                     return GetItem(Message(state=False, message="이미 완료한 프로젝트입니다."))
                 labeling.is_done = True

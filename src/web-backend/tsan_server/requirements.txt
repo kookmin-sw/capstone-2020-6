@@ -7,3 +7,6 @@ django-admin-rangefilter
 pymongo
 django-jet
 mysqlclient
+web3
+solc
+py-solc
