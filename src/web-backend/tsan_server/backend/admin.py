@@ -154,6 +154,7 @@ class PaymentLogAdmin(admin.ModelAdmin):
 
 class LabelingAdmin(admin.ModelAdmin):
     list_display = (
+        'idx',
         'user',
         'request',
         'start_date',
@@ -163,6 +164,7 @@ class LabelingAdmin(admin.ModelAdmin):
     list_filter = (
         'start_date',
         'end_date',
+        'request',
     )
     search_fields = (
         'user',

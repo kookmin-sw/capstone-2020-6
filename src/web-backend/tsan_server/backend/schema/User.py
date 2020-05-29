@@ -1,3 +1,5 @@
+import sys
+import os
 import graphene
 import datetime
 from backend.models import Dataset, User, PaymentLog
@@ -17,6 +19,10 @@ from backend.utils import (
     Message
 )
 
+sys.path.append(os.path.dirname(
+    os.path.abspath(os.path.dirname(
+        os.path.abspath(os.path.dirname("__file__")))))+ "/blockchain/TSanPoint")
+import TSanPoint
 
 class UserType(DjangoObjectType):
     class Meta:
@@ -332,7 +338,9 @@ class AddPoint(graphene.Mutation):
         new_point = 100000
         user.point = user.point + new_point
         user.save()
-        # 블록체인에 추가하는 부분 제작 해야함
+        # TODO: 블록체인에 추가하는 부분 제작 해야함
+        #TSanPoint.transferFrom('owner', user, new_point) # owner -> tsan
+
         # 현 데이터베이스에 로깅하는 부분 제작해야함
         # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
         paymentlogs = PaymentLog()
