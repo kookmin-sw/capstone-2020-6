@@ -526,6 +526,9 @@ class Reward(graphene.Mutation):
                             note = "%s 프로젝트 %d 포인트 보상 수여" % (request.subject, reward_point)
                             paymentlogs.create(type="0", user=labeler.user, request=request, note=note)
 
+                            # 보상처리 체크
+                            request.is_rewarded = True
+                            request.save()
 
                         message = "'%s'주제에 대해 '%d'명의 참여자에게 정상적으로 보상처리 되었습니다." % (request.subject, len(labelers))
                         return Reward(
