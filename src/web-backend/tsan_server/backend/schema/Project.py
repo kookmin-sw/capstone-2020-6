@@ -895,8 +895,8 @@ class GetItem(graphene.Mutation):
                     return GetItem(Message(state=False, message="이미 완료한 프로젝트입니다."))
                 labeling.is_done = True
                 labeling.save()
-                request.current_cycle += 1
-                request.save()
+                # request.current_cycle += 1
+                # request.save()
                 return GetItem(
                     message = Message(status=True, message=""),
                     data = ["COMPLETE",],
