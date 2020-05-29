@@ -5,7 +5,6 @@ import './PageLabelingImgSelect.css';
 
 // Components
 import ImagePicker from '../components/image_picker';
-import LabelingNextBtn from '../components/LabelingNextBtn';
 import LabelingFinishButton from '../components/LabelingFinishButton';
 
 // for Mobx

@@ -34,7 +34,7 @@ class PageLabelingTextSelectByImage extends React.Component<Props & RouteCompone
   }
 
     handleLink = (e: any) => {
-        if (this.props.labelingTextSelectByImageStore?.activeButton == -1) {
+        if (this.props.labelingTextSelectByImageStore?.activeButton === -1) {
           alert('선택해주세요.');
           return;
         }
@@ -47,13 +47,13 @@ class PageLabelingTextSelectByImage extends React.Component<Props & RouteCompone
     render() {
       return (
         <Container className='container'>
-          <div style={{width: 600, margin: '100px auto'}}>s
+          <div style={{width: 600, margin: '100px auto'}}>
             <div className='labelingTitle'>
               <h2>{this.props.labelingTextSelectByImageStore?.labelingSubject}</h2>
             </div>
             <Grid columns={1}>
               <Grid.Column className='imageContent'>
-                <img src={this.props.labelingTextSelectByImageStore?.data} style={{maxHeight: 300}}/>
+                <img src={this.props.labelingTextSelectByImageStore?.data} alt={'labelingImgSel'} style={{maxHeight: 300}}/>
               </Grid.Column>
               <Grid.Column className='imageSelectGrid'>
                 <div className='subTitle' style={{fontWeight: 'bold'}}>
