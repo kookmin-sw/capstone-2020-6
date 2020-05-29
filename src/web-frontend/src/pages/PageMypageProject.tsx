@@ -46,7 +46,8 @@ class PageMypageProject extends React.Component<Props, State> {
         {id: 5, headerItem: '마감일'},
         {id: 6, headerItem: '시작'},
         {id: 7, headerItem: '종료'},
-        {id: 8, headerItem: '비고'},
+        {id: 8, headerItem: '보상'},
+        {id: 9, headerItem: '비고'},
     ];
     user_header = [
         {id: 1, headerItem: '#'},
@@ -80,6 +81,13 @@ class PageMypageProject extends React.Component<Props, State> {
         this.setState({open: false})
     }
 
+    handleReward = (idx: string) => {
+        this.setState({projectID: idx});
+        this.props.myPageProjectStore?.setId(idx);
+        this.props.myPageProjectStore?.reward(idx);
+    }
+
+
     render() {
         const {open} = this.state;
         return (
@@ -107,6 +115,11 @@ class PageMypageProject extends React.Component<Props, State> {
                                     <Table.Cell>
                                     <div onClick={()=>this.show('end', item.id)}>
                                     <Icon name="sign-out alternate"/>
+                                    </div>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                    <div onClick={()=>this.handleReward(item.id)}>
+                                    <Icon name="bitcoin"/>
                                     </div>
                                     </Table.Cell>
                                 </>

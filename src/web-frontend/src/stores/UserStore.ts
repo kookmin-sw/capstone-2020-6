@@ -10,7 +10,9 @@ export default class UserStore {
     @observable phone: string = ""
     constructor() {
         this.point = 0;
-
+        this.getMyInfo()
+    }
+    @action getMyInfo = () => {
         client.query({
             query: gql`
             query My($token: String!) {

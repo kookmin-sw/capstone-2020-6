@@ -43,9 +43,18 @@
 
 &nbsp;&nbsp;T-SAN project aims to develop a data mining platform with crowdsourcing. The users of the platform are divided into clients and labelers. The clients should provide two big pieces of information, a dataset and ways of labeling. The labelers can receive points as a reward when they do labeling works. Besides,  the machine-learning algorithm can be used to collect reliable datasets while reducing labor costs in the process of examining labeled data. As a result, T-SAN can serve as a platform for generating datasets at a lower cost than traditional methods through labeling using multiple collective intelligence and inspection processes using machine running algorithms.
 
-## 3. 소개 영상
+## 3-1. 소개 영상
 
 [![Watch the video](https://raw.githubusercontent.com/kookmin-sw/capstone-2020-6/master/img/youtube.png)](https://youtu.be/zOQfu3Gawzw)
+
+## 3-2. 중간 발표 영상
+
+[![Watch the video](https://raw.githubusercontent.com/kookmin-sw/capstone-2020-6/master/img/youtube.png)](https://youtu.be/z1cbTRaaG1M)
+
+## 3-3. 2차 중간 발표 영상
+
+[![Watch the video](https://raw.githubusercontent.com/kookmin-sw/capstone-2020-6/master/img/youtube.png)](https://youtu.be/Ioof8cz5J1M)
+
 
 ## 4. 팀 소개
 

@@ -21,9 +21,23 @@ from graphene_django.views import GraphQLView
 from django.urls import path
 from django.conf.urls import url, include
 
+import os
+from django.conf import settings
+from django.http import HttpResponse, Http404
+
+def download(request, idx):
+    # file_path = os.path.join(settings.MEDIA_ROOT, path)
+    # if os.path.exists(file_path):
+    #     with open(file_path, 'rb') as fh:
+    response = HttpResponse("ASDSDSADASD", content_type="application/vnd.ms-excel")
+    response['Content-Disposition'] = 'inline; filename=HI'
+    return response
+    # raise Http404
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('v1/graphql', GraphQLView.as_view(graphiql=True)),  
     url(r'^jet/', include('jet.urls', 'jet')),
-    url(r'^jet/dashboard/', include('jet.dashboard.urls', 'jet-dashboard'))
+    url(r'^jet/dashboard', include('jet.dashboard.urls', 'jet-dashboard')),
+    url('^download/(?P<idx>\d+)', download)
 ]
