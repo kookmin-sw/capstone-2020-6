@@ -807,16 +807,17 @@ class IncCurrentCycle(graphene.Mutation):
 
 class GetItem(graphene.Mutation):
     message = graphene.Field(Message)
-    idx = graphene.String()
-    data = graphene.String()
+    idx = graphene.List(graphene.String)
+    data = graphene.List(graphene.String)
     left = graphene.Int()
 
     class Arguments:
         idx = graphene.Int()
+        limit = graphene.Int()
         token = graphene.String()
 
     @only_user
-    def mutate(self, info, idx, token):
+    def mutate(self, info, idx, token, limit=1):
         try:
             res = jwt_decode_handler(token)
             user = User.objects.get(username=res['username'])
@@ -827,29 +828,32 @@ class GetItem(graphene.Mutation):
             if len(xlabeled) == 0:
                 return GetItem(
                     message = Message(status=True, message=""),
-                    data = "COMPLETE",
+                    data = ["COMPLETE",],
                     left = -1,
-                    idx = "COMPLETE"
+                    idx = ["COMPLETE",]
                 )
-            item = random.choice(xlabeled)
-            data = {}
+            items = random.choices(xlabeled, k=limit)
+            dataset = []
             if request.dataset.type == "text":
-                data = db.text_dataset.find_one({"_id": item['data']}, {"text": 1, "_id": 1})
-                data = {
-                    "data": data['text'],
-                    "_id": data['_id']
-                }
+                for item in items:
+                    data = db.text_dataset.find_one({"_id": item['data']}, {"text": 1, "_id": 1})
+                    dataset.append({
+                        "data": data['text'],
+                        "_id": data['_id']
+                    })
             elif request.dataset.type == "image":
-                data = db.image_dataset.find_one({"_id": item['data']}, {"data": 1, "_id": 1})
-                data = {
-                    "data": "data://text/plain;base64," + base64.b64encode(data['data']).decode(),
-                    "_id": data['_id']
-                }
+                for item in items:
+                    data = db.image_dataset.find_one({"_id": item['data']}, {"data": 1, "_id": 1})
+                    dataset.append({
+                        "data": "data://text/plain;base64," + base64.b64encode(data['data']).decode(),
+                        "_id": data['_id']
+                    })
+            left = len(xlabeled) - limit
             return GetItem(
                 message=Message(status=True, message=""),
-                data=data['data'],
-                left=len(xlabeled) - 1,
-                idx=data['_id']
+                data=[x['data'] for x in dataset],
+                left=left if 0 < left else 0,
+                idx=[x['_id'] for x in dataset]
             )
         except Exception as e:
             print(e)

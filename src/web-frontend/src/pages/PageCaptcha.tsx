@@ -34,7 +34,7 @@ interface MatchParams {
 class PageCaptcha extends React.Component<Props, State, RouteComponentProps<MatchParams>> {
   constructor(props: any) {
     super(props);
-    this.props.labelingImgStore!.getImgList();
+    // this.props.labelingImgStore!.getImgList();
     this.props.labelingImgStore!.setSelectList([]);
     this.state = {
       image: null,
@@ -74,7 +74,7 @@ class PageCaptcha extends React.Component<Props, State, RouteComponentProps<Matc
             {/* TODO: Alignment center */}
             <Modal.Content>
               <ImagePicker
-                images={this.props.labelingImgStore!.imgList.map((image, i) => ({src: image, value: i}))}
+                images={this.props.labelingImgStore!.imgList.map((image: string, i: number) => ({src: image, value: i}))}
                 onPick={this.onPickImages.bind(this)}
                 multiple/>
             </Modal.Content>
