@@ -199,7 +199,8 @@ class CreateRequest(graphene.Mutation):
             # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
             paymentlogs = PaymentLog()
             note = "프로젝트 등록으로 %d 포인트 소비" % (total_point)
-            paymentlogs.create(type="3", user=user, request=request, note=note)
+            paymentlogs.create(type="3", user=user, request=request, note=note,
+                               balance=user.point, amount=request.total_point)
 
             keywords = [x.strip().strip("#") for x in keywords.split("#")]
             for keyword in keywords:
@@ -525,7 +526,8 @@ class Reward(graphene.Mutation):
                             # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유여
                             paymentlogs = PaymentLog()
                             note = "%s 프로젝트 %d 포인트 보상 수여" % (request.subject, reward_point)
-                            paymentlogs.create(type="0", user=labeler.user, request=request, note=note)
+                            paymentlogs.create(type="0", user=labeler.user, request=request,
+                                               note=note, balance=labeler.user.point, amount=reward_point)
 
                             request.is_rewarded = True
                             request.save()
