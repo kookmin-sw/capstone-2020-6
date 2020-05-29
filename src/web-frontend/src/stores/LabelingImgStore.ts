@@ -52,6 +52,45 @@ export default class LabelingImgStore {
         this.selectList = [...list]
     }
 
+    @action submit = (items:any[]) => {
+        this.imgList.forEach((item:any) => {
+            if(!items.find(elem => elem == item.value)) {
+                this.submitLabel(0, item.value, () => {})
+            } else {
+                this.submitLabel(1, item.value, () => {})
+            }
+        })
+        setTimeout(this.getItem, 1500)
+    }
+
+    @action submitLabel = (label: any, data: any, callback: any) => {
+        client.mutate({
+            mutation: gql`
+            mutation ($request: Int!, $data: String!, $label: String!, $token: String!) {
+              submitLabel(requestIdx:$request, data:$data, label:$label, token:$token) {
+                message {
+                  status
+                  message
+                }
+              }
+            }
+          `,
+            variables: {
+                request: this.idx,
+                data: data,
+                label: label,
+                token: localStorage.token
+            }
+        })
+        .then(({ data }: any) => {
+            callback()
+        })
+        .catch(e => {
+            console.error(e)
+            alert("제출에 문제가 생겼습니다.")
+        })
+    }
+
     @action getItem = () => {
         client.mutate({
             mutation: gql`
@@ -74,8 +113,16 @@ export default class LabelingImgStore {
             }
         })
         .then(({ data }: any) => {
-            this.imgList = data.getItem.data
-            this.labelingItem = data.getItem.idx
+            const imgList = []
+            for(let i=0;i<data.getItem.data.length;i++) {
+                imgList.push({
+                    image: data.getItem.data[i],
+                    value: data.getItem.idx[i]
+                })
+            }
+            this.imgList = imgList
+            // this.imgList = data.getItem.data
+            // this.labelingItem = data.getItem.idx
             this.leftItems = data.getItem.left
             if(data.getItem.left === -1) {
                 alert("데이터 레이블링을 완료하였습니다.\n보상은 레이블링 의뢰 종료시에 일괄지급됩니다.")

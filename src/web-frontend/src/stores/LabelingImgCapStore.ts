@@ -36,6 +36,7 @@ export default class LabelingImgCapStore {
                 alert("라벨링 정보를 가져오는데 에러가 발생하였습니다.")
             })
     }
+
     @action submitLabel = (label: any, callback: any) => {
         client.mutate({
             mutation: gql`

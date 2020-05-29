@@ -722,7 +722,6 @@ class SubmitLabel(graphene.Mutation):
                 message=Message(status=False, message="참가신청을 하지 않은 의뢰입니다.\\n참가신청을 우선 해주세요.")
             )
 
-
 """
 mutation{
   test(
@@ -864,11 +863,12 @@ class GetItem(graphene.Mutation):
 
 class Query(graphene.ObjectType):
     # 나의 프로젝트 반환
-    get_my_request = graphene.Field(Requests,
-                                    token=graphene.String(),
-                                    offset=graphene.Int(required=False),
-                                    limit=graphene.Int(required=False)
-                                    )
+    get_my_request = graphene.Field(
+        Requests,
+        token=graphene.String(),
+        offset=graphene.Int(required=False),
+        limit=graphene.Int(required=False)
+    )
 
     @only_user
     def resolve_get_my_request(self, info, token, **kwargs):

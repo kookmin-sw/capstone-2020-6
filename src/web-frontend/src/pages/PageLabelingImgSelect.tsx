@@ -46,19 +46,20 @@ class PageLabelingImgSel extends React.Component<Props, State, RouteComponentPro
     };
   }
 
-  onPickImage = (image: any) => {
-    this.setState({ image });
-  };
   onPickImages = (images: any) => {
-    this.setState({ images });
-    this.props.labelingImgStore!.setSelectList(this.state.images);
+    this.props.labelingImgStore!.setSelectList(images);
   };
 
   // 라벨링 다음 버튼 onclick 함수 부분(이런 식으로 만들어서 넣으면 될 듯)
   handleLink = (e: any) => {
+    const items:any[] = []
+    this.props.labelingImgStore?.selectList.forEach((item:any) => {
+      items.push(item.value)
+    })
+    this.props.labelingImgStore?.submit(items)
     // TODO: 선택한 사진 API로 보내기
-    var num = parseInt(this.props.match.params.dataId) + 1;
-    this.props.history.push(`/labeling/${this.props.match.params.postId}/2/${num}`);
+    // var num = parseInt(this.props.match.params.dataId) + 1;
+    // this.props.history.push(`/labeling/${this.props.match.params.postId}/2/${num}`);
   }
 
   render() {
@@ -70,9 +71,9 @@ class PageLabelingImgSel extends React.Component<Props, State, RouteComponentPro
           <Grid columns={1}>
             <Grid.Column>
               <ImagePicker
-                images={this.props.labelingImgStore?.imgList.map((image: string, i: number) => ({
-                  src: image,
-                  value: i,
+                images={this.props.labelingImgStore?.imgList.map((data: any) => ({
+                  src: data['image'],
+                  value: data['value'],
                 }))}
                 onPick={this.onPickImages.bind(this)}
                 multiple
@@ -88,7 +89,7 @@ class PageLabelingImgSel extends React.Component<Props, State, RouteComponentPro
                 {Number(this.props.match.params.dataId) + 1 !==
                   this.props.labelingImgStore?.
                     imgList.length ?
-                    <Button color="blue">다음으로</Button>:
+                    <Button color="blue" onClick={this.handleLink}>다음으로</Button>:
                     <LabelingFinishButton />
                   }
               </div>
