@@ -699,17 +699,16 @@ class SubmitLabel(graphene.Mutation):
     @only_user
     def mutate(self, info, request_idx, data, label, token):
         try:
+            print(">>>")
+            print(type(data))
             res = jwt_decode_handler(token)
             user = User.objects.get(username=res['username'])
             request = Request.objects.get(idx=request_idx)
             labeling = Labeling.objects.get(user=user, request=request)
             dataset = db.user_assigned.find_one({"request": request_idx, "username": user.username})
             print({"request": request_idx, "user": user.username})
-            print(dataset)
             for x in dataset['dataset']:
-                print(x)
                 if x['data'] == bson.ObjectId(data):
-                    print(x)
                     x['label'] = label
                     break
             db.user_assigned.update_one({"request": request_idx, "username": user.username},
@@ -742,10 +741,8 @@ class SubmitLabels(graphene.Mutation):
             labeling = Labeling.objects.get(user=user, request=request)
             dataset = db.user_assigned.find_one({"request": request_idx, "username": user.username})
             print({"request": request_idx, "user": user.username})
-            print(dataset)
             labeled_data = [bson.ObjectId(x) for x in data]
             for x in dataset['dataset']:
-                print(x)
                 for i, d in enumerate(labeled_data):
                     if x['data'] == d:
                         x['label'] = labels[i]
@@ -879,7 +876,6 @@ class GetItem(graphene.Mutation):
                     left = -1,
                     idx = ["COMPLETE",]
                 )
-            print(xlabeled)
             random.shuffle(xlabeled)
             items = xlabeled[:limit]
             dataset = []

@@ -90,9 +90,9 @@ export default class LabelingImgCapStore {
             }
         })
         .then(({ data }: any) => {
-            this.data = data.getItem.data
+            this.data = data.getItem.data[0]
             this.leftItems = data.getItem.left
-            this.labelingItem = data.getItem.idx
+            this.labelingItem = data.getItem.idx[0]
             if(data.getItem.left === -1) {
                 alert("데이터 레이블링을 완료하였습니다.\n보상은 레이블링 의뢰 종료시에 일괄지급됩니다.")
                 window.location.href = "/"

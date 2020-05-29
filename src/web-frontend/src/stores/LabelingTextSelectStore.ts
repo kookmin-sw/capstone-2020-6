@@ -128,9 +128,9 @@ export default class LabelingTextSelectStore {
         }
       })
       .then(({data}:any) => {
-        this.data = data.getItem.data
+        this.data = data.getItem.data[0]
         this.leftItems = data.getItem.left
-        this.labelingItem = data.getItem.idx
+        this.labelingItem = data.getItem.idx[0]
       })
       .catch(e => {
         console.error(e)

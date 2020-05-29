@@ -11,10 +11,10 @@ import LabelingFinishButton from '../components/LabelingFinishButton';
 // for Mobx
 import {inject, observer} from 'mobx-react';
 // TODO: LabelingTextSelectByImageStore 로 변경하기
-import LabelingTextSelectStore from '../stores/LabelingTextSelectStore';
+import LabelingTextSelectByImageStore from '../stores/LabelingTextSelectByImageStore';
 
 interface Props {
-    labelingTextSelectStore?: LabelingTextSelectStore,
+    labelingTextSelectByImageStore?: LabelingTextSelectByImageStore,
 }
 
 interface MatchParams {
@@ -23,30 +23,30 @@ interface MatchParams {
 }
 
 // TODO: labelingTextSelectByImageStore 로 변경하기
-@inject('labelingTextSelectStore') @observer
+@inject('labelingTextSelectByImageStore') @observer
 class PageLabelingTextSelectByImage extends React.Component<Props & RouteComponentProps<MatchParams>> {
   constructor(props: any) {
     super(props);
     let idx = parseInt(this.props.match.params.postId);
 
     // TODO: labelingTextSelectByImageStore 로 변경하기
-    this.props.labelingTextSelectStore?.setIdx(idx);
-    this.props.labelingTextSelectStore?.getRequest();
-    this.props.labelingTextSelectStore?.getKeywords();
-    this.props.labelingTextSelectStore?.getItem();
+    this.props.labelingTextSelectByImageStore?.setIdx(idx);
+    this.props.labelingTextSelectByImageStore?.getRequest();
+    this.props.labelingTextSelectByImageStore?.getKeywords();
+    this.props.labelingTextSelectByImageStore?.getItem();
   }
 
     handleLink = (e: any) => {
         // TODO: labelingTextSelectByImageStore 로 변경하기
-        if (this.props.labelingTextSelectStore?.activeButton == -1) {
-        alert('선택해주세요.');
-        return;
-      }
+        if (this.props.labelingTextSelectByImageStore?.activeButton == -1) {
+          alert('선택해주세요.');
+          return;
+        }
         // TODO: labelingTextSelectByImageStore 로 변경하기
-        this.props.labelingTextSelectStore?.submitLabel(() => {
-        this.props.labelingTextSelectStore?.resetActiveButton();
-        this.props.labelingTextSelectStore?.getItem();
-      });
+        this.props.labelingTextSelectByImageStore?.submitLabel(() => {
+          this.props.labelingTextSelectByImageStore?.resetActiveButton();
+          this.props.labelingTextSelectByImageStore?.getItem();
+        });
     }
 
     render() {
@@ -55,40 +55,40 @@ class PageLabelingTextSelectByImage extends React.Component<Props & RouteCompone
           <div style={{width: 600, margin: '100px auto'}}>
             <div className='labelingTitle'>
               {/* TODO: labelingTextSelectByImageStore 로 변경하기 */}
-              <h2>{this.props.labelingTextSelectStore?.labelingSubject}</h2>
+              <h2>{this.props.labelingTextSelectByImageStore?.labelingSubject}</h2>
             </div>
             <Grid columns={1}>
               <Grid.Column className='imageContent'>
                 {/* TODO: Image src 변경하기 */}
-                <img src='https://i.pinimg.com/564x/e7/d2/ab/e7d2ab0cf45c40522b88c8f2dec0ed3d.jpg'/>
+                <img src={this.props.labelingTextSelectByImageStore?.data} style={{maxHeight: 300}}/>
               </Grid.Column>
               <Grid.Column className='imageSelectGrid'>
                 <div className='subTitle' style={{fontWeight: 'bold'}}>
                   {/* TODO: labelingTextSelectByImageStore 로 변경하기 */}
-                  {this.props.labelingTextSelectStore?.labelingText}
+                  {this.props.labelingTextSelectByImageStore?.labelingText}
                 </div>
                 <LabelingTextButton
                   category={
                       // TODO: labelingTextSelectByImageStore 로 변경하기
-                      this.props.labelingTextSelectStore!.buttonList
+                      this.props.labelingTextSelectByImageStore!.buttonList
                   }
                   value={
                       // TODO: labelingTextSelectByImageStore 로 변경하기
-                      this.props.labelingTextSelectStore?.activeButton
+                      this.props.labelingTextSelectByImageStore?.activeButton
                   }
                   // TODO: labelingTextSelectByImageStore 로 변경하기
-                  onClick={this.props.labelingTextSelectStore?.setActiveButton}
+                  onClick={this.props.labelingTextSelectByImageStore?.setActiveButton}
                 />
                 <div className='finishButtonLocation'>
                   {/* TODO: labelingTextSelectByImageStore 로 변경하기 */}
-                  {this.props.labelingTextSelectStore?.leftItems ?
+                  {this.props.labelingTextSelectByImageStore?.leftItems ?
                   <LabelingNextBtn handleLink={this.handleLink}/> :
                   <LabelingFinishButton/>
                   }
                 </div>
                 <div style={{textAlign: 'right', color: '#777'}}>
                   {/* TODO: labelingTextSelectByImageStore 로 변경하기 */}
-                  남은 라벨링: {this.props.labelingTextSelectStore?.leftItems}
+                  남은 라벨링: {this.props.labelingTextSelectByImageStore?.leftItems}
                 </div>
               </Grid.Column>
             </Grid>
