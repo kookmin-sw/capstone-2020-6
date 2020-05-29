@@ -187,6 +187,7 @@ class CreateRequest(graphene.Mutation):
                 current_cycle=0,
                 max_cycle=max_cycle,
                 total_point=total_point,
+                is_rewarded=False,
                 is_captcha=is_captcha,
                 dataset=dataset,
                 count_dataset=count_dataset,
@@ -704,17 +705,16 @@ class SubmitLabel(graphene.Mutation):
     @only_user
     def mutate(self, info, request_idx, data, label, token):
         try:
+            print(">>>")
+            print(type(data))
             res = jwt_decode_handler(token)
             user = User.objects.get(username=res['username'])
             request = Request.objects.get(idx=request_idx)
             labeling = Labeling.objects.get(user=user, request=request)
             dataset = db.user_assigned.find_one({"request": request_idx, "username": user.username})
             print({"request": request_idx, "user": user.username})
-            print(dataset)
             for x in dataset['dataset']:
-                print(x)
                 if x['data'] == bson.ObjectId(data):
-                    print(x)
                     x['label'] = label
                     break
             db.user_assigned.update_one({"request": request_idx, "username": user.username},
@@ -728,6 +728,50 @@ class SubmitLabel(graphene.Mutation):
                 message=Message(status=False, message="참가신청을 하지 않은 의뢰입니다.\\n참가신청을 우선 해주세요.")
             )
 
+
+class SubmitLabels(graphene.Mutation):
+    message = graphene.Field(Message)
+
+    class Arguments:
+        request_idx = graphene.Int()
+        data = graphene.List(graphene.String)
+        labels = graphene.List(graphene.String)
+        token = graphene.String()
+
+    @only_user
+    def mutate(self, info, request_idx, data, labels, token):
+        try:
+            res = jwt_decode_handler(token)
+            user = User.objects.get(username=res['username'])
+            request = Request.objects.get(idx=request_idx)
+            labeling = Labeling.objects.get(user=user, request=request)
+            dataset = db.user_assigned.find_one({"request": request_idx, "username": user.username})
+            print({"request": request_idx, "user": user.username})
+            labeled_data = [bson.ObjectId(x) for x in data]
+            for x in dataset['dataset']:
+                for i, d in enumerate(labeled_data):
+                    if x['data'] == d:
+                        x['label'] = labels[i]
+                        break
+            db.user_assigned.update_one(
+                {
+                    "request": request_idx,
+                    "username": user.username
+                },
+                {
+                    "$set": {
+                        "dataset": dataset['dataset']
+                    }
+                }
+            )
+            return SubmitLabel(
+                message=Message(status=True, message="")
+            )
+        except Exception as e:
+            print(e)
+            return SubmitLabel(
+                message=Message(status=False, message="참가신청을 하지 않은 의뢰입니다.\\n참가신청을 우선 해주세요.")
+            )
 
 """
 mutation{
@@ -813,16 +857,17 @@ class IncCurrentCycle(graphene.Mutation):
 
 class GetItem(graphene.Mutation):
     message = graphene.Field(Message)
-    idx = graphene.String()
-    data = graphene.String()
+    idx = graphene.List(graphene.String)
+    data = graphene.List(graphene.String)
     left = graphene.Int()
 
     class Arguments:
         idx = graphene.Int()
+        limit = graphene.Int()
         token = graphene.String()
 
     @only_user
-    def mutate(self, info, idx, token):
+    def mutate(self, info, idx, token, limit=1):
         try:
             res = jwt_decode_handler(token)
             user = User.objects.get(username=res['username'])
@@ -830,25 +875,36 @@ class GetItem(graphene.Mutation):
             labeling = Labeling.objects.get(user=user, request=request)
             dataset = db.user_assigned.find_one({"request": idx, "username": user.username})
             xlabeled = [x for x in dataset['dataset'] if x['label'] == None]
-            item = random.choice(xlabeled)
-            data = {}
+            if len(xlabeled) == 0:
+                return GetItem(
+                    message = Message(status=True, message=""),
+                    data = ["COMPLETE",],
+                    left = -1,
+                    idx = ["COMPLETE",]
+                )
+            random.shuffle(xlabeled)
+            items = xlabeled[:limit]
+            dataset = []
             if request.dataset.type == "text":
-                data = db.text_dataset.find_one({"_id": item['data']}, {"text": 1, "_id": 1})
-                data = {
-                    "data": data['text'],
-                    "_id": data['_id']
-                }
+                for item in items:
+                    data = db.text_dataset.find_one({"_id": item['data']}, {"text": 1, "_id": 1})
+                    dataset.append({
+                        "data": data['text'],
+                        "_id": data['_id']
+                    })
             elif request.dataset.type == "image":
-                data = db.image_dataset.find_one({"_id": item['data']}, {"data": 1, "_id": 1})
-                data = {
-                    "data": "data://text/plain;base64," + base64.b64encode(data['data']).decode(),
-                    "_id": data['_id']
-                }
+                for item in items:
+                    data = db.image_dataset.find_one({"_id": item['data']}, {"data": 1, "_id": 1})
+                    dataset.append({
+                        "data": "data://text/plain;base64," + base64.b64encode(data['data']).decode(),
+                        "_id": data['_id']
+                    })
+            left = len(xlabeled) - limit
             return GetItem(
                 message=Message(status=True, message=""),
-                data=data['data'],
-                left=len(xlabeled) - 1,
-                idx=data['_id']
+                data=[x['data'] for x in dataset],
+                left=left if 0 < left else 0,
+                idx=[x['_id'] for x in dataset]
             )
         except Exception as e:
             print(e)
@@ -859,11 +915,12 @@ class GetItem(graphene.Mutation):
 
 class Query(graphene.ObjectType):
     # 나의 프로젝트 반환
-    get_my_request = graphene.Field(Requests,
-                                    token=graphene.String(),
-                                    offset=graphene.Int(required=False),
-                                    limit=graphene.Int(required=False)
-                                    )
+    get_my_request = graphene.Field(
+        Requests,
+        token=graphene.String(),
+        offset=graphene.Int(required=False),
+        limit=graphene.Int(required=False)
+    )
 
     @only_user
     def resolve_get_my_request(self, info, token, **kwargs):

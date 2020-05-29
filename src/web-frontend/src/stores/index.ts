@@ -13,6 +13,7 @@ import UserStore from './UserStore';
 import RegisterStore from './RegisterStore';
 import LabelingResultStore from "./LabelingResultStore";
 import LabelingImgCapStore from  './LabelingImgCapStore';
+import LabelingTextSelectByImageStore from './LabelingTextSelectByImageStore';
 
 export default {
   navigationStore: new NavigationStore(),
@@ -30,4 +31,5 @@ export default {
   registerStore: new RegisterStore(),
   labelingResultStore : new LabelingResultStore(),
   labelingImgCapStore : new LabelingImgCapStore(),
+  labelingTextSelectByImageStore: new LabelingTextSelectByImageStore()
 };

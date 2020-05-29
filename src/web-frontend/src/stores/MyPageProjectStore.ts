@@ -34,6 +34,29 @@ export default class ProjectListStore {
         paymentlogSet: [PaymentLogType!]!
     */
 
+    @action reward = (idx: string) => {
+
+        client.mutate({
+            mutation: gql`
+                mutation Reward($idx: Int!, $token: String!) {
+                    reward(idx: $idx, token: $token) {
+                        message {
+                            status
+                            message
+                        }
+                    }
+                }`,
+            variables: {
+                idx: parseInt(this.idx),
+                token: localStorage.token,
+            },
+        }).then(({data}: any) => {
+            alert(data.reward.message.message);
+        }).catch((e) => {
+            console.log(e);
+        });
+    }
+
     @action setId = (idx: string) => {
         this.idx = idx;
     }

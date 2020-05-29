@@ -51,16 +51,25 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
     this.setState({crop: crop});
   }
 
-  handleLink = (e: any) => {
-    // TODO: 선택한 버튼 API 로 보내기
-    this.props.labelingImgCapStore?.resetActiveButton();
-    var num = parseInt(this.props.match.params.dataId) + 1;
-    this.props.history.push(`/labeling/${this.props.match.params.postId}/3/${num}`);
-  }
-
-  onCapture = (crop: any) =>{
-      alert('캡처되었습니다.');
-
+  onCapture = (check:boolean) =>{
+    let data = { x: 0, y: 0, width: 0, height: 0}
+    if(check) {
+      data = this.state.crop
+    }
+    this.props.labelingImgCapStore?.submitLabel(
+      data,
+      () => {
+        this.setState({
+          crop: {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
+          }
+        })
+        this.props.labelingImgCapStore?.getItem()
+      }
+    )  
   }
 
   render() {
@@ -82,36 +91,35 @@ class PageLabelingImageCapture extends React.Component<Props, State> {
               <div className='subTitle'>
                 {this.props.labelingImgCapStore?.labelingText}
               </div>
-              <Grid className='imagePreviewCanvas'>
-              <div
-                style={{
-                  backgroundImage: `url(${this.props.labelingImgCapStore?.data || ""})`,
-                  backgroundPositionX: `-${this.state.crop.x}px`,
-                  backgroundPositionY: `-${this.state.crop.y}px`,
-                  backgroundRepeat: 'no-repeat',
-                  width: this.state.crop.width,
-                  height: this.state.crop.height,
-                }}
-              />
+              <Grid className='imagePreviewCanvas' style={{padding: 50}}>
+                <div
+                  style={{
+                    backgroundImage: `url(${this.props.labelingImgCapStore?.data || ""})`,
+                    backgroundPositionX: `-${this.state.crop.x}px`,
+                    backgroundPositionY: `-${this.state.crop.y}px`,
+                    backgroundRepeat: 'no-repeat',
+                    width: this.state.crop.width,
+                    height: this.state.crop.height,
+                  }}
+                />
               </Grid>
-              <br/><br/>
-              <Grid className='captureButtonGrid'>
-              {/* TODO: Implement onClick method */}
-              <Button color={'blue'} className='captureButton' onClick={()=>this.onCapture(this.state.crop)}>
-              캡쳐
-              </Button>
-              </Grid>
-              <div className='finishButtonLocation'>
-                  {/* TODO: 버튼 눌렀을 때 선택된 값 저장 + 버튼 눌린 상태 초기화 해줘야함 */}
-                  {Number(this.props.match.params.dataId) + 1 !==
-                  this.props.labelingImgCapStore?.
-                      imgList.length ?
-                      <LabelingNextBtn handleLink={this.handleLink}/> :
-                      <LabelingFinishButton/>
-                  }
-              </div>
-          </Grid.Column>
+            </Grid.Column>
           </Grid>
+
+          <div style={{textAlign: "center", marginTop: 50}}>
+              <div>
+                남은 데이터: {this.props.labelingImgCapStore?.leftItems}
+              </div>
+              <div>
+                <Button color={'blue'} onClick={()=>this.onCapture(true)}>
+                제출하기
+                </Button>
+                <Button color={'red'} onClick={()=>this.onCapture(false)}>
+                영역 지정을 할 수 없습니다.
+                </Button>
+              </div>
+          </div>
+
       </Container>
     );
   }
