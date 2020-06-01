@@ -47,9 +47,6 @@ def temp_labeling(df, n):
             
             credibility_label_temp = sum(credibilities_n) / len(credibilities_n)
         
-        ##라벨러 n 명 이하일 때
-        ##추가##
-        
         data = pd.Series([i, temp_df.data.iloc[0], mode_label, credibility_label_temp], index = ['data_index', 'data', 'label_temp', 'credibility_label_temp'])  
         temp_labeling_df = temp_labeling_df.append(data, ignore_index = True)
             
