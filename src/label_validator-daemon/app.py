@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-import cnn_model 
-import clustering
+import image_selection_validator
 
 import pandas as pd
 import operator
@@ -8,7 +7,8 @@ import operator
 
 def make_dataframe() :
     
-    df = pd.read_csv("sample_furniture-images.csv", index_col = 0)
+    # df = pd.read_csv("sample_furniture-images.csv", index_col = 0)
+    df = pd.DataFrame({'project_id':[], 'data_index':[],'data':[],'label_user':[],'user_id':[],'user_credibility':[]})
     
     return df
 
@@ -51,20 +51,6 @@ def temp_labeling(df, n):
         temp_labeling_df = temp_labeling_df.append(data, ignore_index = True)
             
     return temp_labeling_df
-
-
-def label_validate(df):
-    model = cnn_model.model()
-    paths = df.path.tolist()
-    
-    label_num = len(set(df.label_temp.tolist()))
-    
-    img_feature = cnn_model.feature_extract(model, paths)
-    
-    kmeans_labels = clustering.kmeans_clustering(img_feature, label_num)
-    
-    return kmeans_labels
-
 
 def cal_cor_pers(df, correct_df): 
     cor_pers = {}
@@ -215,16 +201,51 @@ def final_credibility(df, cor_pers, right_id):
     
     return user_cred_df   
 
+def image_selection_label(df):
+    #임시 레이블 지정
+    temp_label_df = temp_labeling(df)
+    
+    #모델의 예측 레이블 중 임시와 일치하는 것, 일치하지 않는 것
+    matched_df, not_matched_df = image_selection_validator.compareLabel(temp_label_df)
+    
+    #일치하는 것으로 문제 당 정답률과 정답자 id를 계산
+    cor_pers, right_id = cal_cor_pers(df, matched_df)
+    
+    #정답자 임시 신뢰도 계산
+    temp_credibility_df = cal_credibility(df, cor_pers, right_id)
+
+    #2차 임시 레이블 지정
+    second_temp_label_df = second_labeling(temp_credibility_df, not_matched_df, 5)##
+
+    project_id = df.iloc[0].project_id.values[0]
+
+    final_df = final_labeling(project_id, matched_df,  second_temp_label_df)
+    
+    return final_df
+
+def image_capture_label(df):
+    #####
+    return
+
+def text_selection_label(df):
+    #####
+    return
 
 def main():
     
     df = make_dataframe()
-    df_temp_label = temp_labeling(df)
     
-    df_temp_label['kmeans_label'] = label_validate(df_temp_label)
-    
-    print(df_temp_label)
-      
+    # 1: image_selection, 2: image_capture, 3: text_selection
+    if type == 1:
+        image_selection_label(df)
+    elif type == 2:
+        image_capture_label(df)
+    elif type == 3:
+        text_selection_label(df)
+
+    else:
+        print('type error')
+
     return
 
 
