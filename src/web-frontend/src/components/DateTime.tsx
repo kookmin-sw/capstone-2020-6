@@ -14,8 +14,8 @@ class Datetime extends Component<Props> {
     const day = dayTmp >= 10 ? dayTmp : '0' + dayTmp;
     return (
       <>
-        {/* 2020.01.01 */}
-        {year}.{month}.{day}
+        {/* 2020-01-01 */}
+        {year}-{month}-{day}
       </>
     );
   }

@@ -1,7 +1,13 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {Container, Table} from 'semantic-ui-react';
-import "./PagePoints.css"
+import './PagePoints.css';
+
+// Components
+import Datetime from '../components/DateTime';
+import Time from '../components/Time';
+
+// for mobx
 import UserStore from '../stores/UserStore';
 import {inject, observer} from 'mobx-react';
 
@@ -48,7 +54,11 @@ class PagePoints extends React.Component<Props> {
                   <Table.Cell textAlign='center'>{item.amount}</Table.Cell>
                   <Table.Cell textAlign='center'>{item.balance}</Table.Cell>
                   <Table.Cell textAlign='center'>{item.note}</Table.Cell>
-                  <Table.Cell textAlign='center'>{item.logTime}</Table.Cell>
+                  <Table.Cell textAlign='center'>
+                    <Datetime datetime={item.logTime}/>
+                    T
+                    <Time datetime={item.logTime}/>
+                  </Table.Cell>
                 </Table.Row>
               );
             })}
