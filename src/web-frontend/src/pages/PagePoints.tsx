@@ -55,9 +55,7 @@ class PagePoints extends React.Component<Props> {
                   <Table.Cell textAlign='center'>{item.balance}</Table.Cell>
                   <Table.Cell textAlign='center'>{item.note}</Table.Cell>
                   <Table.Cell textAlign='center'>
-                    <Datetime datetime={item.logTime}/>
-                    T
-                    <Time datetime={item.logTime}/>
+                    <Datetime datetime={item.logTime}/> <Time datetime={item.logTime}/>
                   </Table.Cell>
                 </Table.Row>
               );
