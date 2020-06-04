@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+# +
 import tensorflow as tf
 import numpy as np
 import pandas as pd
@@ -259,27 +261,27 @@ class KoBertTokenizer(PreTrainedTokenizer):
 def convert_data(data_df):
     global tokenizer
     
-    SEQ_LEN = 64 #SEQ_LEN : ????? ??? ????? ????
+    SEQ_LEN = 64 #SEQ_LEN : ��Ʈ�� �� ��ǲ�� ����
     
     tokens, masks, segments, targets = [], [], [], []
     
     for i in tqdm(range(len(data_df))):
-        # token : ?????? ??????
+        # token : ������ ��ūȭ��
         token = tokenizer.encode(data_df[DATA_COLUMN][i], max_length=SEQ_LEN, pad_to_max_length=True)
        
-        # ??????? ?????? ?????? ?��??? ??? ?��??? 1, ?��??? ?��??? 0???? ????
+        # ����ũ�� ��ūȭ�� ���忡�� �е��� �ƴ� �κ��� 1, �е��� �κ��� 0���� ����
         num_zeros = token.count(0)
         mask = [1]*(SEQ_LEN-num_zeros) + [0]*num_zeros
         
-        # ?????? ??????? ????????? ???????? ?????? 1????? ??????? ??? 0
+        # ������ ���İ��踦 �������ִ� ���׸�Ʈ�� ������ 1���ۿ� �����Ƿ� ��� 0
         segment = [0]*SEQ_LEN
 
-        # ??? ??????? ????? token, mask, segment?? tokens, segments?? ???? ????
+        # ��Ʈ ��ǲ���� ���� token, mask, segment�� tokens, segments�� ���� ����
         
-        # ????(???? : 1 ???? 0)?? targets ?????? ?????? ??
+        # ����(���� : 1 ���� 0)�� targets ������ ������ ��
         targets.append(data_df[LABEL_COLUMN][i])
 
-    # tokens, masks, segments, ???? ???? targets?? numpy array?? ????    
+    # tokens, masks, segments, ���� ���� targets�� numpy array�� ����    
     tokens = np.array(tokens)
     masks = np.array(masks)
     segments = np.array(segments)
@@ -293,11 +295,11 @@ def create_model():
     BATCH_SIZE = 32
     
     model = TFBertModel.from_pretrained("monologg/kobert", from_pt=True)
-    # ??? ???, ????? ???, ?????? ??? ????
+    # ��ū ��ǲ, ����ũ ��ǲ, ���׸�Ʈ ��ǲ ����
     token_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_word_ids')
     mask_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_masks')
     segment_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_segment')
-    # ????? [???, ?????, ??????]?? ?? ????
+    # ��ǲ�� [��ū, ����ũ, ���׸�Ʈ]�� �� ����
     bert_outputs = model([token_inputs, mask_inputs, segment_inputs])
     bert_outputs = bert_outputs[1]
     
@@ -305,7 +307,7 @@ def create_model():
     sentiment_first = tf.keras.layers.Dense(1, activation='sigmoid', kernel_initializer=tf.keras.initializers.TruncatedNormal(stddev=0.02))(sentiment_drop)
     sentiment_model = tf.keras.Model([token_inputs, mask_inputs, segment_inputs], sentiment_first)
     
-    #?��??? ???? ???
+    #�н��� ���� ���
     latest = tf.train.latest_checkpoint(checkpoint_dir)
     sentiment_model.load_weights(latest)
     
@@ -337,7 +339,7 @@ def predict_label(df, model):
     for i in range(len(df)):
         sentence = df.iloc[i].data
 
-        #??? ?�� ????       
+        #�𵨷� Ư¡ ����       
         data_x = sentence_convert_data(sentence)
         predict = model.predict(data_x)
         predict_value = np.ravel(predict)
@@ -355,3 +357,4 @@ def compareLabel(df):
     not_matched_df = df[df['label_temp'] != df['label_predicted']]
 
     return matched_df, not_matched_df
+
