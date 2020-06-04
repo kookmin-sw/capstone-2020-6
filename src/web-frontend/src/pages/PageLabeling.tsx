@@ -6,6 +6,8 @@ import './PageLabeling.css';
 
 // Components
 import Datetime from '../components/DateTime';
+import Loading from "../components/Loading";
+
 
 // for mobx
 import LabelingPageStore from '../stores/LabelingPageStore';
@@ -160,6 +162,7 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
               }
             </Grid.Row>
           </Grid>
+        <Loading load={this.props.labelingPageStore?.loading}/>
         </Container>
       </>
     );

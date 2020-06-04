@@ -115,6 +115,7 @@ class RequestAdmin(admin.ModelAdmin):
         'max_cycle',
         'total_point',
         'state',
+        'is_rewarded',
     )
     list_filter = (
         'category',
@@ -123,7 +124,8 @@ class RequestAdmin(admin.ModelAdmin):
         'subject',
         'user',
         'category',
-        'total_point'
+        'total_point',
+        'is_rewarded',
     )
 
 
@@ -132,6 +134,8 @@ class PaymentLogAdmin(admin.ModelAdmin):
         'type',
         'idx',
         'user',
+        'balance',
+        'amount',
         'request',
         'note',
         'log_time',
@@ -150,14 +154,17 @@ class PaymentLogAdmin(admin.ModelAdmin):
 
 class LabelingAdmin(admin.ModelAdmin):
     list_display = (
+        'idx',
         'user',
         'request',
         'start_date',
         'end_date',
+        'is_done',
     )
     list_filter = (
         'start_date',
         'end_date',
+        'request',
     )
     search_fields = (
         'user',

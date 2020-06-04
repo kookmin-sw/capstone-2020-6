@@ -7,6 +7,7 @@ import './PageViewAllProjects.css';
 import JInput from '../components/JInput';
 import ProjectListTable from '../components/ProjectListTable';
 import Datetime from '../components/DateTime';
+import Loading from "../components/Loading";
 
 // for mobx
 import {inject, observer} from 'mobx-react';
@@ -75,9 +76,7 @@ class PageViewAllProjects extends React.Component<Props> {
             );
           })}
         />
-        <Dimmer active={this.props.projectListStore?.loading}>
-          <Loader/>
-        </Dimmer>
+        <Loading load={this.props.projectListStore?.loading}/>
       </Container>
     );
   }

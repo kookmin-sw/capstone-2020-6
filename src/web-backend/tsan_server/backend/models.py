@@ -158,6 +158,7 @@ class Labeling(models.Model):
     user = models.ForeignKey("User", on_delete=models.DO_NOTHING, null=True, blank=True)  # 생성자
     start_date = models.DateTimeField(auto_now=True)  # 시작 시간
     end_date = models.DateTimeField(blank=False)  # 종료 시간 = 해당 프로젝트 종료시간
+    is_done = models.BooleanField(default=False) # 모든 라벨링 문제 완
 
 
 # 금액 지급 내역 테이블
@@ -169,6 +170,8 @@ class PaymentLog(models.Model):
     request = models.ForeignKey("Request", on_delete=models.DO_NOTHING, null=True, blank=True)  # 보상을 주는 의뢰
     note = models.CharField(max_length=300)  # 사유
     log_time = models.DateTimeField(auto_now=True)  # 시행 시
+    balance = models.IntegerField(null=True) # 잔액
+    amount = models.IntegerField(null=True) # 변동 금액
 
     def clean(self):
         if validate_paymentlog_type(self.type):
@@ -176,12 +179,21 @@ class PaymentLog(models.Model):
 
         return self
 
-    def create(self, type="4", user=None, request=None, note="", log_time=timezone.now()):
+    def create(self,
+               type="4",
+               user=None,
+               request=None,
+               note="", log_time=timezone.now(),
+               balance=0,
+               amount=0
+               ):
         self.type = type
         self.user = user
         self.request = request
         self.note = note
         self.log_time = log_time
+        self.balance = balance
+        self.amount = amount
         self.save()
         return self
 

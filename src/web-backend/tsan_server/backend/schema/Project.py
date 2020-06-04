@@ -1,3 +1,5 @@
+import sys
+import os
 import graphene
 import datetime
 import random
@@ -22,6 +24,10 @@ from backend.utils import (
     Message
 )
 
+sys.path.append(os.path.dirname(
+    os.path.abspath(os.path.dirname(
+        os.path.abspath(os.path.dirname("__file__")))))+ "/blockchain/TSanPoint")
+import TSanPoint
 
 class RequestType(DjangoObjectType):
     class Meta:
@@ -175,6 +181,9 @@ class CreateRequest(graphene.Mutation):
             user.point = user.point - total_point
             user.save()
 
+            # TODO: 블록체인 API 연동
+            # TSanPoint.transferFrom(user.username, 'owner', total_point) # owner -> tsan
+
             request = Request(
                 user=user,
                 category=category,
@@ -199,7 +208,8 @@ class CreateRequest(graphene.Mutation):
             # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유
             paymentlogs = PaymentLog()
             note = "프로젝트 등록으로 %d 포인트 소비" % (total_point)
-            paymentlogs.create(type="3", user=user, request=request, note=note)
+            paymentlogs.create(type="3", user=user, request=request, note=note,
+                               balance=user.point, amount=request.total_point)
 
             keywords = [x.strip().strip("#") for x in keywords.split("#")]
             for keyword in keywords:
@@ -515,6 +525,7 @@ class Reward(graphene.Mutation):
                             # reward_point = request.total_point * 신뢰도 # 계획
 
                             # TODO: 블록체인 API 연동 (tsan -> labeler)
+                            # TSanPoint.transferFrom('owner',labeler.user.username, reward_point) # owner -> tsan
 
                             # DB 포인트 업데이트
                             labeler.user.point += reward_point
@@ -525,8 +536,11 @@ class Reward(graphene.Mutation):
                             # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유여
                             paymentlogs = PaymentLog()
                             note = "%s 프로젝트 %d 포인트 보상 수여" % (request.subject, reward_point)
-                            paymentlogs.create(type="0", user=labeler.user, request=request, note=note)
+                            paymentlogs.create(type="0", user=labeler.user, request=request,
+                                               note=note, balance=labeler.user.point, amount=reward_point)
 
+                            request.is_rewarded = True
+                            request.save()
 
                         message = "'%s'주제에 대해 '%d'명의 참여자에게 정상적으로 보상처리 되었습니다." % (request.subject, len(labelers))
                         return Reward(
@@ -582,6 +596,12 @@ class TakeProject(graphene.Mutation):
                 if request.state != 'RUN':
                     message = "승인전/마감된 프로젝트 입니다."
                     return TakeProject(message=Message(status=False, message=message))
+
+                print(len(Labeling.objects.filter(request=request)))
+                if request.max_cycle <= len(Labeling.objects.filter(request=request)):
+                    message = "인원이 모두 충족되어 참여할 수 없는 프로젝트 입니다."
+                    return TakeProject(message=Message(status=False, message=message))
+
                 new_labeling = Labeling(request=request, user=user, end_date=request.end_date)
                 try:
                     new_labeling.clean()
@@ -589,6 +609,8 @@ class TakeProject(graphene.Mutation):
                     return TakeProject(message=Message(status=False, message=str(e)))
                 else:
                     new_labeling.save()
+                    request.current_cycle += 1
+                    request.save()
                     row = db.assigned_dataset.find_one({"request": request_idx})
                     dataset = row['dataset'] or []
                     user_assigned = []
@@ -815,8 +837,16 @@ class EndUpdate(graphene.Mutation):
             except ValidationError as e:
                 return EndRequest(message=Message(status=False, message=str(e)))
             else:
-                request.is_rewarded = True
-                request.save()
+                # request.is_rewarded = False
+                # request.state = "RUN"
+                # request.max_cycle = 8
+                # request.current_cycle = 5
+                # end_date = "2020-06-20"
+                # request.end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d")
+                # request.save()
+                print(TSanPoint.balanceOf('owner'))
+                # TSanPoint.supply(1000)
+                # print(TSanPoint.balanceOf('owner'))
 
                 message = "수정 완료"
                 return EndRequest(
@@ -872,7 +902,16 @@ class GetItem(graphene.Mutation):
             labeling = Labeling.objects.get(user=user, request=request)
             dataset = db.user_assigned.find_one({"request": idx, "username": user.username})
             xlabeled = [x for x in dataset['dataset'] if x['label'] == None]
+            print(labeling)
             if len(xlabeled) == 0:
+                # 해당 회원 모든 라벨링 완료로 바꾸고, 진도완료 명 수 1 올리기
+                # labeling = Labelings.objects.filter(user=user)
+                if labeling.is_done == True:
+                    return GetItem(Message(state=False, message="이미 완료한 프로젝트입니다."))
+                labeling.is_done = True
+                labeling.save()
+                # request.current_cycle += 1
+                # request.save()
                 return GetItem(
                     message = Message(status=True, message=""),
                     data = ["COMPLETE",],

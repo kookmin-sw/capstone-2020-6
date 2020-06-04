@@ -242,12 +242,22 @@ class Query(graphene.ObjectType):
     }
     """
     # 모든 금액 지급 내역 반환
-    get_all_paymentlog = graphene.Field(PaymentLogs, token=graphene.String())
+    get_all_paymentlog = graphene.Field(PaymentLogs,
+                                        token=graphene.String(),
+                                        offset=graphene.Int(required=False),
+                                        limit=graphene.Int(required=False)
+                                        )
 
     @only_user
     @only_admin
-    def resolve_get_all_paymentlog(self, info, token):
-        paymentlogs = PaymentLog.objects.all()
+    def resolve_get_all_paymentlog(self, info, token, **kwargs):
+        offset = kwargs.get("offset", None)
+        limit = kwargs.get("limit", None)
+
+        if offset or limit:
+            paymentlogs = PaymentLog.objects.all().order_by('-idx')[offset:offset+limit]
+        else:
+            paymentlogs = PaymentLog.objects.all().order_by('-idx')
 
         for paymentlog in paymentlogs:
             if paymentlog.user is not None:
@@ -265,13 +275,23 @@ class Query(graphene.ObjectType):
 
 
     # 나의 지급 내역 보기
-    get_my_paymentlog = graphene.Field(PaymentLogs, token=graphene.String())
+    get_my_paymentlog = graphene.Field(PaymentLogs,
+                                       token=graphene.String(),
+                                       offset=graphene.Int(required=False),
+                                       limit=graphene.Int(required=False)
+                                       )
 
     @only_user
-    def resolve_get_my_paymentlog(self, info, token):
+    def resolve_get_my_paymentlog(self, info, token, **kwargs):
         res = jwt_decode_handler(token)
         users = User.objects.get(username=res['username'])
-        paymentlogs = PaymentLog.objects.filter(user=users)
+        offset = kwargs.get("offset", None)
+        limit = kwargs.get("limit", None)
+
+        if offset or limit:
+            paymentlogs = PaymentLog.objects.filter(user=users).order_by('-idx')[offset:offset+limit]
+        else:
+            paymentlogs = PaymentLog.objects.filter(user=users).order_by('-idx')
 
         for paymentlog in paymentlogs:
             if paymentlog.user is not None:

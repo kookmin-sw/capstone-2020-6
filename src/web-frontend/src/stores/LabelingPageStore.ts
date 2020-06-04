@@ -17,8 +17,13 @@ export default class LabelingPageStore {
     totalProgress: '',
     progressRate: '',
   }
+  @observable loading: boolean = false;
+  constructor() {
+    this.loading = false;
+  }
 
   @action getRequest = (postId: number) => {
+    this.loading = true;
     client.query({
       query: gql`
         query GetIdxRequest($idx: Int!){
@@ -56,6 +61,7 @@ export default class LabelingPageStore {
         idx: postId,
       },
     }).then(({data}:any) => {
+      this.loading = false;
       const req = data.getIdxRequest.requests[0];
       this.request = {
         labelingSubject: req.subject,
@@ -73,6 +79,7 @@ export default class LabelingPageStore {
         progressRate: req.currentCycle / req.maxCycle * 100,
       };
     }).catch(e => {
+      this.loading = false;
       console.error(e);
     });
   }

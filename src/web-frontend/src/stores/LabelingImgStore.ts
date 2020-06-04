@@ -61,7 +61,7 @@ export default class LabelingImgStore {
         const labels:any = []
         this.imgList.forEach((item:any) => {
             data.push(item.value)
-            if(items.find(elem => elem == item.value)) {
+            if(items.find(elem => elem === item.value)) {
                 labels.push("1")
             } else {
                 labels.push("0")
