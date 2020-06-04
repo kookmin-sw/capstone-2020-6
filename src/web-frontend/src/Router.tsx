@@ -16,7 +16,7 @@ import PageLabelingImgSelect from './pages/PageLabelingImgSelect';
 import PageMypagePW from './pages/PageMypagePW';
 import PageLabelingRegister from './pages/PageLabelingRegister';
 import PagePoints from './pages/PagePoints';
-import PageLabelingResult from './pages/PageLabelingResult';
+import PageLabelingRequesterResult from './pages/PageLabelingRequesterResult';
 import PageLabeling from './pages/PageLabeling';
 import PageLabelingTextWrite from './pages/PageLabelingTextWrite';
 import PageLabelingTextSelect from './pages/PageLabelingTextSelect';
@@ -27,6 +27,7 @@ import PageViewAllProjects from './pages/PageViewAllProjects';
 import PageViewAllProjectsFinished from './pages/PageViewAllProjectsFinished';
 import PageLabelingSetting from './pages/PageViewAllProjectsFinished';
 import PageLabelingTextSelectByImage from './pages/PageLabelingTextSelectByImage';
+import PageLabelingParticipantsResult from './pages/PageLabelingParticipantsResult';
 
 // for Components
 import Navigation from './components/Navigation';
@@ -98,8 +99,11 @@ class App extends React.Component<Props> {
           <Route path='/labeling/:postId/4/:dataId'>
             <PageLabelingTextSelectByImage/>
           </Route>
-          <Route path='/labeling/:postId/result'>
-            <PageLabelingResult/>
+          <Route path='/labeling/:postId/requesterResult'>
+            <PageLabelingRequesterResult/>
+          </Route>
+          <Route path='/labeling/:postId/participantsResult'>
+            <PageLabelingParticipantsResult/>
           </Route>
           <Route path='/labeling/:postId'>
             <PageLabeling/>
