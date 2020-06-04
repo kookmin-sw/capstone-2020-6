@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import image_selection_validator
+import text_selection_validator
 
 import pandas as pd
 import operator
@@ -228,7 +229,27 @@ def image_capture_label(df):
     return
 
 def text_selection_label(df):
-    #####
+    
+    #임시 레이블 지정
+    temp_label_df = temp_labeling(df)
+    
+    #모델의 예측 레이블 중 임시와 일치하는 것, 일치하지 않는 것
+    matched_df, not_matched_df = text_selection_validator.compareLabel(temp_label_df)
+    
+    #일치하는 것으로 문제 당 정답률과 정답자 id를 계산
+    cor_pers, right_id = cal_cor_pers(df, matched_df)
+    
+    #정답자 임시 신뢰도 계산
+    temp_credibility_df = cal_credibility(df, cor_pers, right_id)
+
+    #2차 임시 레이블 지정
+    second_temp_label_df = second_labeling(temp_credibility_df, not_matched_df, 5)##
+
+    project_id = df.iloc[0].project_id.values[0]
+
+    final_df = final_labeling(project_id, matched_df,  second_temp_label_df)
+    
+    return final_df
     return
 
 def main():
