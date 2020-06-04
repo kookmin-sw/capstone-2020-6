@@ -1,499 +1,373 @@
-{
- "cells": [
-  {
-   "cell_type": "code",
-   "execution_count": 1,
-   "metadata": {
-    "ExecuteTime": {
-     "end_time": "2020-06-04T11:20:13.851087Z",
-     "start_time": "2020-06-04T11:20:08.362164Z"
+# -*- coding: utf-8 -*-
+# +
+import tensorflow as tf
+import tensorflow_addons as tfa
+import numpy as np
+import pandas as pd
+from transformers import *
+import numpy as np
+import pandas as pd
+from tqdm import tqdm
+import os
+import logging
+import unicodedata
+from shutil import copyfile
+
+logger = logging.getLogger(__name__)
+
+VOCAB_FILES_NAMES = {"vocab_file": "tokenizer_78b3253a26.model",
+                     "vocab_txt": "vocab.txt"}
+
+PRETRAINED_VOCAB_FILES_MAP = {
+    "vocab_file": {
+        "monologg/kobert": "https://s3.amazonaws.com/models.huggingface.co/bert/monologg/kobert/tokenizer_78b3253a26.model",
+        "monologg/kobert-lm": "https://s3.amazonaws.com/models.huggingface.co/bert/monologg/kobert-lm/tokenizer_78b3253a26.model",
+        "monologg/distilkobert": "https://s3.amazonaws.com/models.huggingface.co/bert/monologg/distilkobert/tokenizer_78b3253a26.model"
+    },
+    "vocab_txt": {
+        "monologg/kobert": "https://s3.amazonaws.com/models.huggingface.co/bert/monologg/kobert/vocab.txt",
+        "monologg/kobert-lm": "https://s3.amazonaws.com/models.huggingface.co/bert/monologg/kobert-lm/vocab.txt",
+        "monologg/distilkobert": "https://s3.amazonaws.com/models.huggingface.co/bert/monologg/distilkobert/vocab.txt"
     }
-   },
-   "outputs": [],
-   "source": [
-    "import tensorflow as tf\n",
-    "import tensorflow_addons as tfa\n",
-    "import numpy as np\n",
-    "import pandas as pd\n",
-    "from transformers import *\n",
-    "import numpy as np\n",
-    "import pandas as pd\n",
-    "from tqdm import tqdm\n",
-    "import os\n",
-    "import logging\n",
-    "import unicodedata\n",
-    "from shutil import copyfile"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 2,
-   "metadata": {
-    "ExecuteTime": {
-     "end_time": "2020-06-04T11:20:37.089892Z",
-     "start_time": "2020-06-04T11:20:37.074265Z"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "logger = logging.getLogger(__name__)\n",
-    "\n",
-    "VOCAB_FILES_NAMES = {\"vocab_file\": \"tokenizer_78b3253a26.model\",\n",
-    "                     \"vocab_txt\": \"vocab.txt\"}\n",
-    "\n",
-    "PRETRAINED_VOCAB_FILES_MAP = {\n",
-    "    \"vocab_file\": {\n",
-    "        \"monologg/kobert\": \"https://s3.amazonaws.com/models.huggingface.co/bert/monologg/kobert/tokenizer_78b3253a26.model\",\n",
-    "        \"monologg/kobert-lm\": \"https://s3.amazonaws.com/models.huggingface.co/bert/monologg/kobert-lm/tokenizer_78b3253a26.model\",\n",
-    "        \"monologg/distilkobert\": \"https://s3.amazonaws.com/models.huggingface.co/bert/monologg/distilkobert/tokenizer_78b3253a26.model\"\n",
-    "    },\n",
-    "    \"vocab_txt\": {\n",
-    "        \"monologg/kobert\": \"https://s3.amazonaws.com/models.huggingface.co/bert/monologg/kobert/vocab.txt\",\n",
-    "        \"monologg/kobert-lm\": \"https://s3.amazonaws.com/models.huggingface.co/bert/monologg/kobert-lm/vocab.txt\",\n",
-    "        \"monologg/distilkobert\": \"https://s3.amazonaws.com/models.huggingface.co/bert/monologg/distilkobert/vocab.txt\"\n",
-    "    }\n",
-    "}\n",
-    "\n",
-    "PRETRAINED_POSITIONAL_EMBEDDINGS_SIZES = {\n",
-    "    \"monologg/kobert\": 512,\n",
-    "    \"monologg/kobert-lm\": 512,\n",
-    "    \"monologg/distilkobert\": 512\n",
-    "}\n",
-    "\n",
-    "PRETRAINED_INIT_CONFIGURATION = {\n",
-    "    \"monologg/kobert\": {\"do_lower_case\": False},\n",
-    "    \"monologg/kobert-lm\": {\"do_lower_case\": False},\n",
-    "    \"monologg/distilkobert\": {\"do_lower_case\": False}\n",
-    "}\n",
-    "\n",
-    "SPIECE_UNDERLINE = u'▁'"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 3,
-   "metadata": {
-    "ExecuteTime": {
-     "end_time": "2020-06-04T11:20:44.525832Z",
-     "start_time": "2020-06-04T11:20:44.470806Z"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "class KoBertTokenizer(PreTrainedTokenizer):\n",
-    "    \"\"\"\n",
-    "        SentencePiece based tokenizer. Peculiarities:\n",
-    "            - requires `SentencePiece <https://github.com/google/sentencepiece>`_\n",
-    "    \"\"\"\n",
-    "    vocab_files_names = VOCAB_FILES_NAMES\n",
-    "    pretrained_vocab_files_map = PRETRAINED_VOCAB_FILES_MAP\n",
-    "    pretrained_init_configuration = PRETRAINED_INIT_CONFIGURATION\n",
-    "    max_model_input_sizes = PRETRAINED_POSITIONAL_EMBEDDINGS_SIZES\n",
-    "\n",
-    "    def __init__(\n",
-    "            self,\n",
-    "            vocab_file,\n",
-    "            vocab_txt,\n",
-    "            do_lower_case=False,\n",
-    "            remove_space=True,\n",
-    "            keep_accents=False,\n",
-    "            unk_token=\"[UNK]\",\n",
-    "            sep_token=\"[SEP]\",\n",
-    "            pad_token=\"[PAD]\",\n",
-    "            cls_token=\"[CLS]\",\n",
-    "            mask_token=\"[MASK]\",\n",
-    "            **kwargs):\n",
-    "        super().__init__(\n",
-    "            unk_token=unk_token,\n",
-    "            sep_token=sep_token,\n",
-    "            pad_token=pad_token,\n",
-    "            cls_token=cls_token,\n",
-    "            mask_token=mask_token,\n",
-    "            **kwargs\n",
-    "        )\n",
-    "\n",
-    "        # Build vocab\n",
-    "        self.token2idx = dict()\n",
-    "        self.idx2token = []\n",
-    "        with open(vocab_txt, 'r', encoding='utf-8') as f:\n",
-    "            for idx, token in enumerate(f):\n",
-    "                token = token.strip()\n",
-    "                self.token2idx[token] = idx\n",
-    "                self.idx2token.append(token)\n",
-    "\n",
-    "        self.max_len_single_sentence = self.max_len - 2  # take into account special tokens\n",
-    "        self.max_len_sentences_pair = self.max_len - 3  # take into account special tokens\n",
-    "\n",
-    "        try:\n",
-    "            import sentencepiece as spm\n",
-    "        except ImportError:\n",
-    "            logger.warning(\"You need to install SentencePiece to use KoBertTokenizer: https://github.com/google/sentencepiece\"\n",
-    "                           \"pip install sentencepiece\")\n",
-    "\n",
-    "        self.do_lower_case = do_lower_case\n",
-    "        self.remove_space = remove_space\n",
-    "        self.keep_accents = keep_accents\n",
-    "        self.vocab_file = vocab_file\n",
-    "        self.vocab_txt = vocab_txt\n",
-    "\n",
-    "        self.sp_model = spm.SentencePieceProcessor()\n",
-    "        self.sp_model.Load(vocab_file)\n",
-    "\n",
-    "    @property\n",
-    "    def vocab_size(self):\n",
-    "        return len(self.idx2token)\n",
-    "\n",
-    "    def __getstate__(self):\n",
-    "        state = self.__dict__.copy()\n",
-    "        state[\"sp_model\"] = None\n",
-    "        return state\n",
-    "\n",
-    "    def __setstate__(self, d):\n",
-    "        self.__dict__ = d\n",
-    "        try:\n",
-    "            import sentencepiece as spm\n",
-    "        except ImportError:\n",
-    "            logger.warning(\"You need to install SentencePiece to use KoBertTokenizer: https://github.com/google/sentencepiece\"\n",
-    "                           \"pip install sentencepiece\")\n",
-    "        self.sp_model = spm.SentencePieceProcessor()\n",
-    "        self.sp_model.Load(self.vocab_file)\n",
-    "\n",
-    "    def preprocess_text(self, inputs):\n",
-    "        if self.remove_space:\n",
-    "            outputs = \" \".join(inputs.strip().split())\n",
-    "        else:\n",
-    "            outputs = inputs\n",
-    "        outputs = outputs.replace(\"``\", '\"').replace(\"''\", '\"')\n",
-    "\n",
-    "        if not self.keep_accents:\n",
-    "            outputs = unicodedata.normalize('NFKD', outputs)\n",
-    "            outputs = \"\".join([c for c in outputs if not unicodedata.combining(c)])\n",
-    "        if self.do_lower_case:\n",
-    "            outputs = outputs.lower()\n",
-    "\n",
-    "        return outputs\n",
-    "\n",
-    "    def _tokenize(self, text, return_unicode=True, sample=False):\n",
-    "        \"\"\" Tokenize a string. \"\"\"\n",
-    "        text = self.preprocess_text(text)\n",
-    "\n",
-    "        if not sample:\n",
-    "            pieces = self.sp_model.EncodeAsPieces(text)\n",
-    "        else:\n",
-    "            pieces = self.sp_model.SampleEncodeAsPieces(text, 64, 0.1)\n",
-    "        new_pieces = []\n",
-    "        for piece in pieces:\n",
-    "            if len(piece) > 1 and piece[-1] == str(\",\") and piece[-2].isdigit():\n",
-    "                cur_pieces = self.sp_model.EncodeAsPieces(piece[:-1].replace(SPIECE_UNDERLINE, \"\"))\n",
-    "                if piece[0] != SPIECE_UNDERLINE and cur_pieces[0][0] == SPIECE_UNDERLINE:\n",
-    "                    if len(cur_pieces[0]) == 1:\n",
-    "                        cur_pieces = cur_pieces[1:]\n",
-    "                    else:\n",
-    "                        cur_pieces[0] = cur_pieces[0][1:]\n",
-    "                cur_pieces.append(piece[-1])\n",
-    "                new_pieces.extend(cur_pieces)\n",
-    "            else:\n",
-    "                new_pieces.append(piece)\n",
-    "\n",
-    "        return new_pieces\n",
-    "\n",
-    "    def _convert_token_to_id(self, token):\n",
-    "        \"\"\" Converts a token (str/unicode) in an id using the vocab. \"\"\"\n",
-    "        return self.token2idx.get(token, self.token2idx[self.unk_token])\n",
-    "\n",
-    "    def _convert_id_to_token(self, index, return_unicode=True):\n",
-    "        \"\"\"Converts an index (integer) in a token (string/unicode) using the vocab.\"\"\"\n",
-    "        return self.idx2token[index]\n",
-    "\n",
-    "    def convert_tokens_to_string(self, tokens):\n",
-    "        \"\"\"Converts a sequence of tokens (strings for sub-words) in a single string.\"\"\"\n",
-    "        out_string = \"\".join(tokens).replace(SPIECE_UNDERLINE, \" \").strip()\n",
-    "        return out_string\n",
-    "\n",
-    "    def build_inputs_with_special_tokens(self, token_ids_0, token_ids_1=None):\n",
-    "        \"\"\"\n",
-    "        Build model inputs from a sequence or a pair of sequence for sequence classification tasks\n",
-    "        by concatenating and adding special tokens.\n",
-    "        A RoBERTa sequence has the following format:\n",
-    "            single sequence: [CLS] X [SEP]\n",
-    "            pair of sequences: [CLS] A [SEP] B [SEP]\n",
-    "        \"\"\"\n",
-    "        if token_ids_1 is None:\n",
-    "            return [self.cls_token_id] + token_ids_0 + [self.sep_token_id]\n",
-    "        cls = [self.cls_token_id]\n",
-    "        sep = [self.sep_token_id]\n",
-    "        return cls + token_ids_0 + sep + token_ids_1 + sep\n",
-    "\n",
-    "    def get_special_tokens_mask(self, token_ids_0, token_ids_1=None, already_has_special_tokens=False):\n",
-    "        \"\"\"\n",
-    "        Retrieves sequence ids from a token list that has no special tokens added. This method is called when adding\n",
-    "        special tokens using the tokenizer ``prepare_for_model`` or ``encode_plus`` methods.\n",
-    "        Args:\n",
-    "            token_ids_0: list of ids (must not contain special tokens)\n",
-    "            token_ids_1: Optional list of ids (must not contain special tokens), necessary when fetching sequence ids\n",
-    "                for sequence pairs\n",
-    "            already_has_special_tokens: (default False) Set to True if the token list is already formated with\n",
-    "                special tokens for the model\n",
-    "        Returns:\n",
-    "            A list of integers in the range [0, 1]: 0 for a special token, 1 for a sequence token.\n",
-    "        \"\"\"\n",
-    "\n",
-    "        if already_has_special_tokens:\n",
-    "            if token_ids_1 is not None:\n",
-    "                raise ValueError(\n",
-    "                    \"You should not supply a second sequence if the provided sequence of \"\n",
-    "                    \"ids is already formated with special tokens for the model.\"\n",
-    "                )\n",
-    "            return list(map(lambda x: 1 if x in [self.sep_token_id, self.cls_token_id] else 0, token_ids_0))\n",
-    "\n",
-    "        if token_ids_1 is not None:\n",
-    "            return [1] + ([0] * len(token_ids_0)) + [1] + ([0] * len(token_ids_1)) + [1]\n",
-    "        return [1] + ([0] * len(token_ids_0)) + [1]\n",
-    "\n",
-    "    def create_token_type_ids_from_sequences(self, token_ids_0, token_ids_1=None):\n",
-    "        \"\"\"\n",
-    "        Creates a mask from the two sequences passed to be used in a sequence-pair classification task.\n",
-    "        A BERT sequence pair mask has the following format:\n",
-    "        0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1\n",
-    "        | first sequence    | second sequence\n",
-    "        if token_ids_1 is None, only returns the first portion of the mask (0's).\n",
-    "        \"\"\"\n",
-    "        sep = [self.sep_token_id]\n",
-    "        cls = [self.cls_token_id]\n",
-    "        if token_ids_1 is None:\n",
-    "            return len(cls + token_ids_0 + sep) * [0]\n",
-    "        return len(cls + token_ids_0 + sep) * [0] + len(token_ids_1 + sep) * [1]\n",
-    "\n",
-    "    def save_vocabulary(self, save_directory):\n",
-    "        \"\"\" Save the sentencepiece vocabulary (copy original file) and special tokens file\n",
-    "            to a directory.\n",
-    "        \"\"\"\n",
-    "        if not os.path.isdir(save_directory):\n",
-    "            logger.error(\"Vocabulary path ({}) should be a directory\".format(save_directory))\n",
-    "            return\n",
-    "\n",
-    "        # 1. Save sentencepiece model\n",
-    "        out_vocab_model = os.path.join(save_directory, VOCAB_FILES_NAMES[\"vocab_file\"])\n",
-    "\n",
-    "        if os.path.abspath(self.vocab_file) != os.path.abspath(out_vocab_model):\n",
-    "            copyfile(self.vocab_file, out_vocab_model)\n",
-    "\n",
-    "        # 2. Save vocab.txt\n",
-    "        index = 0\n",
-    "        out_vocab_txt = os.path.join(save_directory, VOCAB_FILES_NAMES[\"vocab_txt\"])\n",
-    "        with open(out_vocab_txt, \"w\", encoding=\"utf-8\") as writer:\n",
-    "            for token, token_index in sorted(self.token2idx.items(), key=lambda kv: kv[1]):\n",
-    "                if index != token_index:\n",
-    "                    logger.warning(\n",
-    "                        \"Saving vocabulary to {}: vocabulary indices are not consecutive.\"\n",
-    "                        \" Please check that the vocabulary is not corrupted!\".format(out_vocab_txt)\n",
-    "                    )\n",
-    "                    index = token_index\n",
-    "                writer.write(token + \"\\n\")\n",
-    "                index += 1\n",
-    "\n",
-    "        return out_vocab_model, out_vocab_txt"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 4,
-   "metadata": {
-    "ExecuteTime": {
-     "end_time": "2020-06-04T11:20:54.162030Z",
-     "start_time": "2020-06-04T11:20:54.143352Z"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "def convert_data(data_df):\n",
-    "    global tokenizer\n",
-    "    \n",
-    "    SEQ_LEN = 64 #SEQ_LEN : 버트에 들어갈 인풋의 길이\n",
-    "    \n",
-    "    tokens, masks, segments, targets = [], [], [], []\n",
-    "    \n",
-    "    for i in tqdm(range(len(data_df))):\n",
-    "        # token : 문장을 토큰화함\n",
-    "        token = tokenizer.encode(data_df[DATA_COLUMN][i], max_length=SEQ_LEN, pad_to_max_length=True)\n",
-    "       \n",
-    "        # 마스크는 토큰화한 문장에서 패딩이 아닌 부분은 1, 패딩인 부분은 0으로 통일\n",
-    "        num_zeros = token.count(0)\n",
-    "        mask = [1]*(SEQ_LEN-num_zeros) + [0]*num_zeros\n",
-    "        \n",
-    "        # 문장의 전후관계를 구분해주는 세그먼트는 문장이 1개밖에 없으므로 모두 0\n",
-    "        segment = [0]*SEQ_LEN\n",
-    "\n",
-    "        # 버트 인풋으로 들어가는 token, mask, segment를 tokens, segments에 각각 저장\n",
-    "        tokens.append(token)\n",
-    "        masks.append(mask)\n",
-    "        segments.append(segment)\n",
-    "        \n",
-    "        # 정답(긍정 : 1 부정 0)을 targets 변수에 저장해 줌\n",
-    "        targets.append(data_df[LABEL_COLUMN][i])\n",
-    "\n",
-    "    # tokens, masks, segments, 정답 변수 targets를 numpy array로 지정    \n",
-    "    tokens = np.array(tokens)\n",
-    "    masks = np.array(masks)\n",
-    "    segments = np.array(segments)\n",
-    "    targets = np.array(targets)\n",
-    "\n",
-    "    return [tokens, masks, segments], targets"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 7,
-   "metadata": {
-    "ExecuteTime": {
-     "end_time": "2020-06-04T11:21:39.878701Z",
-     "start_time": "2020-06-04T11:21:39.860119Z"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "def create_model():\n",
-    "    \n",
-    "    SEQ_LEN = 64\n",
-    "    BATCH_SIZE = 32\n",
-    "    \n",
-    "    model = TFBertModel.from_pretrained(\"monologg/kobert\", from_pt=True)\n",
-    "    # 토큰 인풋, 마스크 인풋, 세그먼트 인풋 정의\n",
-    "    token_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_word_ids')\n",
-    "    mask_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_masks')\n",
-    "    segment_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_segment')\n",
-    "    # 인풋이 [토큰, 마스크, 세그먼트]인 모델 정의\n",
-    "    bert_outputs = model([token_inputs, mask_inputs, segment_inputs])\n",
-    "    bert_outputs = bert_outputs[1]\n",
-    "    \n",
-    "    sentiment_drop = tf.keras.layers.Dropout(0.5)(bert_outputs)\n",
-    "    sentiment_first = tf.keras.layers.Dense(1, activation='sigmoid', kernel_initializer=tf.keras.initializers.TruncatedNormal(stddev=0.02))(sentiment_drop)\n",
-    "    sentiment_model = tf.keras.Model([token_inputs, mask_inputs, segment_inputs], sentiment_first)\n",
-    "    \n",
-    "    #학습된 모델의 경로\n",
-    "    sentiment_model.load_weights(latest)\n",
-    "    \n",
-    "    return sentiment_model"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 9,
-   "metadata": {
-    "ExecuteTime": {
-     "end_time": "2020-06-04T11:22:31.613086Z",
-     "start_time": "2020-06-04T11:22:31.596383Z"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "def sentence_convert_data(data):\n",
-    "    global tokenizer\n",
-    "    tokens, masks, segments = [], [], []\n",
-    "    token = tokenizer.encode(data, max_length=SEQ_LEN, pad_to_max_length=True)\n",
-    "    \n",
-    "    num_zeros = token.count(0) \n",
-    "    mask = [1]*(SEQ_LEN-num_zeros) + [0]*num_zeros \n",
-    "    segment = [0]*SEQ_LEN\n",
-    "\n",
-    "    tokens.append(token)\n",
-    "    segments.append(segment)\n",
-    "    masks.append(mask)\n",
-    "\n",
-    "    tokens = np.array(tokens)\n",
-    "    masks = np.array(masks)\n",
-    "    segments = np.array(segments)\n",
-    "    return [tokens, masks, segments]"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 10,
-   "metadata": {
-    "ExecuteTime": {
-     "end_time": "2020-06-04T11:24:06.226145Z",
-     "start_time": "2020-06-04T11:24:06.212176Z"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "def predict_label(df, model):\n",
-    "    \n",
-    "    label_predicted = []\n",
-    "    \n",
-    "    for i in range(len(df)):\n",
-    "        sentence = df.iloc[i].data\n",
-    "\n",
-    "        #모델로 특징 추출       \n",
-    "        data_x = sentence_convert_data(sentence)\n",
-    "        predict = model.predict(data_x)\n",
-    "        predict_value = np.ravel(predict)\n",
-    "    \n",
-    "    return label_predicted"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": 11,
-   "metadata": {
-    "ExecuteTime": {
-     "end_time": "2020-06-04T11:24:09.707181Z",
-     "start_time": "2020-06-04T11:24:09.694881Z"
-    }
-   },
-   "outputs": [],
-   "source": [
-    "def compareLabel(df):\n",
-    "    trained_model = create_model()\n",
-    "\n",
-    "    label_predicted = predict_label(df, trained_model)\n",
-    "\n",
-    "    df['label_predicted'] = label_predicted\n",
-    "\n",
-    "    matched_df = df[df['label_temp'] == df['label_predicted']]\n",
-    "    not_matched_df = df[df['label_temp'] != df['label_predicted']]\n",
-    "\n",
-    "    return matched_df, not_matched_df"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "codemirror_mode": {
-    "name": "ipython",
-    "version": 3
-   },
-   "file_extension": ".py",
-   "mimetype": "text/x-python",
-   "name": "python",
-   "nbconvert_exporter": "python",
-   "pygments_lexer": "ipython3",
-   "version": "3.6.10"
-  },
-  "latex_envs": {
-   "LaTeX_envs_menu_present": true,
-   "autoclose": false,
-   "autocomplete": true,
-   "bibliofile": "biblio.bib",
-   "cite_by": "apalike",
-   "current_citInitial": 1,
-   "eqLabelWithNumbers": true,
-   "eqNumInitial": 1,
-   "hotkeys": {
-    "equation": "Ctrl-E",
-    "itemize": "Ctrl-I"
-   },
-   "labels_anchors": false,
-   "latex_user_defs": false,
-   "report_style_numbering": false,
-   "user_envs_cfg": false
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 4
 }
+
+PRETRAINED_POSITIONAL_EMBEDDINGS_SIZES = {
+    "monologg/kobert": 512,
+    "monologg/kobert-lm": 512,
+    "monologg/distilkobert": 512
+}
+
+PRETRAINED_INIT_CONFIGURATION = {
+    "monologg/kobert": {"do_lower_case": False},
+    "monologg/kobert-lm": {"do_lower_case": False},
+    "monologg/distilkobert": {"do_lower_case": False}
+}
+
+SPIECE_UNDERLINE = u'▁'
+
+class KoBertTokenizer(PreTrainedTokenizer):
+    """
+        SentencePiece based tokenizer. Peculiarities:
+            - requires `SentencePiece <https://github.com/google/sentencepiece>`_
+    """
+    vocab_files_names = VOCAB_FILES_NAMES
+    pretrained_vocab_files_map = PRETRAINED_VOCAB_FILES_MAP
+    pretrained_init_configuration = PRETRAINED_INIT_CONFIGURATION
+    max_model_input_sizes = PRETRAINED_POSITIONAL_EMBEDDINGS_SIZES
+
+    def __init__(
+            self,
+            vocab_file,
+            vocab_txt,
+            do_lower_case=False,
+            remove_space=True,
+            keep_accents=False,
+            unk_token="[UNK]",
+            sep_token="[SEP]",
+            pad_token="[PAD]",
+            cls_token="[CLS]",
+            mask_token="[MASK]",
+            **kwargs):
+        super().__init__(
+            unk_token=unk_token,
+            sep_token=sep_token,
+            pad_token=pad_token,
+            cls_token=cls_token,
+            mask_token=mask_token,
+            **kwargs
+        )
+
+        # Build vocab
+        self.token2idx = dict()
+        self.idx2token = []
+        with open(vocab_txt, 'r', encoding='utf-8') as f:
+            for idx, token in enumerate(f):
+                token = token.strip()
+                self.token2idx[token] = idx
+                self.idx2token.append(token)
+
+        self.max_len_single_sentence = self.max_len - 2  # take into account special tokens
+        self.max_len_sentences_pair = self.max_len - 3  # take into account special tokens
+
+        try:
+            import sentencepiece as spm
+        except ImportError:
+            logger.warning("You need to install SentencePiece to use KoBertTokenizer: https://github.com/google/sentencepiece"
+                           "pip install sentencepiece")
+
+        self.do_lower_case = do_lower_case
+        self.remove_space = remove_space
+        self.keep_accents = keep_accents
+        self.vocab_file = vocab_file
+        self.vocab_txt = vocab_txt
+
+        self.sp_model = spm.SentencePieceProcessor()
+        self.sp_model.Load(vocab_file)
+
+    @property
+    def vocab_size(self):
+        return len(self.idx2token)
+
+    def __getstate__(self):
+        state = self.__dict__.copy()
+        state["sp_model"] = None
+        return state
+
+    def __setstate__(self, d):
+        self.__dict__ = d
+        try:
+            import sentencepiece as spm
+        except ImportError:
+            logger.warning("You need to install SentencePiece to use KoBertTokenizer: https://github.com/google/sentencepiece"
+                           "pip install sentencepiece")
+        self.sp_model = spm.SentencePieceProcessor()
+        self.sp_model.Load(self.vocab_file)
+
+    def preprocess_text(self, inputs):
+        if self.remove_space:
+            outputs = " ".join(inputs.strip().split())
+        else:
+            outputs = inputs
+        outputs = outputs.replace("``", '"').replace("''", '"')
+
+        if not self.keep_accents:
+            outputs = unicodedata.normalize('NFKD', outputs)
+            outputs = "".join([c for c in outputs if not unicodedata.combining(c)])
+        if self.do_lower_case:
+            outputs = outputs.lower()
+
+        return outputs
+
+    def _tokenize(self, text, return_unicode=True, sample=False):
+        """ Tokenize a string. """
+        text = self.preprocess_text(text)
+
+        if not sample:
+            pieces = self.sp_model.EncodeAsPieces(text)
+        else:
+            pieces = self.sp_model.SampleEncodeAsPieces(text, 64, 0.1)
+        new_pieces = []
+        for piece in pieces:
+            if len(piece) > 1 and piece[-1] == str(",") and piece[-2].isdigit():
+                cur_pieces = self.sp_model.EncodeAsPieces(piece[:-1].replace(SPIECE_UNDERLINE, ""))
+                if piece[0] != SPIECE_UNDERLINE and cur_pieces[0][0] == SPIECE_UNDERLINE:
+                    if len(cur_pieces[0]) == 1:
+                        cur_pieces = cur_pieces[1:]
+                    else:
+                        cur_pieces[0] = cur_pieces[0][1:]
+                cur_pieces.append(piece[-1])
+                new_pieces.extend(cur_pieces)
+            else:
+                new_pieces.append(piece)
+
+        return new_pieces
+
+    def _convert_token_to_id(self, token):
+        """ Converts a token (str/unicode) in an id using the vocab. """
+        return self.token2idx.get(token, self.token2idx[self.unk_token])
+
+    def _convert_id_to_token(self, index, return_unicode=True):
+        """Converts an index (integer) in a token (string/unicode) using the vocab."""
+        return self.idx2token[index]
+
+    def convert_tokens_to_string(self, tokens):
+        """Converts a sequence of tokens (strings for sub-words) in a single string."""
+        out_string = "".join(tokens).replace(SPIECE_UNDERLINE, " ").strip()
+        return out_string
+
+    def build_inputs_with_special_tokens(self, token_ids_0, token_ids_1=None):
+        """
+        Build model inputs from a sequence or a pair of sequence for sequence classification tasks
+        by concatenating and adding special tokens.
+        A RoBERTa sequence has the following format:
+            single sequence: [CLS] X [SEP]
+            pair of sequences: [CLS] A [SEP] B [SEP]
+        """
+        if token_ids_1 is None:
+            return [self.cls_token_id] + token_ids_0 + [self.sep_token_id]
+        cls = [self.cls_token_id]
+        sep = [self.sep_token_id]
+        return cls + token_ids_0 + sep + token_ids_1 + sep
+
+    def get_special_tokens_mask(self, token_ids_0, token_ids_1=None, already_has_special_tokens=False):
+        """
+        Retrieves sequence ids from a token list that has no special tokens added. This method is called when adding
+        special tokens using the tokenizer ``prepare_for_model`` or ``encode_plus`` methods.
+        Args:
+            token_ids_0: list of ids (must not contain special tokens)
+            token_ids_1: Optional list of ids (must not contain special tokens), necessary when fetching sequence ids
+                for sequence pairs
+            already_has_special_tokens: (default False) Set to True if the token list is already formated with
+                special tokens for the model
+        Returns:
+            A list of integers in the range [0, 1]: 0 for a special token, 1 for a sequence token.
+        """
+
+        if already_has_special_tokens:
+            if token_ids_1 is not None:
+                raise ValueError(
+                    "You should not supply a second sequence if the provided sequence of "
+                    "ids is already formated with special tokens for the model."
+                )
+            return list(map(lambda x: 1 if x in [self.sep_token_id, self.cls_token_id] else 0, token_ids_0))
+
+        if token_ids_1 is not None:
+            return [1] + ([0] * len(token_ids_0)) + [1] + ([0] * len(token_ids_1)) + [1]
+        return [1] + ([0] * len(token_ids_0)) + [1]
+
+    def create_token_type_ids_from_sequences(self, token_ids_0, token_ids_1=None):
+        """
+        Creates a mask from the two sequences passed to be used in a sequence-pair classification task.
+        A BERT sequence pair mask has the following format:
+        0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 1 1 1 1
+        | first sequence    | second sequence
+        if token_ids_1 is None, only returns the first portion of the mask (0's).
+        """
+        sep = [self.sep_token_id]
+        cls = [self.cls_token_id]
+        if token_ids_1 is None:
+            return len(cls + token_ids_0 + sep) * [0]
+        return len(cls + token_ids_0 + sep) * [0] + len(token_ids_1 + sep) * [1]
+
+    def save_vocabulary(self, save_directory):
+        """ Save the sentencepiece vocabulary (copy original file) and special tokens file
+            to a directory.
+        """
+        if not os.path.isdir(save_directory):
+            logger.error("Vocabulary path ({}) should be a directory".format(save_directory))
+            return
+
+        # 1. Save sentencepiece model
+        out_vocab_model = os.path.join(save_directory, VOCAB_FILES_NAMES["vocab_file"])
+
+        if os.path.abspath(self.vocab_file) != os.path.abspath(out_vocab_model):
+            copyfile(self.vocab_file, out_vocab_model)
+
+        # 2. Save vocab.txt
+        index = 0
+        out_vocab_txt = os.path.join(save_directory, VOCAB_FILES_NAMES["vocab_txt"])
+        with open(out_vocab_txt, "w", encoding="utf-8") as writer:
+            for token, token_index in sorted(self.token2idx.items(), key=lambda kv: kv[1]):
+                if index != token_index:
+                    logger.warning(
+                        "Saving vocabulary to {}: vocabulary indices are not consecutive."
+                        " Please check that the vocabulary is not corrupted!".format(out_vocab_txt)
+                    )
+                    index = token_index
+                writer.write(token + "\n")
+                index += 1
+
+        return out_vocab_model, out_vocab_txt
+
+def convert_data(data_df):
+    global tokenizer
+    
+    SEQ_LEN = 64 #SEQ_LEN : 버트에 들어갈 인풋의 길이
+    
+    tokens, masks, segments, targets = [], [], [], []
+    
+    for i in tqdm(range(len(data_df))):
+        # token : 문장을 토큰화함
+        token = tokenizer.encode(data_df[DATA_COLUMN][i], max_length=SEQ_LEN, pad_to_max_length=True)
+       
+        # 마스크는 토큰화한 문장에서 패딩이 아닌 부분은 1, 패딩인 부분은 0으로 통일
+        num_zeros = token.count(0)
+        mask = [1]*(SEQ_LEN-num_zeros) + [0]*num_zeros
+        
+        # 문장의 전후관계를 구분해주는 세그먼트는 문장이 1개밖에 없으므로 모두 0
+        segment = [0]*SEQ_LEN
+
+        # 버트 인풋으로 들어가는 token, mask, segment를 tokens, segments에 각각 저장
+        tokens.append(token)
+        masks.append(mask)
+        segments.append(segment)
+        
+        # 정답(긍정 : 1 부정 0)을 targets 변수에 저장해 줌
+        targets.append(data_df[LABEL_COLUMN][i])
+
+    # tokens, masks, segments, 정답 변수 targets를 numpy array로 지정    
+    tokens = np.array(tokens)
+    masks = np.array(masks)
+    segments = np.array(segments)
+    targets = np.array(targets)
+
+    return [tokens, masks, segments], targets
+
+    def convert_data(data_df):
+        global tokenizer
+    
+    SEQ_LEN = 64 #SEQ_LEN : 버트에 들어갈 인풋의 길이
+    
+    tokens, masks, segments, targets = [], [], [], []
+    
+    for i in tqdm(range(len(data_df))):
+        # token : 문장을 토큰화함
+        token = tokenizer.encode(data_df[DATA_COLUMN][i], max_length=SEQ_LEN, pad_to_max_length=True)
+       
+        # 마스크는 토큰화한 문장에서 패딩이 아닌 부분은 1, 패딩인 부분은 0으로 통일
+        num_zeros = token.count(0)
+        mask = [1]*(SEQ_LEN-num_zeros) + [0]*num_zeros
+        
+        # 문장의 전후관계를 구분해주는 세그먼트는 문장이 1개밖에 없으므로 모두 0
+        segment = [0]*SEQ_LEN
+
+        # 버트 인풋으로 들어가는 token, mask, segment를 tokens, segments에 각각 저장
+        tokens.append(token)
+        masks.append(mask)
+        segments.append(segment)
+        
+        # 정답(긍정 : 1 부정 0)을 targets 변수에 저장해 줌
+        targets.append(data_df[LABEL_COLUMN][i])
+
+    # tokens, masks, segments, 정답 변수 targets를 numpy array로 지정    
+    tokens = np.array(tokens)
+    masks = np.array(masks)
+    segments = np.array(segments)
+    targets = np.array(targets)
+
+    return [tokens, masks, segments], targets
+
+ def sentence_convert_data(data):
+        global tokenizer
+    tokens, masks, segments = [], [], []
+    token = tokenizer.encode(data, max_length=SEQ_LEN, pad_to_max_length=True)
+    
+    num_zeros = token.count(0) 
+    mask = [1]*(SEQ_LEN-num_zeros) + [0]*num_zeros 
+    segment = [0]*SEQ_LEN
+
+    tokens.append(token)
+    segments.append(segment)
+    masks.append(mask)
+
+    tokens = np.array(tokens)
+    masks = np.array(masks)
+    segments = np.array(segments)
+
+    return [tokens, masks, segments]
+
+def predict_label(df, model):
+    
+    label_predicted = []
+    
+    for i in range(len(df)):
+        sentence = df.iloc[i].data
+
+        #모델로 특징 추출       
+        data_x = sentence_convert_data(sentence)
+        predict = model.predict(data_x)
+        predict_value = np.ravel(predict)
+    
+    return label_predicted   
+
+def compareLabel(df):
+    trained_model = create_model()
+
+    label_predicted = predict_label(df, trained_model)
+
+    df['label_predicted'] = label_predicted
+
+    matched_df = df[df['label_temp'] == df['label_predicted']]
+    not_matched_df = df[df['label_temp'] != df['label_predicted']]
+
+    return matched_df, not_matched_df
