@@ -1,7 +1,4 @@
-# -*- coding: utf-8 -*-
-# +
 import tensorflow as tf
-import tensorflow_addons as tfa
 import numpy as np
 import pandas as pd
 from transformers import *
@@ -43,7 +40,7 @@ PRETRAINED_INIT_CONFIGURATION = {
     "monologg/distilkobert": {"do_lower_case": False}
 }
 
-SPIECE_UNDERLINE = u'â–'
+SPIECE_UNDERLINE = u'_'
 
 class KoBertTokenizer(PreTrainedTokenizer):
     """
@@ -262,73 +259,60 @@ class KoBertTokenizer(PreTrainedTokenizer):
 def convert_data(data_df):
     global tokenizer
     
-    SEQ_LEN = 64 #SEQ_LEN : ë²„íŠ¸ì— ë“¤ì–´ê°ˆ ì¸í’‹ì˜ ê¸¸ì´
+    SEQ_LEN = 64 #SEQ_LEN : ¹öÆ®¿¡ µé¾î°¥ ÀÎÇ²ÀÇ ±æÀÌ
     
     tokens, masks, segments, targets = [], [], [], []
     
     for i in tqdm(range(len(data_df))):
-        # token : ë¬¸ì¥ì„ í† í°í™”í•¨
+        # token : ¹®ÀåÀ» ÅäÅ«È­ÇÔ
         token = tokenizer.encode(data_df[DATA_COLUMN][i], max_length=SEQ_LEN, pad_to_max_length=True)
        
-        # ë§ˆìŠ¤í¬ëŠ” í† í°í™”í•œ ë¬¸ì¥ì—ì„œ íŒ¨ë”©ì´ ì•„ë‹Œ ë¶€ë¶„ì€ 1, íŒ¨ë”©ì¸ ë¶€ë¶„ì€ 0ìœ¼ë¡œ í†µì¼
+        # ¸¶½ºÅ©´Â ÅäÅ«È­ÇÑ ¹®Àå¿¡¼­ ÆĞµùÀÌ ¾Æ´Ñ ºÎºĞÀº 1, ÆĞµùÀÎ ºÎºĞÀº 0À¸·Î ÅëÀÏ
         num_zeros = token.count(0)
         mask = [1]*(SEQ_LEN-num_zeros) + [0]*num_zeros
         
-        # ë¬¸ì¥ì˜ ì „í›„ê´€ê³„ë¥¼ êµ¬ë¶„í•´ì£¼ëŠ” ì„¸ê·¸ë¨¼íŠ¸ëŠ” ë¬¸ì¥ì´ 1ê°œë°–ì— ì—†ìœ¼ë¯€ë¡œ ëª¨ë‘ 0
+        # ¹®ÀåÀÇ ÀüÈÄ°ü°è¸¦ ±¸ºĞÇØÁÖ´Â ¼¼±×¸ÕÆ®´Â ¹®ÀåÀÌ 1°³¹Û¿¡ ¾øÀ¸¹Ç·Î ¸ğµÎ 0
         segment = [0]*SEQ_LEN
 
-        # ë²„íŠ¸ ì¸í’‹ìœ¼ë¡œ ë“¤ì–´ê°€ëŠ” token, mask, segmentë¥¼ tokens, segmentsì— ê°ê° ì €ì¥
-        tokens.append(token)
-        masks.append(mask)
-        segments.append(segment)
+        # ¹öÆ® ÀÎÇ²À¸·Î µé¾î°¡´Â token, mask, segment¸¦ tokens, segments¿¡ °¢°¢ ÀúÀå
         
-        # ì •ë‹µ(ê¸ì • : 1 ë¶€ì • 0)ì„ targets ë³€ìˆ˜ì— ì €ì¥í•´ ì¤Œ
+        # Á¤´ä(±àÁ¤ : 1 ºÎÁ¤ 0)À» targets º¯¼ö¿¡ ÀúÀåÇØ ÁÜ
         targets.append(data_df[LABEL_COLUMN][i])
 
-    # tokens, masks, segments, ì •ë‹µ ë³€ìˆ˜ targetsë¥¼ numpy arrayë¡œ ì§€ì •    
+    # tokens, masks, segments, Á¤´ä º¯¼ö targets¸¦ numpy array·Î ÁöÁ¤    
     tokens = np.array(tokens)
     masks = np.array(masks)
     segments = np.array(segments)
     targets = np.array(targets)
 
-    return [tokens, masks, segments], targets
+    return [tokens, masks, segments], target
 
-    def convert_data(data_df):
-        global tokenizer
+def create_model():
     
-    SEQ_LEN = 64 #SEQ_LEN : ë²„íŠ¸ì— ë“¤ì–´ê°ˆ ì¸í’‹ì˜ ê¸¸ì´
+    SEQ_LEN = 64
+    BATCH_SIZE = 32
     
-    tokens, masks, segments, targets = [], [], [], []
+    model = TFBertModel.from_pretrained("monologg/kobert", from_pt=True)
+    # ÅäÅ« ÀÎÇ², ¸¶½ºÅ© ÀÎÇ², ¼¼±×¸ÕÆ® ÀÎÇ² Á¤ÀÇ
+    token_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_word_ids')
+    mask_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_masks')
+    segment_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_segment')
+    # ÀÎÇ²ÀÌ [ÅäÅ«, ¸¶½ºÅ©, ¼¼±×¸ÕÆ®]ÀÎ ¸ğµ¨ Á¤ÀÇ
+    bert_outputs = model([token_inputs, mask_inputs, segment_inputs])
+    bert_outputs = bert_outputs[1]
     
-    for i in tqdm(range(len(data_df))):
-        # token : ë¬¸ì¥ì„ í† í°í™”í•¨
-        token = tokenizer.encode(data_df[DATA_COLUMN][i], max_length=SEQ_LEN, pad_to_max_length=True)
-       
-        # ë§ˆìŠ¤í¬ëŠ” í† í°í™”í•œ ë¬¸ì¥ì—ì„œ íŒ¨ë”©ì´ ì•„ë‹Œ ë¶€ë¶„ì€ 1, íŒ¨ë”©ì¸ ë¶€ë¶„ì€ 0ìœ¼ë¡œ í†µì¼
-        num_zeros = token.count(0)
-        mask = [1]*(SEQ_LEN-num_zeros) + [0]*num_zeros
-        
-        # ë¬¸ì¥ì˜ ì „í›„ê´€ê³„ë¥¼ êµ¬ë¶„í•´ì£¼ëŠ” ì„¸ê·¸ë¨¼íŠ¸ëŠ” ë¬¸ì¥ì´ 1ê°œë°–ì— ì—†ìœ¼ë¯€ë¡œ ëª¨ë‘ 0
-        segment = [0]*SEQ_LEN
-
-        # ë²„íŠ¸ ì¸í’‹ìœ¼ë¡œ ë“¤ì–´ê°€ëŠ” token, mask, segmentë¥¼ tokens, segmentsì— ê°ê° ì €ì¥
-        tokens.append(token)
-        masks.append(mask)
-        segments.append(segment)
-        
-        # ì •ë‹µ(ê¸ì • : 1 ë¶€ì • 0)ì„ targets ë³€ìˆ˜ì— ì €ì¥í•´ ì¤Œ
-        targets.append(data_df[LABEL_COLUMN][i])
-
-    # tokens, masks, segments, ì •ë‹µ ë³€ìˆ˜ targetsë¥¼ numpy arrayë¡œ ì§€ì •    
-    tokens = np.array(tokens)
-    masks = np.array(masks)
-    segments = np.array(segments)
-    targets = np.array(targets)
-
-    return [tokens, masks, segments], targets
-
- def sentence_convert_data(data):
-        global tokenizer
+    sentiment_drop = tf.keras.layers.Dropout(0.5)(bert_outputs)
+    sentiment_first = tf.keras.layers.Dense(1, activation='sigmoid', kernel_initializer=tf.keras.initializers.TruncatedNormal(stddev=0.02))(sentiment_drop)
+    sentiment_model = tf.keras.Model([token_inputs, mask_inputs, segment_inputs], sentiment_first)
+    
+    #ÇĞ½ÀµÈ ¸ğµ¨ÀÇ °æ·Î
+    latest = tf.train.latest_checkpoint(checkpoint_dir)
+    sentiment_model.load_weights(latest)
+    
+    return sentiment_model
+    
+def sentence_convert_data(data):
+    global tokenizer
     tokens, masks, segments = [], [], []
     token = tokenizer.encode(data, max_length=SEQ_LEN, pad_to_max_length=True)
     
@@ -353,7 +337,7 @@ def predict_label(df, model):
     for i in range(len(df)):
         sentence = df.iloc[i].data
 
-        #ëª¨ë¸ë¡œ íŠ¹ì§• ì¶”ì¶œ       
+        #¸ğµ¨·Î Æ¯Â¡ ÃßÃâ       
         data_x = sentence_convert_data(sentence)
         predict = model.predict(data_x)
         predict_value = np.ravel(predict)
