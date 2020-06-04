@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import image_selection_validator
 import text_selection_validator
 
@@ -204,19 +203,19 @@ def final_credibility(df, cor_pers, right_id):
 
 def image_selection_label(df):
     n = len(set(df.user_id.tolist()))
-    #?„ì‹œ ?ˆì´ë¸?ì§€?? 
+    
     temp_label_df = temp_labeling(df, n)
     
-    #ëª¨ë¸???ˆì¸¡ ?ˆì´ë¸?ì¤??„ì‹œ?€ ?¼ì¹˜?˜ëŠ” ê²? ?¼ì¹˜?˜ì? ?ŠëŠ” ê²?    
+       
     matched_df, not_matched_df = image_selection_validator.compareLabel(temp_label_df)
     
-    #?¼ì¹˜?˜ëŠ” ê²ƒìœ¼ë¡?ë¬¸ì œ ???•ë‹µë¥ ê³¼ ?•ë‹µ??idë¥?ê³„ì‚°
+    
     cor_pers, right_id = cal_cor_pers(df, matched_df)
     
-    #?•ë‹µ???„ì‹œ ? ë¢°??ê³„ì‚°
+   
     temp_credibility_df = cal_credibility(df, cor_pers, right_id)
 
-    #2ì°??„ì‹œ ?ˆì´ë¸?ì§€??    
+       
     second_temp_label_df = second_labeling(temp_credibility_df, not_matched_df, n)##
 
     project_id = df.iloc[0].project_id.values[0]
@@ -231,19 +230,19 @@ def image_capture_label(df):
 
 def text_selection_label(df):
     n = len(set(df.user_id.tolist()))
-    #?„ì‹œ ?ˆì´ë¸?ì§€?? 
+    
     temp_label_df = temp_labeling(df, n)
     
-    #ëª¨ë¸???ˆì¸¡ ?ˆì´ë¸?ì¤??„ì‹œ?€ ?¼ì¹˜?˜ëŠ” ê²? ?¼ì¹˜?˜ì? ?ŠëŠ” ê²?    
+      
     matched_df, not_matched_df = text_selection_validator.compareLabel(temp_label_df)
     
-    #?¼ì¹˜?˜ëŠ” ê²ƒìœ¼ë¡?ë¬¸ì œ ???•ë‹µë¥ ê³¼ ?•ë‹µ??idë¥?ê³„ì‚°
+    
     cor_pers, right_id = cal_cor_pers(df, matched_df)
     
-    #?•ë‹µ???„ì‹œ ? ë¢°??ê³„ì‚°
+    
     temp_credibility_df = cal_credibility(df, cor_pers, right_id)
 
-    #2ì°??„ì‹œ ?ˆì´ë¸?ì§€??    
+      
     second_temp_label_df = second_labeling(temp_credibility_df, not_matched_df, n)##
 
     project_id = df.iloc[0].project_id.values[0]
