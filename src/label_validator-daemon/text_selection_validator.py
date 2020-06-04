@@ -259,27 +259,27 @@ class KoBertTokenizer(PreTrainedTokenizer):
 def convert_data(data_df):
     global tokenizer
     
-    SEQ_LEN = 64 #SEQ_LEN : 버트에 들어갈 인풋의 길이
+    SEQ_LEN = 64 #SEQ_LEN : ????? ??? ????? ????
     
     tokens, masks, segments, targets = [], [], [], []
     
     for i in tqdm(range(len(data_df))):
-        # token : 문장을 토큰화함
+        # token : ?????? ??????
         token = tokenizer.encode(data_df[DATA_COLUMN][i], max_length=SEQ_LEN, pad_to_max_length=True)
        
-        # 마스크는 토큰화한 문장에서 패딩이 아닌 부분은 1, 패딩인 부분은 0으로 통일
+        # ??????? ?????? ?????? ?е??? ??? ?κ??? 1, ?е??? ?κ??? 0???? ????
         num_zeros = token.count(0)
         mask = [1]*(SEQ_LEN-num_zeros) + [0]*num_zeros
         
-        # 문장의 전후관계를 구분해주는 세그먼트는 문장이 1개밖에 없으므로 모두 0
+        # ?????? ??????? ????????? ???????? ?????? 1????? ??????? ??? 0
         segment = [0]*SEQ_LEN
 
-        # 버트 인풋으로 들어가는 token, mask, segment를 tokens, segments에 각각 저장
+        # ??? ??????? ????? token, mask, segment?? tokens, segments?? ???? ????
         
-        # 정답(긍정 : 1 부정 0)을 targets 변수에 저장해 줌
+        # ????(???? : 1 ???? 0)?? targets ?????? ?????? ??
         targets.append(data_df[LABEL_COLUMN][i])
 
-    # tokens, masks, segments, 정답 변수 targets를 numpy array로 지정    
+    # tokens, masks, segments, ???? ???? targets?? numpy array?? ????    
     tokens = np.array(tokens)
     masks = np.array(masks)
     segments = np.array(segments)
@@ -293,11 +293,11 @@ def create_model():
     BATCH_SIZE = 32
     
     model = TFBertModel.from_pretrained("monologg/kobert", from_pt=True)
-    # 토큰 인풋, 마스크 인풋, 세그먼트 인풋 정의
+    # ??? ???, ????? ???, ?????? ??? ????
     token_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_word_ids')
     mask_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_masks')
     segment_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_segment')
-    # 인풋이 [토큰, 마스크, 세그먼트]인 모델 정의
+    # ????? [???, ?????, ??????]?? ?? ????
     bert_outputs = model([token_inputs, mask_inputs, segment_inputs])
     bert_outputs = bert_outputs[1]
     
@@ -305,7 +305,7 @@ def create_model():
     sentiment_first = tf.keras.layers.Dense(1, activation='sigmoid', kernel_initializer=tf.keras.initializers.TruncatedNormal(stddev=0.02))(sentiment_drop)
     sentiment_model = tf.keras.Model([token_inputs, mask_inputs, segment_inputs], sentiment_first)
     
-    #학습된 모델의 경로
+    #?н??? ???? ???
     latest = tf.train.latest_checkpoint(checkpoint_dir)
     sentiment_model.load_weights(latest)
     
@@ -337,7 +337,7 @@ def predict_label(df, model):
     for i in range(len(df)):
         sentence = df.iloc[i].data
 
-        #모델로 특징 추출       
+        #??? ?¡ ????       
         data_x = sentence_convert_data(sentence)
         predict = model.predict(data_x)
         predict_value = np.ravel(predict)
