@@ -12,7 +12,7 @@ import Confirm from '../components/TSANConfirm';
 import ProjectListTable from '../components/ProjectListTable';
 import Loading from "../components/Loading";
 import Datetime from '../components/DateTime';
-import UserStore from "../stores/UserStore";
+import UserStore from '../stores/UserStore';
 
 interface Props {
     myPageProjectStore?: MyPageProjectStore;
@@ -22,6 +22,7 @@ interface State {
     open: boolean;
     type: string;
     projectID: string;
+    isRequester: string;
 }
 
 @inject('myPageProjectStore')
@@ -34,10 +35,12 @@ class PageMypageProject extends React.Component<Props, State> {
         super(props);
         // 답변 가능한 프로젝트 목록 요청
         this.props.myPageProjectStore!.getProjects();
+        this.props.userStore!.getMyInfo();
         this.state = {
             open: false,
             type: '',
             projectID: '',
+            isRequester: this.props.userStore!.isRequester,
         }
         this.show = this.show.bind(this);
         this.handleConfirm = this.handleConfirm.bind(this);
@@ -51,7 +54,8 @@ class PageMypageProject extends React.Component<Props, State> {
         {id: 6, headerItem: '시작'},
         {id: 7, headerItem: '종료'},
         {id: 8, headerItem: '보상'},
-        {id: 9, headerItem: '비고'},
+        {id: 9, headerItem: '결과'},
+        {id: 10, headerItem: '비고'},
     ];
     user_header = [
         {id: 1, headerItem: '#'},
@@ -59,7 +63,8 @@ class PageMypageProject extends React.Component<Props, State> {
         {id: 3, headerItem: '레이블링 유형'},
         {id: 4, headerItem: '시작일'},
         {id: 5, headerItem: '마감일'},
-        {id: 6, headerItem: '비고'},
+        {id: 6, headerItem: '결과'},
+        {id: 7, headerItem: '비고'},
     ]
 
     show = (_type:string, idx:string) => {
@@ -78,7 +83,6 @@ class PageMypageProject extends React.Component<Props, State> {
 
         this.setState({open: false});
         window.location.reload();
-
     }
 
     handleCancel = () => {
@@ -91,6 +95,13 @@ class PageMypageProject extends React.Component<Props, State> {
         this.props.myPageProjectStore?.reward();
     }
 
+    handleResult = (isRequester: string, idx: string) => {
+        if (isRequester) {
+            window.location.href = `/labeling/${idx}/requesterResult`;
+        } else {
+            window.location.href = `/labeling/${idx}/participantsResult`;
+        }
+    }
 
     render() {
         const {open} = this.state;

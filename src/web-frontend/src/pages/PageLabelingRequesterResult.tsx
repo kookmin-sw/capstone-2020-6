@@ -7,7 +7,7 @@ import {
   PieChart, Pie
 } from 'recharts';
 
-import './PageLabelingResult.css';
+import './PageLabelingRequesterResult.css';
 import LabelingResultStore from '../stores/LabelingResultStore';
 import LabelingPageStore from '../stores/LabelingPageStore';
 import MyPageProjectStore from '../stores/MyPageProjectStore';
@@ -25,7 +25,7 @@ interface Props {
 
 @inject('labelingResultStore', 'labelingPageStore', 'myPageProjectStore')
 @observer
-class PageLabelingResult extends React.Component<Props, RouteComponentProps> {
+class PageLabelingRequesterResult extends React.Component<Props, RouteComponentProps> {
 
   static jsfiddleUrl = 'https://jsfiddle.net/alidingling/xqjtetw0/';
 
@@ -145,4 +145,4 @@ class PageLabelingResult extends React.Component<Props, RouteComponentProps> {
   }
 }
 
-export default withRouter(PageLabelingResult);
+export default withRouter(PageLabelingRequesterResult);
