@@ -1075,31 +1075,30 @@ class Query(graphene.ObjectType):
 
     """
     get_all_request = graphene.Field(Requests,
-                                     orderby=graphene.String(required=False),
-                                     offset=graphene.Int(required=False),
-                                     limit=graphene.Int(required=False)
+                                        orderby=graphene.String(required=False),
+                                        state=graphene.String(required=False),
+                                        offset=graphene.Int(required=False),
+                                        limit=graphene.Int(required=False)
                                      )
 
-    def resolve_get_all_request(self, info, **kwargs):
+    def resolve_get_all_request(self, info, order=None, offset=None, limit=None, **filters):
         requests = Request.objects.all()
         if requests is not None:
             for request in requests.iterator():
                 request.refresh_state()
 
-        order = kwargs.get("orderby", None)
-        offset = kwargs.get("offset", None)
-        limit = kwargs.get("limit", None)
+        requests = Request.objects.filter(**filters).all()
 
         if offset and limit:
             if order:
-                requests = Request.objects.all().order_by(order, '-idx')[offset:offset + limit]  # 인자값 순, 최신 등록 순
+                requests = requests.order_by(order, '-idx')[offset:offset + limit]  # 인자값 순, 최신 등록 순
             else:
-                requests = Request.objects.all().order_by('-idx')[offset:offset + limit]  # 최신 등록 순
+                requests = requests.order_by('-idx')[offset:offset + limit]  # 최신 등록 순
         else:
             if order:
-                requests = Request.objects.all().order_by(order, '-idx')  # 인자값 순, 최신 등록 순
+                requests = requests.order_by(order, '-idx')  # 인자값 순, 최신 등록 순
             else:
-                requests = Request.objects.all().order_by('-idx')  # 최신 등록 순
+                requests = requests.order_by('-idx')  # 최신 등록 순
 
         for request in requests:
             if request.user is not None:
