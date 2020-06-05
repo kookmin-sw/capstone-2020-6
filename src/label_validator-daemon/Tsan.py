@@ -55,3 +55,13 @@ class Tsan:
         self.requests = data['data']['getAllRequest']['requests']
         return self.requests
     
+    def download(self, request):
+
+        # 이미지인 경우
+        if request['category']['type'] == "image":
+            
+            pass
+
+        # 텍스트인 경우
+        else:
+            pass
