@@ -71,7 +71,7 @@ class Tsan:
         # 이미지인 경우
         if request['category']['type'] == "image":
             i = 0
-            files = []
+            files = {}
             for image in assigned['dataset']:
                 i += 1
                 img = db.image_dataset.find_one({"_id": ObjectId(image)})
@@ -80,13 +80,13 @@ class Tsan:
                 print("[%d/%d] Download %s"%(i, len(assigned['dataset']), img['filename']))
                 f.write(img['data'])
                 f.close()
-                files.append(filename)
+                files[str(image)] = filename
             return files
 
         # 텍스트인 경우
         else:
             i = 0
-            files = []
+            files = {}
             for text in assigned['dataset']:
                 i += 1
                 txt = db.text_dataset.find_one({"_id": ObjectId(text)})
@@ -96,5 +96,5 @@ class Tsan:
                 txt['_id'] = str(txt['_id'])
                 json.dump(txt, f)
                 f.close()
-                files.append(filename)
+                files[str(text)] = filename
             return files
