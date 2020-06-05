@@ -10,3 +10,4 @@ mysqlclient
 web3
 solc
 py-solc
+scrypt

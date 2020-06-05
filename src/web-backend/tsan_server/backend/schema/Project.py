@@ -881,7 +881,6 @@ class IncCurrentCycle(graphene.Mutation):
             )
 
 
-
 class GetItem(graphene.Mutation):
     message = graphene.Field(Message)
     idx = graphene.List(graphene.String)

@@ -2,7 +2,11 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
-
+try:
+    import crypto
+    sys.modules['Crypto'] = crypto
+except:
+    pass
 
 def main():
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'tsan_server.settings')
