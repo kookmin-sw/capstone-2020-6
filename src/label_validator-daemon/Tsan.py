@@ -82,6 +82,19 @@ class Tsan:
                 f.close()
                 files.append(filename)
             return files
+
         # 텍스트인 경우
         else:
-            pass
+            i = 0
+            files = []
+            for text in assigned['dataset']:
+                i += 1
+                txt = db.text_dataset.find_one({"_id": ObjectId(text)})
+                filename = os.path.join(folder, str(text) + ".json")
+                f = open(filename, "w")
+                print("[%d/%d] Download %s"%(i, len(assigned['dataset']), filename))
+                txt['_id'] = str(txt['_id'])
+                json.dump(txt, f)
+                f.close()
+                files.append(filename)
+            return files
