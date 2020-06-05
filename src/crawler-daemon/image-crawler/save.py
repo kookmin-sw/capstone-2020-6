@@ -1,7 +1,7 @@
 import os
 from mongodb import db
 
-path = "./download/Cats"
+path = "./download/furniture-images"
 images = [os.path.join(path, x.name) for x in os.scandir(path)]
 data = []
 for image in images:
@@ -10,7 +10,7 @@ for image in images:
         continue
     f = open(image, "rb")
     data.append({
-        "dataset": 8,
+        "dataset": 9,
         "filename": image.split("/")[-1],
         "data": f.read()
     })
