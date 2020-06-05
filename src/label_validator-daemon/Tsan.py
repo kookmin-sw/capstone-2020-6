@@ -1,5 +1,6 @@
 import requests
 import json
+from mongodb import db
 from graphqlclient import GraphQLClient
 
 client = GraphQLClient('http://localhost:8000/v1/graphql')
@@ -53,3 +54,4 @@ class Tsan:
         data = json.loads(res)
         self.requests = data['data']['getAllRequest']['requests']
         return self.requests
+    
