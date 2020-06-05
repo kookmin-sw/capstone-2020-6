@@ -6,6 +6,8 @@ def main():
     if not tsan.token:
         print("Login Fail")
         return
+    tsan.get_end_requests()
+    print(tsan.requests)
 
 if __name__ == "__main__":
     main()
