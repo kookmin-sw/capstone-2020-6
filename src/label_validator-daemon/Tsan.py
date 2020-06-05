@@ -57,6 +57,17 @@ class Tsan:
         self.requests = data['data']['getAllRequest']['requests']
         return self.requests
     
+    def getLabelPerUser(self, request):
+        labeled = {}
+        for label in db.user_assigned.find({"request": int(request['idx'])}):
+            labeled[label['username']] = {
+                "dataset": {},
+                "reliability": 0 # 하드 코딩, 곧 바꿈
+            }
+            for x in label['dataset']:
+                labeled[label['username']]['dataset'][str(x['data'])] = x['label']
+        return labeled
+    
     def download(self, request):
 
         folder = "./tmp/%s/"%(request['idx'])
