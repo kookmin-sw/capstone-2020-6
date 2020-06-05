@@ -131,9 +131,11 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
                 <div className='resultPageButtonsBox'>
                   <h4 className='resultPageButtonsHeader'>[프로젝트 진행사항 변경]</h4>
                   <div className='resultPageButtons'>
-                    <Button color='blue' onClick={() => this.handleConfirm('start')}>시작하기</Button>
-                    <Button color='red' onClick={() => this.handleConfirm('end')}>종료하기</Button>
-                    <Button color='green' onClick={() => this.handleConfirm('reward')}>보상하기</Button>
+                    {this.props.labelingPageStore?.request.state === 'RED' ?
+                      <Button color='blue' onClick={() => this.handleConfirm('start')}>시작하기</Button> :
+                      this.props.labelingPageStore?.request.state === 'RUN' ?
+                      <Button color='red' onClick={() => this.handleConfirm('end')}>종료하기</Button> :
+                      <Button color='green' onClick={() => this.handleConfirm('reward')}>보상하기</Button>}
                   </div>
                 </div>
               </Grid.Column>
