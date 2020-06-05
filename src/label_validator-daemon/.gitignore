@@ -1,3 +1,5 @@
+tmp/
+
 *.ipynb
 /.ipynb_checkpoints
 
