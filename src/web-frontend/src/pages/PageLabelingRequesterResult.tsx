@@ -3,16 +3,16 @@ import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {Container, Button, Header, Grid, Table} from 'semantic-ui-react';
 import Datetime from '../components/DateTime';
 import {
-  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  PieChart, Pie
+  LineChart, Line, XAxis, YAxis, CartesianGrid,
+  Tooltip, Legend, PieChart, Pie, Cell,
 } from 'recharts';
 
 import './PageLabelingRequesterResult.css';
 import LabelingResultStore from '../stores/LabelingResultStore';
 import LabelingPageStore from '../stores/LabelingPageStore';
 import MyPageProjectStore from '../stores/MyPageProjectStore';
-import { inject, observer } from "mobx-react";
-import ProjectListTable from "../components/ProjectListTable";
+import { inject, observer } from 'mobx-react';
+import ProjectListTable from '../components/ProjectListTable';
 
 interface Props {
   labelingPageStore?: LabelingPageStore;
@@ -34,6 +34,7 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
     this.props.myPageProjectStore!.getProjects();
     this.props.labelingResultStore!.getLevelData();
     this.props.labelingResultStore!.getLabelingResult();
+    this.props.labelingResultStore!.getChartColors();
   }
   componentDidMount() {
     this.props.labelingPageStore!.getRequest(parseInt(this.props.match.params.postId));
@@ -86,7 +87,9 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
               <Grid.Column>
                 <Header as={'h3'}># Labeling 결과 분석</Header>
                 <PieChart width={400} height={400}>
-                  <Pie dataKey="value" isAnimationActive={false} data={this.props.labelingResultStore?.labelingResult} cx={200} cy={200} outerRadius={160} fill="#4B81B4" label />
+                  <Pie dataKey="value" isAnimationActive={false} data={this.props.labelingResultStore?.labelingResult} cx={200} cy={200} outerRadius={160} label>
+                    {this.props.labelingResultStore?.labelingResult.map((entry: any, index: any) => <Cell fill={this.props.labelingResultStore?.chartColors[index % this.props.labelingResultStore?.chartColors.length]}/>)}
+                  </Pie>
                   <Tooltip />
                 </PieChart>
               </Grid.Column>

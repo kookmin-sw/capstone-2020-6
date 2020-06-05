@@ -6,9 +6,6 @@ interface Props {
 }
 
 class Loading extends React.Component<Props> {
-    constructor(props:Props) {
-        super(props);
-    }
     render() {
         return (
             <Container>
