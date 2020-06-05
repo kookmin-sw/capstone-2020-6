@@ -88,7 +88,7 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
                 <Header as={'h3'}># Labeling 결과 분석</Header>
                 <PieChart width={400} height={400}>
                   <Pie dataKey="value" isAnimationActive={false} data={this.props.labelingResultStore?.labelingResult} cx={200} cy={200} outerRadius={160} label>
-                    {this.props.labelingResultStore?.labelingResult.map((entry: any, index: any) => <Cell fill={this.props.labelingResultStore?.chartColors[index % this.props.labelingResultStore?.chartColors.length]}/>)}
+                    {this.props.labelingResultStore?.labelingResult.map((entry: any, index: any) => <Cell key={index} fill={this.props.labelingResultStore?.chartColors[index % this.props.labelingResultStore?.chartColors.length]}/>)}
                   </Pie>
                   <Tooltip />
                 </PieChart>
