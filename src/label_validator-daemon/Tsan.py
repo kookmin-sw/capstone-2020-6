@@ -31,8 +31,8 @@ class Tsan:
     def get_reliability(self, username):
         res = client.execute('''
             mutation ($username: String!, $token: String!){
-                test(
-                    username: $username,
+                updateReliability(
+                    username: $username
                     token: $token
                 ) {
                     message{
@@ -48,7 +48,7 @@ class Tsan:
             "token": self.token
         })
         data = json.loads(res)
-        return data['data']['test']['reliability']
+        return data['data']['updateReliability']['reliability']
     
     def get_end_requests(self):
         res = client.execute('''
@@ -79,16 +79,25 @@ class Tsan:
         self.requests = data['data']['getAllRequest']['requests']
         return self.requests
     
-    def getLabelPerUser(self, request):
-        labeled = {}
+    def updateLabel(self, request, username, data):
+        db.user_assigned.find_one({"request": request, "username": username}, {"$set": data})
+    
+    
+    def getLabels(self, request):
+        labeled = []
         for label in db.user_assigned.find({"request": int(request['idx'])}):
-            labeled[label['username']] = {
-                "dataset": {},
-                "reliability": self.get_reliability(label['username'])
-            }
-            for x in label['dataset']:
-                labeled[label['username']]['dataset'][str(x['data'])] = x['label']
+            label['reliability'] = self.get_reliability(label['username'])
+            labeled.append(label)
         return labeled
+        # labeled = {}
+        # for label in db.user_assigned.find({"request": int(request['idx'])}):
+        #     labeled[label['username']] = {
+        #         "dataset": {},
+        #         "reliability": self.get_reliability(label['username'])
+        #     }
+        #     for x in label['dataset']:
+        #         labeled[label['username']]['dataset'][str(x['data'])] = x['label']
+        # return labeled
     
     def download(self, request):
 

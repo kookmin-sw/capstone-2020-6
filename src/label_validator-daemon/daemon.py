@@ -4,6 +4,7 @@ from numpy import dot
 from numpy.linalg import norm
 import numpy as np
 from PIL import Image
+from bson import ObjectId
 import cv2
 
 def cos_sim(A, B):
@@ -22,7 +23,7 @@ def mean(dddd):
 
 tsan = Tsan()
 files = []
-users = []
+labels = []
 
 def text_select(request):
     pass
@@ -31,7 +32,7 @@ def image_choice(request):
     pass
 
 def image_capture_validator(request):
-    global users
+    global labels
     for data_key, filename in files.items():
         dddd = {
             "users": [],
@@ -42,20 +43,20 @@ def image_capture_validator(request):
         }
 
         removed = []
-        cnt = 0
         
-        for username, data in users.items():
-            if data['dataset'][data_key] == None:
-                users[username]['reliability'] *= 0.999
-                cnt += 1
+        for user in labels:
+            label = [x for x in user['dataset'] if x['data'] == ObjectId(data_key)][0]
+
+            if label['label'] == None:
+                user['reliability'] *= 0.999
+                label['is_answer'] = False
                 continue
-            res = json.loads(data['dataset'][data_key])
-            dddd['users'].append(username)
+            res = json.loads(label['label'])
+            dddd['users'].append(user)
             dddd['x'].append(res.get("x"))
             dddd['y'].append(res.get("y"))
             dddd['width'].append(res.get("width"))
             dddd['height'].append(res.get("height"))
-            cnt += 1
         
         x, r = mean(dddd['x'])
         removed += r
@@ -67,7 +68,7 @@ def image_capture_validator(request):
         removed += r
 
         for i in range(len(dddd['users'])):
-            users[dddd['users'][i]]['reliability'] *= 0.999 if i in removed else 1.001
+            dddd['users'][i]['reliability'] *= 0.999 if i in removed else 1.001
                 
         try:
             print([x, y, width, height])
@@ -75,17 +76,19 @@ def image_capture_validator(request):
             print(img.size)
             cropped = img.crop((x, y, x+width, y+height))
             cropped.save(filename)
-            print("\n".join(["%s: %.2f"%(username, v['reliability']) for username, v in users.items()]))
+            print("\n".join(["%s: %.2f"%(label['username'], label['reliability']) for label in labels]))
         except Exception as e:
             print("Error")
 
+    for label in labels:
+        tsan.updateLabel(request=label['request'], username=label['username'], data=label)
 
 def image_select(request):
     pass
 
 def main():
     global files
-    global users
+    global labels
     global tsan
 
     tsan.login(username="robot", password="robot")
@@ -97,7 +100,7 @@ def main():
     tsan.get_end_requests()
     for request in tsan.requests:
         files = tsan.download(request)
-        users = tsan.getLabelPerUser(request)
+        labels = tsan.getLabels(request)
         idx = int(request['category']['idx'])
         if idx == 1: # 텍스트 객관식
             text_select(request)
