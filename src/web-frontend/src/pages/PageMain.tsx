@@ -30,7 +30,7 @@ class App extends React.Component<Props> {
         <br />
         <Container style={{position: 'relative'}}>
           <div className='mainPageShowMore'>
-            <h3>진행중인 라벨링 프로젝트</h3>
+            <h3>진행중인 레이블링 프로젝트</h3>
             <Link to='allProjects'>
               <div className='showMoreLink'>더보기</div>
             </Link>
@@ -60,7 +60,7 @@ class App extends React.Component<Props> {
           </Grid>
           <br/>
           <div className='mainPageShowMore'>
-            <h3>완료된 라벨링 프로젝트</h3>
+            <h3>완료된 레이블링 프로젝트</h3>
             <Link to='allProjectsFinished'>
               <div className='showMoreLink'>더보기</div>
             </Link>
