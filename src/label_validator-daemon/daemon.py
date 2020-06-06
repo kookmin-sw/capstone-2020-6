@@ -82,6 +82,8 @@ def image_capture_validator(request):
 
     for label in labels:
         tsan.updateLabel(request=label['request'], username=label['username'], data=label)
+        tsan.update_reliability(label['username'], label['reliability'])
+    tsan.varifyRequest(request=request['idx'])
 
 def image_select(request):
     pass

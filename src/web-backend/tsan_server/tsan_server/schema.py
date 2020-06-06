@@ -9,7 +9,7 @@ from backend.schema.Dataset import CreateDataset
 from backend.schema.Category import CreateCategory, UpdateCategory
 from backend.schema.Project import CreateRequest, UpdateRequest, StartRequest, EndRequest, TakeProject, \
     DeleteLabelerTakenProject, GetItem, SubmitLabel, EndUpdate, IncCurrentCycle, Reward, SubmitLabels, \
-    VerifyRequest, RewordedRequest
+    VerifyRequest, RewordedRequest, VerifiedRequest
 from backend.schema.Payment import CreatePaymentLog, UpdatePaymentLog, DeletePaymentLog
 
 from command_center.schema import Dataset
@@ -49,7 +49,8 @@ class Mutation(graphene.ObjectType):
     inc_current_cycle = IncCurrentCycle.Field()
     reward = Reward.Field()
     update_reliability = reliabilityUpdate.Field()
-    varify_request = VerifyRequest.Field()
+    verify_request = VerifyRequest.Field()
+    vertified_request = VerifiedRequest.Field()
     rewarded_request = RewordedRequest.Field()
 
 

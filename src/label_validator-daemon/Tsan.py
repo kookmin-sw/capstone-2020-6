@@ -80,7 +80,53 @@ class Tsan:
         return self.requests
     
     def updateLabel(self, request, username, data):
-        db.user_assigned.find_one_and_update({"request": request, "username": username}, {"$set": data})
+        data_ = data.copy()
+        del data_['_id']
+        db.user_assigned.find_one_and_update({"request": request, "username": username}, {"$set": data_})
+    
+    def varifyRequest(self, request):
+        res = client.execute("""        
+                mutation ($request: String!, $token: String!){
+                    verifiedRequest(
+                        idx: $request
+                        token: $token
+                    ) {
+                        message{
+                            status
+                            message
+                        }
+                    }
+                }
+            """, variables={
+                "request": request,
+                "token": self.token
+            })
+        data = json.loads(res)
+        return data['data']['verifiedRequest']['message']
+
+    def update_reliability(self, username, reliability):
+        res = client.execute('''
+            mutation ($token: String!, $username: String!, $reliability: Float!){
+                updateReliability(
+                    username: $username
+                    reliability: $reliability
+                    token: $token
+                ) {
+                    message{
+                        status
+                        message
+                    }
+                    reliability
+                }
+            }
+        ''',
+        variables={
+            "token": self.token,
+            "reliability": reliability,
+            "username": username
+        })
+        data = json.loads(res)
+        return data['data']['updateReliability']['reliability']
     
     def getLabels(self, request):
         labeled = []
