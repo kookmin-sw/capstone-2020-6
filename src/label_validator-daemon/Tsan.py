@@ -28,6 +28,28 @@ class Tsan:
         data = json.loads(res)
         self.token = data['data']['loginAccount']['jwt']
     
+    def get_reliability(self, username):
+        res = client.execute('''
+            mutation ($username: String!, $token: String!){
+                test(
+                    username: $username,
+                    token: $token
+                ) {
+                    message{
+                        status
+                        message
+                    }
+                    reliability
+                }
+            }
+        ''',
+        variables={
+            "username": username,
+            "token": self.token
+        })
+        data = json.loads(res)
+        return data['data']['test']['reliability']
+    
     def get_end_requests(self):
         res = client.execute('''
             query {
@@ -62,7 +84,7 @@ class Tsan:
         for label in db.user_assigned.find({"request": int(request['idx'])}):
             labeled[label['username']] = {
                 "dataset": {},
-                "reliability": 0.5 # 하드 코딩, 곧 바꿈
+                "reliability": self.get_reliability(label['username'])
             }
             for x in label['dataset']:
                 labeled[label['username']]['dataset'][str(x['data'])] = x['label']
