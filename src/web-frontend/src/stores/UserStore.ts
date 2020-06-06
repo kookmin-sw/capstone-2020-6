@@ -8,9 +8,11 @@ export default class UserStore {
     @observable email: string = ""
     @observable point: number = 0
     @observable phone: string = ""
+    @observable paymentLog: any = [];
     constructor() {
         this.point = 0;
-        this.getMyInfo()
+        this.getMyInfo();
+        this.paymentLog = [];
     }
     @action getMyInfo = () => {
         client.query({
@@ -64,5 +66,44 @@ export default class UserStore {
             .catch(e => {
                 alert("포인트 충전에 실패하였습니다.")
             })
+    }
+    @action getPaymentLog = () => {
+        client.query({
+            query: gql`
+                query GetMyPaymentlog($token: String!) {
+                    getMyPaymentlog(token: $token) {
+                        paymentlogs {
+                            idx
+                            type
+                            note
+                            logTime
+                            amount
+                            balance
+                        }
+                    }
+                }
+            `,
+            variables: {
+                token: localStorage.token,
+            },
+        })
+            .then(({data}: any) => {
+                var list: any = [];
+                data.getMyPaymentlog.paymentlogs.forEach((item: any) => {
+                    list.push({
+                        id: item.idx,
+                        type: item.type,
+                        note: item.note,
+                        logTime: item.logTime,
+                        amount: item.amount,
+                        balance: item.balance,
+                    });
+                });
+                this.paymentLog = list;
+
+            })
+            .catch((e) => {
+                console.log(e);
+            });
     }
 }

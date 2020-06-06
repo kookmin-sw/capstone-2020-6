@@ -1,7 +1,13 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
 import {Container, Table} from 'semantic-ui-react';
-import "./PagePoints.css"
+import './PagePoints.css';
+
+// Components
+import Datetime from '../components/DateTime';
+import Time from '../components/Time';
+
+// for mobx
 import UserStore from '../stores/UserStore';
 import {inject, observer} from 'mobx-react';
 
@@ -9,12 +15,16 @@ interface Props extends RouteComponentProps<any>{
   userStore?: UserStore
 }
 
-@inject("userStore") @observer
+@inject("userStore")
+@observer
 class PagePoints extends React.Component<Props> {
+  constructor(props: any) {
+    super(props);
+    this.props.userStore!.getPaymentLog();
+  }
   render() {
     return (
       <Container>
-        
         <br/>
         <h2>포인트 관리</h2>
         <div className="point-newPoint">
@@ -31,29 +41,25 @@ class PagePoints extends React.Component<Props> {
             <Table.Row textAlign="center">
               <Table.HeaderCell width={1}>#</Table.HeaderCell>
               <Table.HeaderCell width={2}>포인트 변동</Table.HeaderCell>
-              <Table.HeaderCell width={2}>포인트 누적</Table.HeaderCell>
+              <Table.HeaderCell width={2}>포인트 잔액</Table.HeaderCell>
               <Table.HeaderCell>내용</Table.HeaderCell>
+              <Table.HeaderCell>시간</Table.HeaderCell>
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            <Table.Row>
-              <Table.Cell textAlign="center">1</Table.Cell>
-              <Table.Cell textAlign="center">-100,000P</Table.Cell>
-              <Table.Cell textAlign="center">100,000P</Table.Cell>
-              <Table.Cell>의뢰 생성으로 인한 포인트 예치</Table.Cell>
-            </Table.Row>
-            {
-              [2,3,4,5,6,7,8,9,10,11].map((item:any) => {
-                return (
-                  <Table.Row>
-                    <Table.Cell textAlign="center">{item}</Table.Cell>
-                    <Table.Cell textAlign="center">+10,000P</Table.Cell>
-                    <Table.Cell textAlign="center">10,000P</Table.Cell>
-                    <Table.Cell>포인트 충전</Table.Cell>
-                  </Table.Row>
-                )
-              })
-            }
+            {this.props.userStore!.paymentLog.map((item: any, key: any) => {
+              return (
+                <Table.Row key={key}>
+                  <Table.Cell textAlign='center'>{key + 1}</Table.Cell>
+                  <Table.Cell textAlign='center'>{item.amount}</Table.Cell>
+                  <Table.Cell textAlign='center'>{item.balance}</Table.Cell>
+                  <Table.Cell textAlign='center'>{item.note}</Table.Cell>
+                  <Table.Cell textAlign='center'>
+                    <Datetime datetime={item.logTime}/> <Time datetime={item.logTime}/>
+                  </Table.Cell>
+                </Table.Row>
+              );
+            })}
           </Table.Body>
         </Table>
       </Container>

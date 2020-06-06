@@ -5,10 +5,7 @@ import 'react-image-crop/dist/ReactCrop.css';
 import {Container, Button, Grid} from 'semantic-ui-react';
 import './PageLabelingImageCapture.css';
 import LabelingImgCapStore from '../stores/LabelingImgCapStore';
-import {inject, observer} from "mobx-react";
-import LabelingNextBtn from "../components/LabelingNextBtn";
-import LabelingFinishButton from "../components/LabelingFinishButton";
-
+import {inject, observer} from 'mobx-react';
 
 interface Props extends RouteComponentProps<any> {
 }

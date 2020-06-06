@@ -33,7 +33,7 @@ class PageLabelingTextSelect extends React.Component<Props & RouteComponentProps
   }
 
   handleLink = (e: any) => {
-    if(this.props.labelingTextSelectStore?.activeButton == -1) {
+    if(this.props.labelingTextSelectStore?.activeButton === -1) {
       alert("선택해주세요.")
       return
     }

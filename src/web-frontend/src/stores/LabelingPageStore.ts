@@ -17,8 +17,13 @@ export default class LabelingPageStore {
     totalProgress: '',
     progressRate: '',
   }
+  @observable loading: boolean = false;
+  constructor() {
+    this.loading = false;
+  }
 
   @action getRequest = (postId: number) => {
+    this.loading = true;
     client.query({
       query: gql`
         query GetIdxRequest($idx: Int!){
@@ -56,8 +61,10 @@ export default class LabelingPageStore {
         idx: postId,
       },
     }).then(({data}:any) => {
+      this.loading = false;
       const req = data.getIdxRequest.requests[0];
       this.request = {
+        state: req.state,
         labelingSubject: req.subject,
         thumbnailURL: req.thumbnail,
         author: req.user ? req.user.fullname : '알 수 없음',
@@ -73,6 +80,7 @@ export default class LabelingPageStore {
         progressRate: req.currentCycle / req.maxCycle * 100,
       };
     }).catch(e => {
+      this.loading = false;
       console.error(e);
     });
   }

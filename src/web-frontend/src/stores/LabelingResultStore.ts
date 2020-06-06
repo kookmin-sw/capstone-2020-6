@@ -1,9 +1,9 @@
 import {action, observable} from 'mobx';
 
 export default class LabelingResultStore {
-    // @observable labelingSubject: any = '';
     @observable levelData: any = [];
     @observable labelingResult: any = [];
+    @observable chartColors: any = [];
 
     constructor() {
         this.levelData = [];
@@ -35,7 +35,9 @@ export default class LabelingResultStore {
             { name: 'Dog\'s nose', value: 400 }, { name: 'Muffine', value: 300 },
             { name: 'None', value: 30 },
         ];
-
     }
 
+    @action getChartColors = () => {
+        this.chartColors = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+    }
 }
