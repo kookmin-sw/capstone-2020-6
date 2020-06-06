@@ -110,7 +110,7 @@ DATABASES = {
         'NAME': 'tsan',
         'USER': 'tsan',
         'PASSWORD': 'ekdmsapfhd123',
-        'HOST': '13.209.70.145',
+        'HOST': 'tsan.tech',
         'PORT': '3306',
         'OPTIONS': {
             'init_command': 'SET sql_mode="STRICT_TRANS_TABLES"'

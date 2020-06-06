@@ -64,6 +64,7 @@ export default class LabelingPageStore {
       this.loading = false;
       const req = data.getIdxRequest.requests[0];
       this.request = {
+        state: req.state,
         labelingSubject: req.subject,
         thumbnailURL: req.thumbnail,
         author: req.user ? req.user.fullname : '알 수 없음',

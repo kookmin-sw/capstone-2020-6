@@ -1,6 +1,6 @@
 import React from 'react';
 import {RouteComponentProps, withRouter, Link} from 'react-router-dom';
-import {Button, Container, Table, Dimmer, Loader} from 'semantic-ui-react';
+import {Button, Container, Table} from 'semantic-ui-react';
 import './PageViewAllProjects.css';
 
 // Components
