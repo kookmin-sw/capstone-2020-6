@@ -546,7 +546,7 @@ class VerifiedRequest(graphene.Mutation):
         token = graphene.String()
 
     @only_user
-    @only_requester
+    @only_admin
     def mutate(self, info, idx, token):
         res = jwt_decode_handler(token)
         user = User.objects.get(username=res['username'])
@@ -1207,12 +1207,13 @@ class Query(graphene.ObjectType):
         생략...
 
     """
-    get_all_request = graphene.Field(Requests,
-                                        orderby=graphene.String(required=False),
-                                        state=graphene.String(required=False),
-                                        offset=graphene.Int(required=False),
-                                        limit=graphene.Int(required=False)
-                                     )
+    get_all_request = graphene.Field(
+        Requests,
+        order=graphene.String(required=False),
+        state=graphene.String(required=False),
+        offset=graphene.Int(required=False),
+        limit=graphene.Int(required=False)
+    )
 
     def resolve_get_all_request(self, info, order=None, offset=None, limit=None, **filters):
         requests = Request.objects.all()

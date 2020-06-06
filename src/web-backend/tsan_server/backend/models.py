@@ -113,6 +113,8 @@ class Request(models.Model):
     is_rewarded = models.BooleanField(default=False) # 보상 진행 여부
 
     def refresh_state(self):
+        if self.state in ["VER", "VED", "REW"]:
+            return
         now = timezone.now()
         if now > self.end_date:
             self.state = 'END'

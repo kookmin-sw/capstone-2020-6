@@ -84,10 +84,10 @@ class Tsan:
         del data_['_id']
         db.user_assigned.find_one_and_update({"request": request, "username": username}, {"$set": data_})
     
-    def vertifiedRequest(self, request):
+    def verifiedRequest(self, request):
         res = client.execute("""        
                 mutation ($request: Int!, $token: String!){
-                    vertifiedRequest(
+                    verifiedRequest(
                         idx: $request
                         token: $token
                     ) {
@@ -102,7 +102,7 @@ class Tsan:
                 "token": self.token
             })
         data = json.loads(res)
-        return data['data']['vertifiedRequest']['message']
+        return data['data']['verifiedRequest']['message']
 
     def update_reliability(self, username, reliability):
         res = client.execute('''

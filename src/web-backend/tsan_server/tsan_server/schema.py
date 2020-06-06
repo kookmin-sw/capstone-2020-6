@@ -50,7 +50,7 @@ class Mutation(graphene.ObjectType):
     reward = Reward.Field()
     update_reliability = reliabilityUpdate.Field()
     verify_request = VerifyRequest.Field()
-    vertified_request = VerifiedRequest.Field()
+    verified_request = VerifiedRequest.Field()
     rewarded_request = RewordedRequest.Field()
 
 
