@@ -1,13 +1,35 @@
 import {action, observable} from 'mobx';
+import { client } from '../tsan';
+import { gql } from 'apollo-boost';
 
 export default class LabelingResultStore {
     @observable levelData: any = [];
     @observable labelingResult: any = [];
     @observable chartColors: any = [];
+    @observable answers:any = [];
 
     constructor() {
         this.levelData = [];
         this.labelingResult = [];
+    }
+
+    @action getAnswer = (request:number) => {
+        client.mutate({
+            mutation: gql`
+                mutation ($request: Int!, $token: String!){
+                    getLabelResultOfRequester(request: $request, token: $token) {
+                        data
+                    }
+                }
+            `,
+            variables: {
+                "request": request,
+                "token": localStorage.token
+            }
+        })
+        .then(({data}:any) => {
+            this.answers = data.getLabelResultOfRequester.data
+        })
     }
 
     @action getLevelData = () => {

@@ -1080,6 +1080,22 @@ class GetItem(graphene.Mutation):
                 message=Message(status=False, message="참가신청을 하지 않은 의뢰입니다.\\n참가신청을 우선 해주세요.")
             )
 
+class GetLabelResultOfRequester(graphene.Mutation):
+    message = graphene.Field(Message)
+    data = graphene.List(graphene.String)
+
+    class Arguments:
+        request = graphene.Int()
+        token = graphene.String()
+
+    @only_user
+    @only_requester
+    def mutate(self, info, request, token):
+        req = db.assigned_dataset.find_one({"request": request})
+        answers = []
+        for k, v in req['answers'].items():
+            answers.append("data://text/plain;base64," + base64.b64encode(v).decode())
+        return GetLabelResultOfRequester(data=answers)
 
 class Query(graphene.ObjectType):
     # 나의 프로젝트 반환
