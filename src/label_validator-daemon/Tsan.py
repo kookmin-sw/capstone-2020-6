@@ -62,7 +62,7 @@ class Tsan:
         for label in db.user_assigned.find({"request": int(request['idx'])}):
             labeled[label['username']] = {
                 "dataset": {},
-                "reliability": 0 # 하드 코딩, 곧 바꿈
+                "reliability": 0.5 # 하드 코딩, 곧 바꿈
             }
             for x in label['dataset']:
                 labeled[label['username']]['dataset'][str(x['data'])] = x['label']
