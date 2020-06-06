@@ -1,7 +1,8 @@
 from django.contrib import admin
 from rangefilter.filter import DateRangeFilter, DateTimeRangeFilter
 from django.contrib.auth.admin import UserAdmin
-from .models import User, Category, Request, PaymentLog, Labeling, Dataset
+from .models import User, Category, Request, PaymentLog, Labeling, Dataset, \
+    Keyword
 
 
 # Register your models here.
@@ -186,6 +187,21 @@ class DatasetAdmin(admin.ModelAdmin):
         'name',
     )
 
+class KeywordAdmin(admin.ModelAdmin):
+    list_display = (
+        'idx',
+        'request',
+        'name',
+    )
+    list_filter = (
+        'name',
+        'idx',
+        'request',
+    )
+    search_fields = (
+        'name',
+    )
+
 
 admin.site.register(User, CustomUserAdmin)
 admin.site.register(Category, CategoryAdmin)
@@ -193,6 +209,7 @@ admin.site.register(Request, RequestAdmin)
 admin.site.register(PaymentLog, PaymentLogAdmin)
 admin.site.register(Labeling, LabelingAdmin)
 admin.site.register(Dataset, DatasetAdmin)
+admin.site.register(Keyword, KeywordAdmin)
 
 """
 DateRangeFilter 사용
