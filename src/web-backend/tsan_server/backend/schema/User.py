@@ -176,16 +176,16 @@ class reliabilityUpdate(graphene.Mutation):
     reliability = graphene.Float()
 
     class Arguments:
+        username = graphene.String()
         token = graphene.String()
         reliability = graphene.Float()
 
     @only_user
-    def mutate(self, info, token, **kwargs):
-        res = jwt_decode_handler(token)
-        user = User.objects.get(username=res['username'])
+    @only_admin
+    def mutate(self, info, username, **kwargs):
         reliability = kwargs.get("reliability", None)
         try:
-            user = User.objects.get(username=user.username)
+            user = User.objects.get(username=username)
         except Exception as ex:
             return reliabilityUpdate(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다." + str(ex)))
         else:
