@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # +
 import tensorflow as tf
-import tensorflow_addons as tfa
 import numpy as np
 import pandas as pd
 from transformers import *
@@ -43,7 +42,7 @@ PRETRAINED_INIT_CONFIGURATION = {
     "monologg/distilkobert": {"do_lower_case": False}
 }
 
-SPIECE_UNDERLINE = u'▁'
+SPIECE_UNDERLINE = u'_'
 
 class KoBertTokenizer(PreTrainedTokenizer):
     """
@@ -262,73 +261,60 @@ class KoBertTokenizer(PreTrainedTokenizer):
 def convert_data(data_df):
     global tokenizer
     
-    SEQ_LEN = 64 #SEQ_LEN : 버트에 들어갈 인풋의 길이
+    SEQ_LEN = 64 #SEQ_LEN : ��Ʈ�� �� ��ǲ�� ����
     
     tokens, masks, segments, targets = [], [], [], []
     
     for i in tqdm(range(len(data_df))):
-        # token : 문장을 토큰화함
+        # token : ������ ��ūȭ��
         token = tokenizer.encode(data_df[DATA_COLUMN][i], max_length=SEQ_LEN, pad_to_max_length=True)
        
-        # 마스크는 토큰화한 문장에서 패딩이 아닌 부분은 1, 패딩인 부분은 0으로 통일
+        # ����ũ�� ��ūȭ�� ���忡�� �е��� �ƴ� �κ��� 1, �е��� �κ��� 0���� ����
         num_zeros = token.count(0)
         mask = [1]*(SEQ_LEN-num_zeros) + [0]*num_zeros
         
-        # 문장의 전후관계를 구분해주는 세그먼트는 문장이 1개밖에 없으므로 모두 0
+        # ������ ���İ��踦 �������ִ� ���׸�Ʈ�� ������ 1���ۿ� �����Ƿ� ��� 0
         segment = [0]*SEQ_LEN
 
-        # 버트 인풋으로 들어가는 token, mask, segment를 tokens, segments에 각각 저장
-        tokens.append(token)
-        masks.append(mask)
-        segments.append(segment)
+        # ��Ʈ ��ǲ���� ���� token, mask, segment�� tokens, segments�� ���� ����
         
-        # 정답(긍정 : 1 부정 0)을 targets 변수에 저장해 줌
+        # ����(���� : 1 ���� 0)�� targets ������ ������ ��
         targets.append(data_df[LABEL_COLUMN][i])
 
-    # tokens, masks, segments, 정답 변수 targets를 numpy array로 지정    
+    # tokens, masks, segments, ���� ���� targets�� numpy array�� ����    
     tokens = np.array(tokens)
     masks = np.array(masks)
     segments = np.array(segments)
     targets = np.array(targets)
 
-    return [tokens, masks, segments], targets
+    return [tokens, masks, segments], target
 
-    def convert_data(data_df):
-        global tokenizer
+def create_model():
     
-    SEQ_LEN = 64 #SEQ_LEN : 버트에 들어갈 인풋의 길이
+    SEQ_LEN = 64
+    BATCH_SIZE = 32
     
-    tokens, masks, segments, targets = [], [], [], []
+    model = TFBertModel.from_pretrained("monologg/kobert", from_pt=True)
+    # ��ū ��ǲ, ����ũ ��ǲ, ���׸�Ʈ ��ǲ ����
+    token_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_word_ids')
+    mask_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_masks')
+    segment_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_segment')
+    # ��ǲ�� [��ū, ����ũ, ���׸�Ʈ]�� �� ����
+    bert_outputs = model([token_inputs, mask_inputs, segment_inputs])
+    bert_outputs = bert_outputs[1]
     
-    for i in tqdm(range(len(data_df))):
-        # token : 문장을 토큰화함
-        token = tokenizer.encode(data_df[DATA_COLUMN][i], max_length=SEQ_LEN, pad_to_max_length=True)
-       
-        # 마스크는 토큰화한 문장에서 패딩이 아닌 부분은 1, 패딩인 부분은 0으로 통일
-        num_zeros = token.count(0)
-        mask = [1]*(SEQ_LEN-num_zeros) + [0]*num_zeros
-        
-        # 문장의 전후관계를 구분해주는 세그먼트는 문장이 1개밖에 없으므로 모두 0
-        segment = [0]*SEQ_LEN
-
-        # 버트 인풋으로 들어가는 token, mask, segment를 tokens, segments에 각각 저장
-        tokens.append(token)
-        masks.append(mask)
-        segments.append(segment)
-        
-        # 정답(긍정 : 1 부정 0)을 targets 변수에 저장해 줌
-        targets.append(data_df[LABEL_COLUMN][i])
-
-    # tokens, masks, segments, 정답 변수 targets를 numpy array로 지정    
-    tokens = np.array(tokens)
-    masks = np.array(masks)
-    segments = np.array(segments)
-    targets = np.array(targets)
-
-    return [tokens, masks, segments], targets
-
- def sentence_convert_data(data):
-        global tokenizer
+    sentiment_drop = tf.keras.layers.Dropout(0.5)(bert_outputs)
+    sentiment_first = tf.keras.layers.Dense(1, activation='sigmoid', kernel_initializer=tf.keras.initializers.TruncatedNormal(stddev=0.02))(sentiment_drop)
+    sentiment_model = tf.keras.Model([token_inputs, mask_inputs, segment_inputs], sentiment_first)
+    
+    #�н��� ���� ���
+    latest = tf.train.latest_checkpoint(checkpoint_dir)
+    sentiment_model.load_weights(latest)
+    
+    return sentiment_model
+    
+def sentence_convert_data(data):
+    global tokenizer
     tokens, masks, segments = [], [], []
     token = tokenizer.encode(data, max_length=SEQ_LEN, pad_to_max_length=True)
     
@@ -353,7 +339,7 @@ def predict_label(df, model):
     for i in range(len(df)):
         sentence = df.iloc[i].data
 
-        #모델로 특징 추출       
+        #�𵨷� Ư¡ ����       
         data_x = sentence_convert_data(sentence)
         predict = model.predict(data_x)
         predict_value = np.ravel(predict)
@@ -371,3 +357,4 @@ def compareLabel(df):
     not_matched_df = df[df['label_temp'] != df['label_predicted']]
 
     return matched_df, not_matched_df
+
