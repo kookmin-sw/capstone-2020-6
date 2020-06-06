@@ -171,6 +171,37 @@ class UpdateAccount(graphene.Mutation):
             )
 
 
+class reliabilityUpdate(graphene.Mutation):
+    message = graphene.Field(Message)
+    reliability = graphene.Float()
+
+    class Arguments:
+        username = graphene.String()
+        token = graphene.String()
+        reliability = graphene.Float()
+
+    @only_user
+    @only_admin
+    def mutate(self, info, username, **kwargs):
+        reliability = kwargs.get("reliability", None)
+        try:
+            user = User.objects.get(username=username)
+        except Exception as ex:
+            return reliabilityUpdate(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다." + str(ex)))
+        else:
+            if reliability:
+                user.reliability = reliability
+                user.save()
+                message = "%s의 수정된 신뢰도: %f" % (user.username, user.reliability)
+            else:
+                message = "%s의  신뢰도: %f" % (user.username, user.reliability)
+
+        return reliabilityUpdate(
+            message=Message(status=True, message=message),
+            reliability=user.reliability
+        )
+
+
 """
 mutation {
   updatePassword(
