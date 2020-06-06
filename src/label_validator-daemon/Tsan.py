@@ -84,10 +84,10 @@ class Tsan:
         del data_['_id']
         db.user_assigned.find_one_and_update({"request": request, "username": username}, {"$set": data_})
     
-    def varifyRequest(self, request):
+    def vertifiedRequest(self, request):
         res = client.execute("""        
-                mutation ($request: String!, $token: String!){
-                    verifiedRequest(
+                mutation ($request: Int!, $token: String!){
+                    vertifiedRequest(
                         idx: $request
                         token: $token
                     ) {
@@ -102,7 +102,7 @@ class Tsan:
                 "token": self.token
             })
         data = json.loads(res)
-        return data['data']['verifiedRequest']['message']
+        return data['data']['vertifiedRequest']['message']
 
     def update_reliability(self, username, reliability):
         res = client.execute('''
@@ -143,6 +143,19 @@ class Tsan:
         #     for x in label['dataset']:
         #         labeled[label['username']]['dataset'][str(x['data'])] = x['label']
         # return labeled
+    
+    def save(self, request, answers):
+        db.assigned_dataset.update_one(
+            {
+                "request": int(request)
+            },
+            {
+                "$set":
+                {
+                    "answers": answers
+                }
+            }
+        )
     
     def download(self, request):
 

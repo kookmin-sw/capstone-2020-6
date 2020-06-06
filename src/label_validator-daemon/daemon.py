@@ -33,6 +33,7 @@ def image_choice(request):
 
 def image_capture_validator(request):
     global labels
+    answers = {}
     for data_key, filename in files.items():
         dddd = {
             "users": [],
@@ -69,6 +70,7 @@ def image_capture_validator(request):
 
         for i in range(len(dddd['users'])):
             dddd['users'][i]['reliability'] *= 0.999 if i in removed else 1.001
+
                 
         try:
             print([x, y, width, height])
@@ -76,6 +78,8 @@ def image_capture_validator(request):
             print(img.size)
             cropped = img.crop((x, y, x+width, y+height))
             cropped.save(filename)
+            with open(filename, "rb") as f:
+                answers[data_key] = f.read()
             print("\n".join(["%s: %.2f"%(label['username'], label['reliability']) for label in labels]))
         except Exception as e:
             print("Error")
@@ -83,7 +87,8 @@ def image_capture_validator(request):
     for label in labels:
         tsan.updateLabel(request=label['request'], username=label['username'], data=label)
         tsan.update_reliability(label['username'], label['reliability'])
-    tsan.varifyRequest(request=request['idx'])
+    tsan.vertifiedRequest(request=request['idx'])
+    tsan.save(request=request['idx'], answers=answers)
 
 def image_select(request):
     pass
