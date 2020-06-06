@@ -125,23 +125,27 @@ class PageMypageProject extends React.Component<Props, State> {
                                 {this.props.userStore?.isRequester &&
                                     <>
                                         <Table.Cell>
-                                        <div onClick={()=>this.show('start', item.id)}>
-                                        <Icon name="sign-in alternate"/>
-                                        </div>
+                                          <div onClick={()=>this.show('start', item.id)}>
+                                            <Icon name="sign-in alternate"/>
+                                          </div>
                                         </Table.Cell>
                                         <Table.Cell>
-                                        <div onClick={()=>this.show('end', item.id)}>
-                                        <Icon name="sign-out alternate"/>
-                                        </div>
+                                          <div onClick={()=>this.show('end', item.id)}>
+                                            <Icon name="sign-out alternate"/>
+                                          </div>
                                         </Table.Cell>
                                         <Table.Cell>
-                                        <div onClick={()=>this.handleReward(item.id)}>
-                                        <Icon name="bitcoin"/>
-                                        </div>
+                                          <div onClick={()=>this.handleReward(item.id)}>
+                                            <Icon name="bitcoin"/>
+                                          </div>
                                         </Table.Cell>
                                     </>
                                 }
-
+                                <Table.Cell>
+                                  <div onClick={()=>this.handleResult(this.props.userStore!.isRequester, item.id)}>
+                                    <Icon name="tasks"/>
+                                  </div>
+                                </Table.Cell>
                                 <Table.Cell>{item.status}</Table.Cell>
                             </Table.Row>
                         );
