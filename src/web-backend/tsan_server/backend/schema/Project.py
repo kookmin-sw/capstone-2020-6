@@ -182,7 +182,7 @@ class CreateRequest(graphene.Mutation):
             user.save()
 
             # TODO: 블록체인 API 연동
-            # TSanPoint.transferFrom(user.username, 'owner', total_point) # owner -> tsan
+            TSanPoint.transferFrom(user.username, 'tsan', total_point)
 
             request = Request(
                 user=user,
@@ -525,7 +525,7 @@ class Reward(graphene.Mutation):
                             # reward_point = request.total_point * 신뢰도 # 계획
 
                             # TODO: 블록체인 API 연동 (tsan -> labeler)
-                            # TSanPoint.transferFrom('owner',labeler.user.username, reward_point) # owner -> tsan
+                            TSanPoint.transferFrom('tsan', labeler.user.username, reward_point)
 
                             # DB 포인트 업데이트
                             labeler.user.point += reward_point
