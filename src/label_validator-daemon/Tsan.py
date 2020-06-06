@@ -80,8 +80,7 @@ class Tsan:
         return self.requests
     
     def updateLabel(self, request, username, data):
-        db.user_assigned.find_one({"request": request, "username": username}, {"$set": data})
-    
+        db.user_assigned.find_one_and_update({"request": request, "username": username}, {"$set": data})
     
     def getLabels(self, request):
         labeled = []
