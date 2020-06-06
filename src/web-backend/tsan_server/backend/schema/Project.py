@@ -525,6 +525,47 @@ class VerifyRequest(graphene.Mutation):
 
 """
 mutation{
+  verifiedRequest(
+    idx:1
+    token:"의뢰자/관리자"
+  ) {
+    message{
+      status
+      message
+    }
+    idx
+  }
+}
+"""
+class VerifiedRequest(graphene.Mutation):
+    message = graphene.Field(Message)
+    idx = graphene.Int()
+
+    class Arguments:
+        idx = graphene.Int()
+        token = graphene.String()
+
+    @only_user
+    @only_requester
+    def mutate(self, info, idx, token):
+        res = jwt_decode_handler(token)
+        user = User.objects.get(username=res['username'])
+        try:
+            request = Request.objects.get(idx=idx)
+        except Exception as ex:
+            return VerifiedRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다." + str(ex)))
+        else:
+            request.state = 'VED'
+            request.save()
+            message = "'%s'주제가 정상적으로 검증완료단계로 수정되었습니다." % (request.subject)
+            return VerifiedRequest(
+                message=Message(status=True, message=message),
+                idx=request.idx
+            )
+
+
+"""
+mutation{
   rewordedRequest(
     idx:1
     token:"의뢰자/관리자"

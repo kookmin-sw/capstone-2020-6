@@ -106,6 +106,7 @@ class Request(models.Model):
         ('RUN', 'running'),
         ('END', 'end'),
         ('VER', 'verify'),
+        ('VED', 'verified'),
         ('REW', 'done reword'),
     )
     state = models.CharField(max_length=3, choices=STATE_CHOICES, default='RED')
