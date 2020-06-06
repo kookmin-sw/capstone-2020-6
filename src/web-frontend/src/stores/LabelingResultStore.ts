@@ -13,6 +13,26 @@ export default class LabelingResultStore {
         this.labelingResult = [];
     }
 
+    @action getAnswerLabeler = (request:number) => {
+        client.mutate({
+            mutation: gql`
+                mutation ($request: Int!, $token: String!){
+                    getLabelResultOfLabeler(request: $request, token: $token) {
+                        data
+                    }
+                }
+            `,
+            variables: {
+                "request": request,
+                "token": localStorage.token
+            }
+        })
+        .then(({data}:any) => {
+            this.answers = JSON.parse(data.getLabelResultOfLabeler.data)
+            console.log(JSON.parse(data.getLabelResultOfLabeler.data))
+        })
+    }
+
     @action getAnswer = (request:number) => {
         client.mutate({
             mutation: gql`

@@ -1,6 +1,6 @@
 import React from 'react';
 import {RouteComponentProps, withRouter} from 'react-router-dom';
-import {Container, Header} from 'semantic-ui-react';
+import {Container, Header, Table} from 'semantic-ui-react';
 import Datetime from '../components/DateTime';
 
 import './PageLabelingParticipantsResult.css';
@@ -33,6 +33,7 @@ class PageLabelingParticipantsResult extends React.Component<Props, RouteCompone
   }
   componentDidMount() {
     this.props.labelingPageStore!.getRequest(parseInt(this.props.match.params.postId));
+    this.props.labelingResultStore?.getAnswerLabeler(parseInt(this.props.match.params.postId));
   }
   header = [
     { id: 1, headerItem: '번호' },
@@ -67,13 +68,40 @@ class PageLabelingParticipantsResult extends React.Component<Props, RouteCompone
             <div className="project-progress">
               <div style={{ width: `${this.props.labelingPageStore?.request.progressRate}%` }} />
             </div>
-          </Container>
-          <br/>
-          <Container className={"result_cont"}>
+        </Container>
+        </div>
+        <br/>
+        <div>
+          <Container>
             <Header as={'h3'}># Labeling 결과 분석</Header>
+            <Table celled>
+              <Table.Header>
+                <Table.HeaderCell textAlign="center">#</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">데이터 이름</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">입력 레이블</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">정답 레이블</Table.HeaderCell>
+                <Table.HeaderCell textAlign="center">정답 여부</Table.HeaderCell>
+              </Table.Header>
+              <Table.Body>
+                {
+                  this.props.labelingResultStore?.answers.map((answer:any, idx:number) => {
+                    console.log(answer)
+                    return (
+                      <Table.Row negative={!answer.is_answer} positive={answer.is_answer}>
+                        <Table.Cell textAlign="center">{idx}</Table.Cell>
+                        <Table.Cell>{answer.data || "데이터 없음"}</Table.Cell>
+                        <Table.Cell>{answer.label || "데이터 없음"}</Table.Cell>
+                        <Table.Cell>{answer.answer || "데이터 없음"}</Table.Cell>
+                        <Table.Cell textAlign="center">{answer.is_answer ? "O" : "X"}</Table.Cell>
+                      </Table.Row>
+                    )
+                  })
+                }
+              </Table.Body>
+            </Table>
             {/* TODO: Implement table body. */}
             {/* TODO: Check footer. */}
-            <ProjectListTable header={this.header} body={null}/>
+            {/* <ProjectListTable header={this.header} body={null}/> */}
           </Container>
         </div>
       </>

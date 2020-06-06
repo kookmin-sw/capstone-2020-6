@@ -5,6 +5,7 @@ import datetime
 import random
 import bson
 import base64
+import json
 from django.utils import timezone
 from mongodb import db
 from django.db.models import Q
@@ -1087,15 +1088,35 @@ class GetLabelResultOfRequester(graphene.Mutation):
     class Arguments:
         request = graphene.Int()
         token = graphene.String()
-
+   
     @only_user
     @only_requester
     def mutate(self, info, request, token):
         req = db.assigned_dataset.find_one({"request": request})
         answers = []
         for k, v in req['answers'].items():
-            answers.append("data://text/plain;base64," + base64.b64encode(v).decode())
+            answers.append("data://text/plain;base64," + base64.b64encode(v[1]).decode())
         return GetLabelResultOfRequester(data=answers)
+
+class GetLabelResultOfLabeler(graphene.Mutation):
+    message = graphene.Field(Message)
+    data = graphene.String()
+
+    class Arguments:
+        request = graphene.Int()
+        token = graphene.String()
+   
+    @only_user
+    def mutate(self, info, request, token):
+        res = jwt_decode_handler(token)
+        user = User.objects.get(username=res['username'])
+        assigned = db.assigned_dataset.find_one({"request": request})
+        data = db.user_assigned.find_one({"request": int(request), "username": res['username']})
+        for idx, x in enumerate(data['dataset']):
+            k = str(x['data'])
+            data['dataset'][idx]['data'] = k
+            data['dataset'][idx]['answer'] = assigned['answers'].get(k, [None, None])[0]
+        return GetLabelResultOfLabeler(data=json.dumps(data['dataset']))
 
 class Query(graphene.ObjectType):
     # 나의 프로젝트 반환

@@ -9,7 +9,7 @@ from backend.schema.Dataset import CreateDataset
 from backend.schema.Category import CreateCategory, UpdateCategory
 from backend.schema.Project import CreateRequest, UpdateRequest, StartRequest, EndRequest, TakeProject, \
     DeleteLabelerTakenProject, GetItem, SubmitLabel, EndUpdate, IncCurrentCycle, Reward, SubmitLabels, \
-    VerifyRequest, RewordedRequest, VerifiedRequest, GetLabelResultOfRequester
+    VerifyRequest, RewordedRequest, VerifiedRequest, GetLabelResultOfRequester, GetLabelResultOfLabeler
 from backend.schema.Payment import CreatePaymentLog, UpdatePaymentLog, DeletePaymentLog
 
 from command_center.schema import Dataset
@@ -53,6 +53,7 @@ class Mutation(graphene.ObjectType):
     verified_request = VerifiedRequest.Field()
     rewarded_request = RewordedRequest.Field()
     get_label_result_of_requester = GetLabelResultOfRequester.Field()
+    get_label_result_of_labeler = GetLabelResultOfLabeler.Field()
 
 
 

@@ -48,6 +48,7 @@ def image_capture_validator(request):
         for user in labels:
             label = [x for x in user['dataset'] if x['data'] == ObjectId(data_key)][0]
 
+            label['is_answer'] = True
             if label['label'] == None:
                 user['reliability'] *= 0.999
                 label['is_answer'] = False
@@ -70,7 +71,9 @@ def image_capture_validator(request):
 
         for i in range(len(dddd['users'])):
             dddd['users'][i]['reliability'] *= 0.999 if i in removed else 1.001
-
+            if i in removed:
+                label = [x for x in user['dataset'] if x['data'] == ObjectId(data_key)][0]
+                label['is_answer'] = False
                 
         try:
             print([x, y, width, height])
@@ -79,7 +82,12 @@ def image_capture_validator(request):
             cropped = img.crop((x, y, x+width, y+height))
             cropped.save(filename)
             with open(filename, "rb") as f:
-                answers[data_key] = f.read()
+                answers[data_key] = (json.dumps({
+                    "x": x,
+                    "y": y,
+                    "width": width,
+                    "height": height
+                }), f.read())
             print("\n".join(["%s: %.2f"%(label['username'], label['reliability']) for label in labels]))
         except Exception as e:
             print("Error")
