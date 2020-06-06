@@ -811,27 +811,30 @@ mutation{
 # 서버 개발 test용 API입니다.
 class EndUpdate(graphene.Mutation):
     message = graphene.Field(Message)
-    idx = graphene.Int()
+    reliability = graphene.Float()
 
     class Arguments:
-        idx = graphene.Int()
+        username = graphene.String()
+        reliability = graphene.Float()
         # cycle = graphene.Int()
         # state = graphene.String()
-        token = graphene.String()
+        # token = graphene.String()
 
-    @only_user
-    @only_requester
-    def mutate(self, info, idx, token):
-        res = jwt_decode_handler(token)
-        user = User.objects.get(username=res['username'])
+    def mutate(self, info, username, **kwargs):
+        # res = jwt_decode_handler(token)
+        # user = User.objects.get(username=res['username'])
+        reliability = kwargs.get("reliability", None)
         try:
-            request = Request.objects.get(idx=idx)
-            update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject,
-                             description=request.description,
-                             start_date=str(request.start_date), end_date=str(request.end_date),
-                             max_cycle=request.max_cycle, total_point=request.total_point,
-                             is_captcha=request.is_captcha, state='END',
-                             current_cycle=request.current_cycle)
+            # request = Request.objects.get(idx=idx)
+            # update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject,
+            #                  description=request.description,
+            #                  start_date=str(request.start_date), end_date=str(request.end_date),
+            #                  max_cycle=request.max_cycle, total_point=request.total_point,
+            #                  is_captcha=request.is_captcha, state='END',
+            #                  current_cycle=request.current_cycle)
+            user = User.objects.get(username=username)
+
+            """
             try:
                 update.clean()
             except ValidationError as e:
@@ -847,14 +850,21 @@ class EndUpdate(graphene.Mutation):
                 # print(TSanPoint.balanceOf('owner'))
                 # TSanPoint.supply(1000)
                 # print(TSanPoint.balanceOf('owner'))
-
-                message = "수정 완료"
-                return EndRequest(
-                    message=Message(status=True, message=message),
-                    idx=request.idx
-                )
+            """
         except Exception as ex:
             return EndRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다." + str(ex)))
+        else:
+            if reliability:
+                user.reliability = reliability
+                user.save()
+                message = "%s의 수정된 신뢰도: %f" % (user.username, user.reliability)
+            else:
+                message = "%s의  신뢰도: %f" % (user.username, user.reliability)
+
+        return EndUpdate(
+                message=Message(status=True, message=message),
+                reliability=user.reliability
+            )
 
 
 class IncCurrentCycle(graphene.Mutation):
@@ -1526,3 +1536,6 @@ query{
         request = Request.objects.get(idx=request_idx)
         keywords = [x for x in Keyword.objects.filter(request=request) if x.name]
         return keywords
+
+
+

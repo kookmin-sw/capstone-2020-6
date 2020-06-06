@@ -26,7 +26,7 @@ class User(django.contrib.auth.models.AbstractUser):
     email = models.CharField(max_length=30, validators=[validate_email])
     phone = models.CharField(max_length=30, validators=[validate_phone])  # 전화번호
     point = models.IntegerField(default=0)  # 포인트
-    reliability = models.FloatField(default=0)  # 신뢰도
+    reliability = models.FloatField(default=0.5)  # 신뢰도
     is_requester = models.BooleanField(default=False)  # 디폴트: 의뢰자
     is_robot = models.BooleanField(default=False)
     """
