@@ -105,6 +105,8 @@ class Request(models.Model):
         ('RED', 'before_permission'),
         ('RUN', 'running'),
         ('END', 'end'),
+        ('VER', 'verify'),
+        ('REW', 'done reword'),
     )
     state = models.CharField(max_length=3, choices=STATE_CHOICES, default='RED')
     is_rewarded = models.BooleanField(default=False) # 보상 진행 여부
