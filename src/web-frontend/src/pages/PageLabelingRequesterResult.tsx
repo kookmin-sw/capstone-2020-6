@@ -175,9 +175,10 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
                   <>보상이 완료되었습니다.</>}
             </div>
           </div>
-          <div style={{ marginTop: 30, padding: 20, backgroundColor: "#f2f2f2" }}>
-            현재까지 완료된 데이터셋 <a href={"/download/" + this.props.match?.params.postId}>다운로드</a>
-          </div>
+          {this.props.labelingPageStore?.request.state === 'REW' &&
+            <div style={{ marginTop: 30, padding: 20, backgroundColor: "#f2f2f2" }}>
+              현재까지 완료된 데이터셋 <a href={"/download/" + this.props.match?.params.postId}>다운로드</a>
+            </div>}
         </Container>
       </>
     );
