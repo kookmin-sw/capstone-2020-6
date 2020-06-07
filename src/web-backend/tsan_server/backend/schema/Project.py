@@ -1473,10 +1473,14 @@ class Query(graphene.ObjectType):
         offset = kwargs.get("offset", None)
         limit = kwargs.get("limit", None)
 
-        if offset or limit:
-            request_rows = Request.objects.filter(state=state).order_by('-idx')[offset:offset + limit]
+        request_rows = []
+        if state == "END":                
+            request_rows = Request.objects.filter(Q(state="END") | Q(state="VER") | Q(state="VED") | Q(state="REW")).order_by('-idx')
         else:
             request_rows = Request.objects.filter(state=state).order_by('-idx')
+
+        if offset or limit:
+            request_rows = request_rows[offset:offset + limit]
 
         for request in request_rows:
             if request.user is not None:
