@@ -48,10 +48,9 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
     this.props.myPageProjectStore?.setId(this.props.match.params.postId);
     if (type === 'start') this.props.myPageProjectStore?.setStartReq();
     else if (type === 'end') this.props.myPageProjectStore?.setEndReq();
-    // TODO
-    else if (type === 'varify') return;
+    else if (type === 'verify') this.props.myPageProjectStore?.setVerReq();
     else if (type === 'reward') this.props.myPageProjectStore?.reward();
-
+    window.location.reload();
   }
   download() {
     
@@ -168,7 +167,7 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
                 this.props.labelingPageStore?.request.state === 'RUN' ?
                   <Button color='red' onClick={() => this.handleConfirm('end')}>종료하기</Button> :
                     this.props.labelingPageStore?.request.state === 'END'?
-                  <Button color='yellow' onClick={() => this.handleConfirm('varify')}>검증하기</Button> :
+                  <Button color='yellow' onClick={() => this.handleConfirm('verify')}>검증하기</Button> :
                     this.props.labelingPageStore?.request.state === 'VER'?
                   <>검증 중입니다.</> :
                     this.props.labelingPageStore?.request.state !== 'VED' ?
