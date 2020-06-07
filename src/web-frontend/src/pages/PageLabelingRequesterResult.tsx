@@ -48,7 +48,10 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
     this.props.myPageProjectStore?.setId(this.props.match.params.postId);
     if (type === 'start') this.props.myPageProjectStore?.setStartReq();
     else if (type === 'end') this.props.myPageProjectStore?.setEndReq();
+    // TODO
+    else if (type === 'varify') return;
     else if (type === 'reward') this.props.myPageProjectStore?.reward();
+
   }
   download() {
 
@@ -164,7 +167,13 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
                 <Button color='blue' onClick={() => this.handleConfirm('start')}>시작하기</Button> :
                 this.props.labelingPageStore?.request.state === 'RUN' ?
                   <Button color='red' onClick={() => this.handleConfirm('end')}>종료하기</Button> :
-                  <Button color='green' onClick={() => this.handleConfirm('reward')}>보상하기</Button>}
+                    this.props.labelingPageStore?.request.state === 'END'?
+                  <Button color='yellow' onClick={() => this.handleConfirm('varify')}>검증하기</Button> :
+                    this.props.labelingPageStore?.request.state === 'VER'?
+                  <>검증 중입니다.</> :
+                    this.props.labelingPageStore?.request.state !== 'VED' ?
+                  <Button color='green' onClick={() => this.handleConfirm('reward')}>보상하기</Button>:
+                  <>보상이 완료되었습니다.</>}
             </div>
           </div>
           <div style={{ marginTop: 30, padding: 20, backgroundColor: "#f2f2f2" }}>
