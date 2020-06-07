@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
-# +
+
 import tensorflow as tf
 import numpy as np
 import pandas as pd
 from transformers import *
-import numpy as np
-import pandas as pd
 from tqdm import tqdm
 import os
 import logging
 import unicodedata
 from shutil import copyfile
+
+SEQ_LEN = 64
+BATCH_SIZE = 32
 
 logger = logging.getLogger(__name__)
 
@@ -258,6 +259,8 @@ class KoBertTokenizer(PreTrainedTokenizer):
 
         return out_vocab_model, out_vocab_txt
 
+tokenizer = KoBertTokenizer.from_pretrained('monologg/kobert')
+
 def convert_data(data_df):
     global tokenizer
     
@@ -290,26 +293,25 @@ def convert_data(data_df):
     return [tokens, masks, segments], target
 
 def create_model():
-    
+    print('create_model 시작')
     SEQ_LEN = 64
     BATCH_SIZE = 32
     
     model = TFBertModel.from_pretrained("monologg/kobert", from_pt=True)
-    # ��ū ��ǲ, ����ũ ��ǲ, ���׸�Ʈ ��ǲ ����
+    # 토큰 인풋, 마스크 인풋, 세그먼트 인풋 정의
     token_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_word_ids')
     mask_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_masks')
     segment_inputs = tf.keras.layers.Input((SEQ_LEN,), dtype=tf.int32, name='input_segment')
-    # ��ǲ�� [��ū, ����ũ, ���׸�Ʈ]�� �� ����
+    # 인풋이 [토큰, 마스크, 세그먼트]인 모델 정의
     bert_outputs = model([token_inputs, mask_inputs, segment_inputs])
     bert_outputs = bert_outputs[1]
     
     sentiment_drop = tf.keras.layers.Dropout(0.5)(bert_outputs)
     sentiment_first = tf.keras.layers.Dense(1, activation='sigmoid', kernel_initializer=tf.keras.initializers.TruncatedNormal(stddev=0.02))(sentiment_drop)
     sentiment_model = tf.keras.Model([token_inputs, mask_inputs, segment_inputs], sentiment_first)
-    
     #�н��� ���� ���
-    latest = tf.train.latest_checkpoint(checkpoint_dir)
-    sentiment_model.load_weights(latest)
+    weight_path = 'KOBERT_huggingface.h5'
+    sentiment_model.load_weights(weight_path)
     
     return sentiment_model
     
@@ -333,28 +335,31 @@ def sentence_convert_data(data):
     return [tokens, masks, segments]
 
 def predict_label(df, model):
-    
+    print("predict_label 시작")
     label_predicted = []
     
-    for i in range(len(df)):
+    for i in tqdm(range(len(df))):
         sentence = df.iloc[i].data
 
         #�𵨷� Ư¡ ����       
         data_x = sentence_convert_data(sentence)
         predict = model.predict(data_x)
         predict_value = np.ravel(predict)
+        label_predicted.append(predict_value)
     
     return label_predicted   
 
-def compareLabel(df):
+def compare_label(df):
+    print("compare_label 시작")
     trained_model = create_model()
 
     label_predicted = predict_label(df, trained_model)
-
+    print(len(df), len(label_predicted))
     df['label_predicted'] = label_predicted
 
     matched_df = df[df['label_temp'] == df['label_predicted']]
     not_matched_df = df[df['label_temp'] != df['label_predicted']]
 
+    print("compare_label 완료")
     return matched_df, not_matched_df
 

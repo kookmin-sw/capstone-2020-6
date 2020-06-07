@@ -7,5 +7,5 @@
 *.hdf5
 *.csv
 *.jpg
-*.ckpt
+*.ckpt.*
 *.zip

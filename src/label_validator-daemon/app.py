@@ -3,13 +3,33 @@ import text_selection_validator
 
 import pandas as pd
 import operator
+from tqdm import tqdm
 
+def image_df():
+
+    df = pd.read_csv("_dummy_labeling_dataset_furniture-images.csv", index_col = 0)
+
+    return df
+
+def text_df():
+    
+    df = pd.read_csv("dummy_labeling_dataset_movie_sentiment-text.csv", index_col = 0)
+
+    return df
 
 def make_dataframe() :
     
-    df = pd.read_csv("dummy_labeling_dataset_movie_sentiment-text.csv", index_col = 0)
+    print("dataframe 생성")
+    #text
+    # df = pd.read_csv("dummy_labeling_dataset_movie_sentiment-text.csv", index_col = 0)
+
+    #image
+    df = pd.read_csv("_dummy_labeling_dataset_furniture-images.csv", index_col = 0)
+    
     # df = pd.DataFrame({'project_id':[], 'data_index':[],'data':[],'label_user':[],'user_id':[],'user_credibility':[]})
     
+    print("dataframe 완료")
+
     return df
 
 def find_mode_label(labels):
@@ -26,11 +46,13 @@ def find_mode_label(labels):
 
 def temp_labeling(df, n):
     
+    print("temp_labeling 시작")
+
     temp_labeling_df = pd.DataFrame({'data_index' : [], 'data' : [], 'label_temp' : []})
     
     data_indices = set(df.data_index.tolist())
     
-    for i in data_indices:
+    for i in tqdm(data_indices):
         temp_df = df[df['data_index'] == i]
         
         credibilities = temp_df.user_credibility.tolist()
@@ -49,7 +71,9 @@ def temp_labeling(df, n):
         
         data = pd.Series([i, temp_df.data.iloc[0], mode_label, credibility_label_temp], index = ['data_index', 'data', 'label_temp', 'credibility_label_temp'])  
         temp_labeling_df = temp_labeling_df.append(data, ignore_index = True)
-            
+
+    print("temp_labeling 완료")   
+
     return temp_labeling_df
 
 def cal_cor_pers(df, correct_df): 
@@ -65,7 +89,7 @@ def cal_cor_pers(df, correct_df):
 
     index_df = df.loc[:, ['data_index', 'label_user', 'user_id']]
 
-    for index in index_label:
+    for index in tqdm(index_label):
         if index in data_indices:
             cor_df = index_df[(index_df['data_index'] == index) & (index_df['label_user']== index_label[index])]
             correct = len(cor_df)
@@ -81,7 +105,7 @@ def cal_cor_pers(df, correct_df):
 def cal_credibility(df, cor_pers, right_id):
     new_cred = 0
     new_creds = {}
-    cred_df = df.iloc[:, ['data_index', 'user_id', 'user_credibility']]
+    cred_df = df.loc[:, ['data_index', 'user_id', 'user_credibility']]
     
     for i in range(len(cred_df)):
         index = cred_df.iloc[i]
@@ -90,7 +114,7 @@ def cal_credibility(df, cor_pers, right_id):
     cor_data_indices = cor_pers.keys()
     ids = cred_df.user_id.tolist()
     
-    for index in cor_data_indices:
+    for index in tqdm(cor_data_indices):
         tmp_df = cred_df[cred_df['data_index']== index]
         id_list = tmp_df.user_id.tolist()
         for id in id_list:
@@ -113,7 +137,7 @@ def second_labeling(df, false_df, n):
     
     mode_labels = []
     
-    for i in data_indices:
+    for i in tqdm(data_indices):
         temp_df = df[df['data_index'] == i]
         
         credibilities = temp_df.user_credibility_temp.tolist()
@@ -133,11 +157,11 @@ def final_labeling(project_id, correct_df, second_df):
     
     final_df = pd.DataFrame({'project_id': [], 'data_index':[], 'data':[], 'label_final':[]})
     
-    for i in range(len(correct_df)):
+    for i in tqdm(range(len(correct_df))):
         data = pd.Series([project_id, correct_df.iloc[i].data_index, correct_df.iloc[i].data, correct_df.iloc[i].label_predicted],index = ['project_id', 'data_index', 'data', 'label_final'])   
         final_df = final_df.append(data, ignore_index=True)
     
-    for i in range(len(second_df)):
+    for i in tqdm(range(len(second_df))):
         data = pd.Series([project_id, second_df.iloc[i].data_index, second_df.iloc[i].data, second_df.iloc[i].label_second],index = ['project_id', 'data_index', 'data', 'label_final'])   
         final_df = final_df.append(data, ignore_index=True)
     
@@ -202,12 +226,15 @@ def final_credibility(df, cor_pers, right_id):
     return user_cred_df   
 
 def image_selection_label(df):
+
+    print("image_selection_label validation 시작")
+
     n = len(set(df.user_id.tolist()))
     
     temp_label_df = temp_labeling(df, n)
     
        
-    matched_df, not_matched_df = image_selection_validator.compareLabel(temp_label_df)
+    matched_df, not_matched_df = image_selection_validator.compare_label(temp_label_df)
     
     
     cor_pers, right_id = cal_cor_pers(df, matched_df)
@@ -218,7 +245,7 @@ def image_selection_label(df):
        
     second_temp_label_df = second_labeling(temp_credibility_df, not_matched_df, n)##
 
-    project_id = df.iloc[0].project_id.values[0]
+    project_id = df.iloc[0].project_id
 
     final_df = final_labeling(project_id, matched_df,  second_temp_label_df)
     
@@ -229,12 +256,15 @@ def image_capture_label(df):
     return
 
 def text_selection_label(df):
+
+    print("text_selection_label validation 시작")
+
     n = len(set(df.user_id.tolist()))
     
     temp_label_df = temp_labeling(df, n)
     
       
-    matched_df, not_matched_df = text_selection_validator.compareLabel(temp_label_df)
+    matched_df, not_matched_df = text_selection_validator.compare_label(temp_label_df)
     
     
     cor_pers, right_id = cal_cor_pers(df, matched_df)
@@ -245,24 +275,27 @@ def text_selection_label(df):
       
     second_temp_label_df = second_labeling(temp_credibility_df, not_matched_df, n)##
 
-    project_id = df.iloc[0].project_id.values[0]
+    project_id = df.iloc[0].project_id
 
     final_df = final_labeling(project_id, matched_df,  second_temp_label_df)
     
     return final_df
-    return
 
-def main(num):
+def main(idx):
     
-    df = make_dataframe()
+    # df = make_dataframe()
     
     # 1: image_selection, 2: image_capture, 3: text_selection
-    if num == 1:
-        image_selection_label(df)
-    elif num == 2:
+    if idx == 1:
+        df = image_df()
+        final_df = image_selection_label(df)
+        print(final_df)
+    elif idx == 2:
         image_capture_label(df)
-    elif num == 3:
-        text_selection_label(df)
+    elif idx == 3:
+        df = text_df()
+        final_df = text_selection_label(df)
+        print(final_df)
 
     else:
         print('type error')
@@ -271,9 +304,14 @@ def main(num):
 
 
 if __name__ == '__main__' :
-
-    num = int(input('type : '))
-    main(num)
+    while True:
+        try:
+            idx = int(input('type : '))
+            main(idx)
+        except AttributeError as e:
+            print(e)
+    # idx = int(input('type : '))
+    # main(idx)
 
 
 
