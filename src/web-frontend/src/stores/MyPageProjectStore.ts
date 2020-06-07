@@ -55,7 +55,7 @@ export default class ProjectListStore {
             }
         }).then(({data}: any) => {
             this.loading = false;
-            // window.location.reload();
+            window.location.reload();
             alert(data.reward.message.message);
         }).catch((e) => {
             this.loading = false;
