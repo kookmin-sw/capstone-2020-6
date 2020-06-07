@@ -1,5 +1,6 @@
 *.ipynb
 /.ipynb_checkpoints
+/furniture-images
 
 *.json
 *.h5
@@ -7,3 +8,4 @@
 *.csv
 *.jpg
 *.ckpt
+*.zip
