@@ -53,7 +53,7 @@ class Tsan:
     def get_end_requests(self):
         res = client.execute('''
             query {
-                getAllRequest(state: "END") {
+                getAllRequest(state: "VER") {
                     message {
                         status
                         message
@@ -140,7 +140,7 @@ class Tsan:
         #         "dataset": {},
         #         "reliability": self.get_reliability(label['username'])
         #     }
-        #     for x in label['dataset']:
+        #     for x in label['dataset']:dataset
         #         labeled[label['username']]['dataset'][str(x['data'])] = x['label']
         # return labeled
     

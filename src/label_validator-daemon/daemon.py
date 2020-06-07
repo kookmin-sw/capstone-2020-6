@@ -1,5 +1,7 @@
 from Tsan import Tsan
 import json
+from pprint import pprint
+import copy
 from numpy import dot
 from numpy.linalg import norm
 import numpy as np
@@ -9,6 +11,12 @@ import cv2
 
 def cos_sim(A, B):
     return dot(A, B)/(norm(A)*norm(B))
+
+def softmax(a) :
+    exp_a = np.exp(a)
+    sum_exp_a = np.sum(exp_a)
+    y = exp_a / sum_exp_a
+    return y
 
 def mean(dddd):
     removed = []
@@ -30,16 +38,60 @@ def text_select(request):
 
 def image_choice(request):
     global labels
+    # request['category']
+    # request['idx']
+    # request['state']
+    # request['isRewarded']
     print(request)
-    # assigned = tsan.assigned_dataset(request)
-    # rels = [x['reliability'] for x in labels]
-    # print(rels)
-    # print(labels)
-    # print(assigned)
-    # answers = {}
-    # for data_key, filename in files.items():
-    #     pass
-    # pass
+    assigned = tsan.assigned_dataset(request)
+    dataset = [str(x) for x in assigned['dataset']]
+
+    users = [x['username'] for x in labels]
+    rels_user = [x['reliability'] for x in labels]
+    rels = softmax(np.array(rels_user))
+
+    answers = {}
+    for prob in dataset:
+        print(prob)
+        user_labels = []
+        users_data = [label['dataset'] for label in labels]
+        for user_data in users_data:
+            for user_label in user_data:
+                if user_label['data'] == ObjectId(prob):
+                    user_labels.append(user_label.get("label", None))
+        user_labels = np.array(user_labels)
+        cand0 = rels[user_labels == '0']
+        cand1 = rels[user_labels == '1']
+        none = user_labels == None
+
+        cr0 = sum(cand0)
+        cr1 = sum(cand1)
+
+        win = '0'
+        loose = '1'
+        wr = cr0
+        if cr0 < cr1:
+            wr = cr1
+            win, loose = loose, win
+        for u_idx, u in enumerate(user_labels == win):
+            if u: rels_user[u_idx] *= 1.001 * wr
+        for u_idx, u in enumerate(user_labels == loose):
+            if u: rels_user[u_idx] *= 0.999 * wr
+        for u_idx, u in enumerate(user_labels == None):
+            if u: rels_user[u_idx] *= 0.99
+        answers[prob] = win
+
+        for user_data in users_data:
+            for user_label in user_data:
+                if user_label['data'] == ObjectId(prob):
+                    user_label['is_answer'] = (win == user_label['label'])
+
+
+    for idx, label in enumerate(labels):
+        tsan.updateLabel(request=label['request'], username=label['username'], data=label)
+        tsan.update_reliability(label['username'], rels_user[idx])
+    tsan.verifiedRequest(request=request['idx'])
+    tsan.save(request=request['idx'], answers=answers)
 
 def image_capture_validator(request):
     global labels
