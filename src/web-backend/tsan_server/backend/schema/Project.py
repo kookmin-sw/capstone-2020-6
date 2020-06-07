@@ -638,7 +638,7 @@ class Reward(graphene.Mutation):
             return Reward(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다." + str(ex)))
         else:
             if user.username == request.user.username or user.is_superuser:
-                if request.state == "END":
+                if request.state == "VED":
                     if request.is_rewarded == False:
                         labelers = Labeling.objects.filter(request__idx=idx).distinct()
 
@@ -663,8 +663,10 @@ class Reward(graphene.Mutation):
                             paymentlogs.create(type="0", user=labeler.user, request=request,
                                                note=note, balance=labeler.user.point, amount=reward_point)
 
+                            request.state = "REW"
                             request.is_rewarded = True
                             request.save()
+
 
                         message = "'%s'주제에 대해 '%d'명의 참여자에게 정상적으로 보상처리 되었습니다." % (request.subject, len(labelers))
                         return Reward(
@@ -938,25 +940,26 @@ class EndUpdate(graphene.Mutation):
     reliability = graphene.Float()
 
     class Arguments:
-        username = graphene.String()
-        reliability = graphene.Float()
+        # username = graphene.String()
+        # reliability = graphene.Float()
         # cycle = graphene.Int()
         # state = graphene.String()
         # token = graphene.String()
+        pass
 
-    def mutate(self, info, username, **kwargs):
+    def mutate(self, info, **kwargs):
         # res = jwt_decode_handler(token)
         # user = User.objects.get(username=res['username'])
-        reliability = kwargs.get("reliability", None)
+        # reliability = kwargs.get("reliability", None)
         try:
-            # request = Request.objects.get(idx=idx)
+            request = Request.objects.get(idx=60)
             # update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject,
             #                  description=request.description,
             #                  start_date=str(request.start_date), end_date=str(request.end_date),
             #                  max_cycle=request.max_cycle, total_point=request.total_point,
             #                  is_captcha=request.is_captcha, state='END',
             #                  current_cycle=request.current_cycle)
-            user = User.objects.get(username=username)
+            # user = User.objects.get(username=username)
 
             """
             try:
@@ -978,16 +981,18 @@ class EndUpdate(graphene.Mutation):
         except Exception as ex:
             return EndRequest(message=Message(status=False, message="수정 요청한 인스턴스가 존재하지 않습니다." + str(ex)))
         else:
-            if reliability:
-                user.reliability = reliability
-                user.save()
-                message = "%s의 수정된 신뢰도: %f" % (user.username, user.reliability)
-            else:
-                message = "%s의  신뢰도: %f" % (user.username, user.reliability)
+            # if reliability:
+            #     user.reliability = reliability
+            #     user.save()
+            #     message = "%s의 수정된 신뢰도: %f" % (user.username, user.reliability)
+            # else:
+            #     message = "%s의  신뢰도: %f" % (user.username, user.reliability)
+            request.state = "VED"
+            request.save()
+            message = "수정 완료"
 
         return EndUpdate(
-                message=Message(status=True, message=message),
-                reliability=user.reliability
+                message=Message(status=True, message=message)
             )
 
 
