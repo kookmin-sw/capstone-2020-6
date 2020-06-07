@@ -91,21 +91,38 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
             ) : (
               (this.props.labelingPageStore?.request.labelingTypeValue == 3) ? (
                 <>
-            <Header as={'h3'}># Labeling 결과 일부</Header>
-            <Grid columns={6}>
-              {
-                this.props.labelingResultStore?.answers.map((answer: string, i: number) => {
-                  if (i >= 12) return;
-                  return (
-                    <Grid.Column textAlign="center">
-                      <img src={answer} style={{ width: 100, height: 100 }} />
-                    </Grid.Column>
-                  )
-                })
-              }
-            </Grid>
-          </>
-              ) : (
+                  <Header as={'h3'}># Labeling 결과 일부</Header>
+                  <Grid columns={6}>
+                    {
+                      this.props.labelingResultStore?.answers.map((answer: string, i: number) => {
+                        if (i >= 12) return;
+                        return (
+                          <Grid.Column textAlign="center">
+                            <img src={answer} style={{ width: 100, height: 100 }} />
+                          </Grid.Column>
+                        )
+                      })
+                    }
+                  </Grid>
+                </>
+              ) : (this.props.labelingPageStore?.request.labelingTypeValue == 2) ? (
+                <>
+                  <Header as={'h3'}># Labeling 결과 일부</Header>
+                  <Grid columns={6}>
+                    {
+                      this.props.labelingResultStore?.answers.map((answer: string, i: number) => {
+                        if (i >= 12) return;
+                        return (
+                          <Grid.Column textAlign="center">
+                            <img src={answer} style={{ width: 100, height: 100 }} />
+                          </Grid.Column>
+                        )
+                      })
+                    }
+                  </Grid>
+                </>
+              )
+              : (
                   this.props.labelingPageStore?.request.state === 'REW' && <Grid>
                       <Grid.Row columns={2}>
                         <Grid.Column>

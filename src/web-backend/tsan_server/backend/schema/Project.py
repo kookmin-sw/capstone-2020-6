@@ -1100,10 +1100,20 @@ class GetLabelResultOfRequester(graphene.Mutation):
     @only_user
     @only_requester
     def mutate(self, info, request, token):
+        reqd = Request.objects.get(idx=request)
         req = db.assigned_dataset.find_one({"request": request})
         answers = []
-        for k, v in req['answers'].items():
-            answers.append("data://text/plain;base64," + base64.b64encode(v[1]).decode())
+        max_cnt = 30
+        if reqd.category.idx == 2:
+            cnt = 0
+            for data, is_object in req['answers'].items():
+                if int(is_object) == 1:
+                    if max_cnt <= cnt: break
+                    answers.append("data://text/plain;base64," + base64.b64encode(db.image_dataset.find_one({"_id": bson.ObjectId(data)})['data']).decode())
+                    cnt += 1
+        elif reqd.category.idx == 3:
+            for k, v in req['answers'].items():
+                answers.append("data://text/plain;base64," + base64.b64encode(v[1]).decode())
         return GetLabelResultOfRequester(data=answers)
 
 class GetLabelResultOfLabeler(graphene.Mutation):

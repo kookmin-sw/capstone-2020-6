@@ -49,7 +49,6 @@ export default class LabelingResultStore {
         })
         .then(({data}:any) => {
             this.answers = data.getLabelResultOfRequester.data
-            window.location.reload();
         })
         .catch(() => {})
     }
