@@ -127,6 +127,34 @@ export default class ProjectListStore {
         })
     }
 
+    @action setVerReq = () => {
+        this.loading = true;
+        client.mutate({
+            mutation: gql`
+            mutation VerifyRequest($idx: Int!, $token: String!) {
+                verifyRequest(idx: $idx, token: $token) {
+                    message{
+                        status
+                        message
+                    }
+                }
+            }`
+            ,
+            variables: {
+                idx: parseInt(this.idx),
+                token: localStorage.token
+            }
+        }).then(({data}:any) => {
+                this.loading = false;
+
+                alert(data.verifyRequest.message.message);
+            }
+        ).catch(e=>{
+            this.loading = false;
+
+            console.log(e)
+        })
+    }
 
     @action getProjects = () => {
         this.loading = true;
