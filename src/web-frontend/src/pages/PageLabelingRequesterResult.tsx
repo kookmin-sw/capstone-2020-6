@@ -50,7 +50,6 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
     else if (type === 'end') this.props.myPageProjectStore?.setEndReq();
     else if (type === 'verify') this.props.myPageProjectStore?.setVerReq();
     else if (type === 'reward') this.props.myPageProjectStore?.reward();
-    window.location.reload();
   }
   download() {
     

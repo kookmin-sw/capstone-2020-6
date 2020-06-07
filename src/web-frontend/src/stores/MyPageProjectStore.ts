@@ -51,14 +51,14 @@ export default class ProjectListStore {
                 }`,
             variables: {
                 idx: parseInt(this.idx),
-                token: localStorage.token,
-            },
+                token: localStorage.token
+            }
         }).then(({data}: any) => {
             this.loading = false;
+            // window.location.reload();
             alert(data.reward.message.message);
         }).catch((e) => {
             this.loading = false;
-
             console.log(e);
         });
     }
@@ -87,7 +87,7 @@ export default class ProjectListStore {
             }
         }).then(({data}:any) => {
             this.loading = false;
-
+            window.location.reload();
             alert(data.startRequest.message.message);
             }
         ).catch((e) => {
@@ -117,7 +117,7 @@ export default class ProjectListStore {
             }
         }).then(({data}:any) => {
             this.loading = false;
-
+            window.location.reload();
             alert(data.endRequest.message.message);
             }
         ).catch(e=>{
@@ -146,12 +146,11 @@ export default class ProjectListStore {
             }
         }).then(({data}:any) => {
                 this.loading = false;
-
+                window.location.reload();
                 alert(data.verifyRequest.message.message);
             }
         ).catch(e=>{
             this.loading = false;
-
             console.log(e)
         })
     }

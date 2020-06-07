@@ -649,7 +649,10 @@ class Reward(graphene.Mutation):
                             # reward_point = request.total_point * 신뢰도 # 계획
 
                             # TODO: 블록체인 API 연동 (tsan -> labeler)
-                            TSanPoint.transferFrom('tsan', labeler.user.username, reward_point)
+                            try:
+                                TSanPoint.transferFrom('tsan', labeler.user.username, reward_point)
+                            except:
+                                print("블록체인 연동 에러")
 
                             # DB 포인트 업데이트
                             labeler.user.point += reward_point
