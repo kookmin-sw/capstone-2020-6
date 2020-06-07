@@ -54,6 +54,7 @@ export default class ProjectListStore {
               currentCycle
               maxCycle
               totalPoint
+              isRewarded
             }
           }
         }
@@ -79,6 +80,7 @@ export default class ProjectListStore {
             progress: item.currentCycle,
             all: item.maxCycle,
             progress_rate: item.currentCycle / item.maxCycle,
+            reward_state: item.isRewarded,
           });
         });
         if (state === 'RUN') {
@@ -122,6 +124,7 @@ export default class ProjectListStore {
               currentCycle
               maxCycle
               totalPoint
+              isRewarded
             }
           }
         }
@@ -148,6 +151,7 @@ export default class ProjectListStore {
             progress: item.currentCycle,
             all: item.maxCycle,
             progress_rate: item.currentCycle / item.maxCycle,
+            reward_state: item.isRewarded,
           });
         });
         if (state === 'RUN') {
@@ -189,6 +193,7 @@ export default class ProjectListStore {
             currentCycle
             maxCycle
             totalPoint
+            isRewarded
           }
         }
       }
@@ -210,6 +215,7 @@ export default class ProjectListStore {
           progress: item.currentCycle,
           all: item.maxCycle,
           progress_rate: item.currentCycle / item.maxCycle,
+          reward_state: item.isRewarded,
         });
       });
       if (this.searchKeyword === '') {
@@ -253,6 +259,7 @@ export default class ProjectListStore {
             currentCycle
             maxCycle
             totalPoint
+            isRewarded
           }
         }
       }
@@ -274,6 +281,7 @@ export default class ProjectListStore {
               progress: item.currentCycle,
               all: item.maxCycle,
               progress_rate: item.currentCycle / item.maxCycle,
+              reward_state: item.isRewarded,
             });
           });
           if (this.searchKeyword === '') {
