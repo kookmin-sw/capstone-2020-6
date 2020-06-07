@@ -22,6 +22,7 @@ from django.urls import path
 from django.conf.urls import url, include
 
 import os
+from bson import ObjectId
 from django.conf import settings
 from django.http import HttpResponse, Http404
 from backend.models import Request
@@ -40,7 +41,28 @@ def download(request, idx):
     #     with open(file_path, 'rb') as fh:
     idx = int(idx)
     req = Request.objects.get(idx=idx)
-    if req.category.idx == 3:
+
+    print(req.category.idx)
+
+    if req.category.idx == 2:
+        directory = "./tmp/data/%d/"%(idx)
+        try: os.makedirs(directory)
+        except: pass
+        assigned = db.assigned_dataset.find_one({"request": idx})
+        for key, answer in assigned['answers'].items():
+            if(answer == '1'):
+                data = db.image_dataset.find_one({"_id": ObjectId(key)})['data']
+                with open(os.path.join(directory, "%s.jpg"%(key)), "wb") as f:
+                    f.write(data)
+
+        zipf = zipfile.ZipFile('./tmp/%d.zip'%(idx), 'w', zipfile.ZIP_DEFLATED)
+        zipdir(directory, zipf)
+        zipf.close()
+        
+        f = open('./tmp/%d.zip'%(idx), "rb")
+        data = f.read()
+        f.close()
+    elif req.category.idx == 3:
         directory = "./tmp/data/%d/"%(idx)
         try: os.makedirs(directory)
         except: pass
