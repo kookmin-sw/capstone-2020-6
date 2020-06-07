@@ -19,18 +19,25 @@ interface Props extends RouteComponentProps<any> {
   all?: string;
   progress_rate?: string;
   status: string;
+  reward_state: boolean;
 }
 
-function calcAgo(start: string, end: string) {
-  let y1 = parseInt(start.slice(0,4));
+function calcAgo(end: string) {
+
+  let today = new Date();
+
+  let y1 = today.getFullYear();
+  let m1 = today.getMonth() + 1;
+  let d1 = today.getDate();
+
   let y2 = parseInt(end.slice(0,4));
-  let m1 = parseInt(start.slice(5,7));
   let m2 = parseInt(end.slice(5,7));
-  let d1 = parseInt(start.slice(8,10));
   let d2 = parseInt(end.slice(8,10));
 
   let _start = new Date(y1, m1, d1) as any;
   let _end = new Date(y2, m2, d2) as any;
+
+  if(_start > _end) return '';
 
   let timestamp = _end - _start;
 
@@ -47,7 +54,7 @@ function calcAgo(start: string, end: string) {
   ago += parseInt(''+hour) ? hour + '시간 ' : '';
   ago += parseInt(''+min) ? min + '분 ' : '';
 
-  if (ago.length > 0) return ago + '뒤 ';
+  return ago + '뒤 ';
 }
 
 class CardProject extends React.Component<Props> {
@@ -81,7 +88,8 @@ class CardProject extends React.Component<Props> {
               &nbsp;|&nbsp;
               {this.props.point}P
               |&nbsp;
-              {calcAgo(this.props.start_date, this.props.end_date)}종료
+              {calcAgo(this.props.end_date)}종료
+              {this.props.reward_state === true && ` | 보상완료`}
             </Card.Meta>
             <Card.Description className="card_description">{this.props.description!.length < 40 ? this.props.description : this.props.description?.slice(0, 38) + '...'}</Card.Description>
             <ProgressBar
