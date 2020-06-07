@@ -24,13 +24,41 @@ from django.conf.urls import url, include
 import os
 from django.conf import settings
 from django.http import HttpResponse, Http404
+from backend.models import Request
+from mongodb import db
+import zipfile
+
+def zipdir(path, ziph):
+    # ziph is zipfile handle
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ziph.write(os.path.join(root, file))
 
 def download(request, idx):
     # file_path = os.path.join(settings.MEDIA_ROOT, path)
     # if os.path.exists(file_path):
     #     with open(file_path, 'rb') as fh:
-    response = HttpResponse("ASDSDSADASD", content_type="application/vnd.ms-excel")
-    response['Content-Disposition'] = 'inline; filename=HI'
+    idx = int(idx)
+    req = Request.objects.get(idx=idx)
+    if req.category.idx == 3:
+        directory = "./tmp/data/%d/"%(idx)
+        try: os.makedirs(directory)
+        except: pass
+        assigned = db.assigned_dataset.find_one({"request": idx})
+        for key, answer in assigned['answers'].items():
+            with open(os.path.join(directory, "%s.jpg"%(key)), "wb") as f:
+                f.write(answer[1])
+
+        zipf = zipfile.ZipFile('./tmp/%d.zip'%(idx), 'w', zipfile.ZIP_DEFLATED)
+        zipdir(directory, zipf)
+        zipf.close()
+        
+        f = open('./tmp/%d.zip'%(idx), "rb")
+        data = f.read()
+        f.close()
+
+    response = HttpResponse(data, content_type="application/zip")
+    response['Content-Disposition'] = 'inline; filename=%d.zip'%(idx)
     return response
     # raise Http404
 

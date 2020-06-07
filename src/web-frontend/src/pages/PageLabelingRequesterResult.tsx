@@ -54,7 +54,7 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
 
   }
   download() {
-
+    
   }
   render() {
     return (
@@ -177,7 +177,7 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
             </div>
           </div>
           <div style={{ marginTop: 30, padding: 20, backgroundColor: "#f2f2f2" }}>
-            현재까지 완료된 데이터셋 <a href={"http://localhost:8000/download/" + this.props.match?.params.postId}>다운로드</a>
+            현재까지 완료된 데이터셋 <a href={"/download/" + this.props.match?.params.postId}>다운로드</a>
           </div>
         </Container>
       </>

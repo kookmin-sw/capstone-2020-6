@@ -125,6 +125,7 @@ def main():
     tsan.get_end_requests()
     for request in tsan.requests:
         idx = int(request['category']['idx'])
+        print(request['idx'], idx)
         labels = tsan.getLabels(request)
         if idx == 1: # 텍스트 객관식
             continue
