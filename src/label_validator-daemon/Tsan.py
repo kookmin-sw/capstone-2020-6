@@ -157,6 +157,9 @@ class Tsan:
             }
         )
     
+    def assigned_dataset(self, request):
+        return db.assigned_dataset.find_one({"request": int(request['idx'])})
+    
     def download(self, request):
 
         folder = "./tmp/%s/"%(request['idx'])

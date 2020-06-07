@@ -29,7 +29,17 @@ def text_select(request):
     pass
 
 def image_choice(request):
-    pass
+    global labels
+    print(request)
+    # assigned = tsan.assigned_dataset(request)
+    # rels = [x['reliability'] for x in labels]
+    # print(rels)
+    # print(labels)
+    # print(assigned)
+    # answers = {}
+    # for data_key, filename in files.items():
+    #     pass
+    # pass
 
 def image_capture_validator(request):
     global labels
@@ -114,16 +124,21 @@ def main():
 
     tsan.get_end_requests()
     for request in tsan.requests:
-        files = tsan.download(request)
-        labels = tsan.getLabels(request)
         idx = int(request['category']['idx'])
+        labels = tsan.getLabels(request)
         if idx == 1: # 텍스트 객관식
+            continue
+            files = tsan.download(request)
             text_select(request)
         elif idx == 2: # 이미지 선택형
+            idx = int(request['category']['idx'])
             image_choice(request)
         elif idx == 3: # 이미지 영역지정
+            continue
+            files = tsan.download(request)
             image_capture_validator(request)
         elif idx == 4: # 이미지 객관식
+            continue
             image_select(request)
         break
 
