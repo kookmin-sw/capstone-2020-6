@@ -370,7 +370,7 @@ class AddPoint(graphene.Mutation):
         user.point = user.point + new_point
         user.save()
         # TODO: 블록체인에 추가하는 부분 제작 해야함
-        TSanPoint.transferFrom('tsan', user, new_point)
+        TSanPoint.transferFrom('tsan', user.username, new_point)
 
         # 현 데이터베이스에 로깅하는 부분 제작해야함
         # 0 = 보상, 1 = 충전, 2 = 환급, 3 = 소비, 4 = 기타사유

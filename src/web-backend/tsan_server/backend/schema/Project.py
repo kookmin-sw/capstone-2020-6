@@ -675,7 +675,7 @@ class Reward(graphene.Mutation):
                     else:
                         return Reward(message=Message(status=False, message="이미 해당 프로젝트에 대해 보상 진행이 완료되었습니다."))
                 else:
-                    return Reward(message=Message(status=False, message="종료된 프로젝트만 보상을 진행할 수 있습니다."))
+                    return Reward(message=Message(status=False, message="검증완료된 프로젝트만 보상을 진행할 수 있습니다."))
             else:
                 return Reward(message=Message(status=False, message="관리자 또는 해당 프로젝트의 의뢰자만 보상을 진행할 수 있습니다."))
 
@@ -952,7 +952,7 @@ class EndUpdate(graphene.Mutation):
         # user = User.objects.get(username=res['username'])
         # reliability = kwargs.get("reliability", None)
         try:
-            request = Request.objects.get(idx=60)
+            request = Request.objects.get(idx=55)
             # update = Request(user=user, category=request.category, thumbnail=request.thumbnail, subject=request.subject,
             #                  description=request.description,
             #                  start_date=str(request.start_date), end_date=str(request.end_date),
@@ -987,8 +987,10 @@ class EndUpdate(graphene.Mutation):
             #     message = "%s의 수정된 신뢰도: %f" % (user.username, user.reliability)
             # else:
             #     message = "%s의  신뢰도: %f" % (user.username, user.reliability)
-            request.state = "VED"
-            request.save()
+            # request.state = "VED"
+            # request.is_rewarded = False
+            # request.save()
+            print("jen 잔액: ", TSanPoint.balanceOf('jen'))
             message = "수정 완료"
 
         return EndUpdate(
