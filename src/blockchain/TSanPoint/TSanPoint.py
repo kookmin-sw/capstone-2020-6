@@ -18,8 +18,9 @@ contract = w3.eth.contract(contract_address, abi=ABI)
 #####FUNCTIONS
 
 ##총 발행 Point 확인
-def totalSupply():
-    return contract.functions.totalSupply().call({'from': '0xA364820C7268C805604Fe7C98E613c4E17F68d21'})
+def balanceOf(_user):
+    a = hex(int(str_to_num(_user)))
+    return contract.functions.balanceOf(a).call({'from': '0xA364820C7268C805604Fe7C98E613c4E17F68d21'})
 
 ##_user 잔액 확인
 def balanceOf(_user):
