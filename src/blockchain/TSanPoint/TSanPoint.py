@@ -9,7 +9,7 @@ infura_url = "https://ropsten.infura.io/v3/63264f9ada7d4691a3333e445eddba49"
 # print(ABI)
 w3 = Web3(Web3.HTTPProvider(infura_url))
 
-tx_hash ='0x4870bbc716436c2142055463e5bfb28959a02d79345c01ce496cd81845379d34'
+tx_hash ='0xc0a6729bdc9425ce6f79cfe6d8c8af28b7eaec74d16a0c9069541b326374e590'
 tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
 contract_address = tx_receipt.contractAddress
 contract = w3.eth.contract(contract_address, abi=ABI)
@@ -32,7 +32,7 @@ def transferFrom(_from,_to,_value):
     construct_txn = contract.functions.transferFrom(_from,_to,_value).buildTransaction({
         'from': acct.address,
         'nonce': w3.eth.getTransactionCount(acct.address),
-        'gas': 400000,
+        'gas': 60000,
         'gasPrice': w3.toWei('21', 'gwei')})
     signed = acct.signTransaction(construct_txn)
     w3.eth.sendRawTransaction(signed.rawTransaction)
@@ -47,7 +47,7 @@ def supply(_value):
     construct_txn = contract.functions.supply(_value).buildTransaction({
         'from': acct.address,
         'nonce': w3.eth.getTransactionCount(acct.address),
-        'gas': 40000,
+        'gas': 60000,
         'gasPrice': w3.toWei('21', 'gwei')})
     signed = acct.signTransaction(construct_txn)
     w3.eth.sendRawTransaction(signed.rawTransaction)
@@ -60,7 +60,7 @@ def extinct(_from,_value):
     construct_txn = contract.functions.extinct(_from,_value).buildTransaction({
         'from': acct.address,
         'nonce': w3.eth.getTransactionCount(acct.address),
-        'gas': 40000,
+        'gas': 60000,
         'gasPrice': w3.toWei('21', 'gwei')})
     signed = acct.signTransaction(construct_txn)
     w3.eth.sendRawTransaction(signed.rawTransaction)
