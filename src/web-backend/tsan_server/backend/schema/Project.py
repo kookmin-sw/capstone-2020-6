@@ -642,17 +642,15 @@ class Reward(graphene.Mutation):
                     if request.is_rewarded == False:
                         labelers = Labeling.objects.filter(request__idx=idx).distinct()
 
+                        labeler_rewardpoint = {}
                         for labeler in labelers:
                             # TODO: ML 모듈과 연동 후 신뢰도 기반으로 보상 나눔
                             reward_point = request.total_point // len(labelers) # 임시: 1/N
-                            print("total_point: ", request.total_point, "len(laberlers); ", len(labelers))
+                            # print("total_point: ", request.total_point, "len(laberlers); ", len(labelers))
                             # reward_point = request.total_point * 신뢰도 # 계획
 
-                            # TODO: 블록체인 API 연동 (tsan -> labeler)
-                            try:
-                                TSanPoint.transferFrom('tsan', labeler.user.username, reward_point)
-                            except:
-                                print("블록체인 연동 에러")
+                            # 블록체인 API 인
+                            labeler_rewardpoint[labeler.user.username] = reward_point
 
                             # DB 포인트 업데이트
                             labeler.user.point += reward_point
@@ -669,6 +667,12 @@ class Reward(graphene.Mutation):
                             request.state = "REW"
                             request.is_rewarded = True
                             request.save()
+
+                        # TODO: 블록체인 API 연동 (tsan -> labeler)
+                        try:
+                            TSanPoint.transferReward('tsan', labeler_rewardpoint)
+                        except:
+                            print("블록체인 연동 에러")
 
 
                         message = "'%s'주제에 대해 '%d'명의 참여자에게 정상적으로 보상처리 되었습니다." % (request.subject, len(labelers))
