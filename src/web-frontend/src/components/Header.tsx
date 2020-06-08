@@ -18,7 +18,7 @@ class Header extends React.Component<Props> {
           <span>T-SAN, 티끌모아 태산</span>
           <Container className="main_body_text">
             <br/>
-            <div>티끌 모아 태산 T-SAN에서 데이터 레이블링을 통한 보상을 얻어블보세요.</div>
+            <div>티끌 모아 태산 T-SAN에서 데이터 레이블링을 통한 보상을 얻어보세요.</div>
             저희 T-SAN 플랫폼은 자체적으로 데이터셋을 확보하고<br/>
             레이블링을 진행하여 인공지능 사업 발전에 기여할 수 있습니다.
           </Container>
