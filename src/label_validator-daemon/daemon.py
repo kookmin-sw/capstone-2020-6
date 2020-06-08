@@ -192,9 +192,6 @@ def image_select(request):
             })
         i += 1
     inp = toDF(data)
-    
-    inp.to_csv('inp.csv', mode='w')###
-    
     res = psi_daemon.image_selection_label(inp)
     print(res)
 
