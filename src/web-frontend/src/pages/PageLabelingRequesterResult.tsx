@@ -89,7 +89,7 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
               <>
           </>
             ) : (
-              (this.props.labelingPageStore?.request.labelingTypeValue == 3) ? (
+              (this.props.labelingPageStore?.request.labelingTypeValue == 3 && this.props.labelingPageStore?.request.state === 'REW') ? (
                 <>
                   <Header as={'h3'}># Labeling 결과 일부</Header>
                   <Grid columns={6}>
@@ -105,7 +105,7 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
                     }
                   </Grid>
                 </>
-              ) : (this.props.labelingPageStore?.request.labelingTypeValue == 2) ? (
+              ) : (this.props.labelingPageStore?.request.labelingTypeValue == 2 && this.props.labelingPageStore?.request.state === 'REW') ? (
                 <>
                   <Header as={'h3'}># Labeling 결과 일부</Header>
                   <Grid columns={6}>
