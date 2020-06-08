@@ -121,6 +121,31 @@ class PageLabelingRequesterResult extends React.Component<Props, RouteComponentP
                     }
                   </Grid>
                 </>
+              ) : (this.props.labelingPageStore?.request.labelingTypeValue == 4) ? (
+                <>
+                  {
+                    this.props.labelingResultStore?.category.map((category: string) => {
+                      return (
+                        <>
+                          <Header as={'h3'}># {category} 레이블 샘플</Header>
+                          <Grid columns={6}>
+                            {
+                              this.props.labelingResultStore?.answers.map((answer: string) => {
+                                let item:any = JSON.parse(answer)
+                                if(item[0] !== category) return
+                                return (
+                                  <Grid.Column textAlign="center">
+                                    <img src={item[1]} style={{ width: 100, height: 100 }} />
+                                  </Grid.Column>
+                                )
+                              })
+                            }
+                          </Grid>
+                        </>
+                      )
+                    })
+                  }
+                </>
               )
               : (
                   this.props.labelingPageStore?.request.state === 'REW' && <Grid>

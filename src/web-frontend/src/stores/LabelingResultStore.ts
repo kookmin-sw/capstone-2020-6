@@ -7,6 +7,7 @@ export default class LabelingResultStore {
     @observable labelingResult: any = [];
     @observable chartColors: any = [];
     @observable answers:any = [];
+    @observable category:any = [];
 
     constructor() {
         this.levelData = [];
@@ -49,6 +50,14 @@ export default class LabelingResultStore {
         })
         .then(({data}:any) => {
             this.answers = data.getLabelResultOfRequester.data
+            const category:any[] = []
+            this.answers.forEach((elem:any) => {
+                const cate = JSON.parse(elem)[0]
+                if(category.findIndex(function(x){ return x == cate }) == -1) {
+                    category.push(cate)
+                }
+            })
+            this.category = category
         })
         .catch(() => {})
     }

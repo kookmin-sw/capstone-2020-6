@@ -1116,6 +1116,24 @@ class GetLabelResultOfRequester(graphene.Mutation):
         elif reqd.category.idx == 3:
             for k, v in req['answers'].items():
                 answers.append("data://text/plain;base64," + base64.b64encode(v[1]).decode())
+        elif reqd.category.idx == 4:
+            items = {}
+            keywords = [x.name for x in reqd.keyword_set.all()]
+            for keyword in keywords:
+                if keyword == "": continue
+                items[keyword] = []
+            for k, v in req['answers'].items():
+                for keyword in keywords:
+                    try:
+                        if v == keyword and len(items[keyword]) < 6:
+                            img = db.image_dataset.find_one({"_id": bson.ObjectId(k)})
+                            items[keyword].append("data://text/plain;base64," + base64.b64encode(img['data']).decode())
+                    except:
+                        pass
+            answers = []
+            for k, v in items.items():
+                for row in v:
+                    answers.append(json.dumps([k, row]))
         return GetLabelResultOfRequester(data=answers)
 
 class GetLabelResultOfLabeler(graphene.Mutation):
@@ -1135,7 +1153,11 @@ class GetLabelResultOfLabeler(graphene.Mutation):
         for idx, x in enumerate(data['dataset']):
             k = str(x['data'])
             data['dataset'][idx]['data'] = k
-            data['dataset'][idx]['answer'] = assigned['answers'].get(k, [None, None])[0]
+            ans = assigned['answers'].get(k, [None, None])
+            if type(ans) == str:
+                data['dataset'][idx]['answer'] = ans
+            else:
+                data['dataset'][idx]['answer'] = ans[0]
         return GetLabelResultOfLabeler(data=json.dumps(data['dataset']))
 
 class Query(graphene.ObjectType):
