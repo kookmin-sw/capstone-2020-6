@@ -5,7 +5,7 @@ from bson import ObjectId
 from mongodb import db
 from graphqlclient import GraphQLClient
 
-client = GraphQLClient('http://localhost:8000/v1/graphql')
+client = GraphQLClient('http://tsan.tech/v1/graphql')
 
 class Tsan:
 

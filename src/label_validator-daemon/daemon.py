@@ -9,7 +9,7 @@ from PIL import Image
 from bson import ObjectId
 import pandas as pd
 import cv2
-# import psi_daemon
+import psi_daemon
 
 def cos_sim(A, B):
     return dot(A, B)/(norm(A)*norm(B))
@@ -180,6 +180,8 @@ def image_select(request):
     data = []
     for prob_key, prob_file in files.items():
         for label in labels:
+            if prob_file == './tmp/66/.DS_Store': ###
+                continue
             data.append({
                 "project_id": request['idx'],
                 "data_index": i,
@@ -190,8 +192,25 @@ def image_select(request):
             })
         i += 1
     inp = toDF(data)
-    # res = psi_daemon.image_selection_label(inp)
-    # print(res)
+    res, rels = psi_daemon.image_selection_label(inp)
+    res = json.loads(res)
+    rels = json.loads(rels)
+    answers = {}
+    for r in res:
+        i = int(r['data_index'])
+        for label in labels:
+            label['dataset'][i]['is_answer'] = label['dataset'][i]['label'] == r['label_final']
+        for prob_key, prob_file in files.items():
+            if prob_file == r['data']:
+                answers[prob_key] = r['label_final']
+    for label in labels:
+        label['reliability'] = [x['user_credibility'] for x in rels if x['user_id'] == label['username']][0]
+    for label in labels:
+        tsan.updateLabel(request=label['request'], username=label['username'], data=label)
+        tsan.update_reliability(label['username'], label['reliability'])
+    tsan.verifiedRequest(request=request['idx'])
+    tsan.save(request=request['idx'], answers=answers)
+
 
 def main():
     global files
