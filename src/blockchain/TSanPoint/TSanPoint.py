@@ -39,6 +39,24 @@ def transferFrom(_from,_to,_value):
 
     return 'transferFrom';
 
+def transferReward(_from,_data):
+    acct = w3.eth.account.privateKeyToAccount('1EBA152E3D8A5CFDD002E203368A739D7CB6267A79B35322399700E5D9FE67E0')
+
+    _from = hex(int(str_to_num(_from)))
+    _to = list(_data.keys())
+    _to = [hex(int(str_to_num(i))) for i in _to]
+    _value = list(_data.values())
+
+    construct_txn = contract.functions.transferReward(len(_to),_from,_to,_value).buildTransaction({
+        'from': acct.address,
+        'nonce': w3.eth.getTransactionCount(acct.address),
+        'gas':1000000,
+        'gasPrice': w3.toWei('21', 'gwei')})
+    signed = acct.signTransaction(construct_txn)
+    w3.eth.sendRawTransaction(signed.rawTransaction)
+
+    return 'transfer';
+
 ## Point 생성
 def supply(_value):
     acct = w3.eth.account.privateKeyToAccount('1EBA152E3D8A5CFDD002E203368A739D7CB6267A79B35322399700E5D9FE67E0')
