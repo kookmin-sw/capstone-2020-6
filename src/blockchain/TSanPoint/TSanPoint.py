@@ -22,13 +22,12 @@ def balanceOf(_user):
     a = hex(int(str_to_num(_user)))
     return contract.functions.balanceOf(a).call({'from': '0xA364820C7268C805604Fe7C98E613c4E17F68d21'})
 
-##_user 잔액 확인
-def balanceOf(_user):
-    return contract.functions.balanceOf(_user).call({'from': '0xA364820C7268C805604Fe7C98E613c4E17F68d21'})
 ## Point 전송
 def transferFrom(_from,_to,_value):
     acct = w3.eth.account.privateKeyToAccount('1EBA152E3D8A5CFDD002E203368A739D7CB6267A79B35322399700E5D9FE67E0')
-    # gas = contract.functions.transferFrom(_from,_to,_value).estimateGas()
+
+    _from = hex(int(str_to_num(_from)))
+    _to = hex(int(str_to_num(_to)))
 
     construct_txn = contract.functions.transferFrom(_from,_to,_value).buildTransaction({
         'from': acct.address,
@@ -38,7 +37,7 @@ def transferFrom(_from,_to,_value):
     signed = acct.signTransaction(construct_txn)
     w3.eth.sendRawTransaction(signed.rawTransaction)
 
-    return 'transfer';
+    return 'transferFrom';
 
 ## Point 생성
 def supply(_value):
