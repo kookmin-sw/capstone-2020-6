@@ -13,3 +13,7 @@ TSanPoint.transferFrom('owner','kookmin',100)
 
 ##생성
 TSanPoint.supply(1000)
+
+##보상
+d = {'kookmin':100, 'jihee':200, 'aaa':1000,'bbb':20000}
+TSanPoint.transferReward('tsan',d)
