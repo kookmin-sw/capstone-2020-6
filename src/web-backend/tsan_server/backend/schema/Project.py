@@ -219,17 +219,7 @@ class CreateRequest(graphene.Mutation):
 
             rows = []
             if dataset.type == "text":
-                rows = db.text_dataset.aggregate(
-                    [{
-                        "$sample": {
-                            "size": count_dataset
-                        }
-                    }, {
-                        "$project": {
-                            "_id": True
-                        }
-                    }]
-                )
+                rows = db.text_dataset.find({"category": str(dataset.idx)}, {"_id": 1}).limit(count_dataset)
             else:
                 rows = db.image_dataset.find({"dataset": dataset.idx}, {"_id": 1}).limit(count_dataset)
 
@@ -1138,6 +1128,25 @@ class GetLabelResultOfRequester(graphene.Mutation):
             for k, v in items.items():
                 for row in v:
                     answers.append(json.dumps([k, row]))
+        elif reqd.category.idx == 1:
+            print(reqd.category.idx)
+            items = {}
+            keywords = [x.name for x in reqd.keyword_set.all()]
+            for keyword in keywords:
+                if keyword == "": continue
+                items[keyword] = []
+            for k, v in req['answers'].items():
+                for keyword in keywords:
+                    try:
+                        if v == keyword and len(items[keyword]) < 6:
+                            items[keyword].append(db.text_dataset.find_one({"_id": bson.ObjectId(k)})['text'])
+                    except:
+                        pass
+            answers = []
+            for k, v in items.items():
+                for row in v:
+                    answers.append(json.dumps([k, row]))
+
         return GetLabelResultOfRequester(data=answers)
 
 class GetLabelResultOfLabeler(graphene.Mutation):
