@@ -1,4 +1,5 @@
 tmp/
+furniture-images/
 
 *.ipynb
 /.ipynb_checkpoints
@@ -9,3 +10,4 @@ tmp/
 *.csv
 *.jpg
 *.ckpt
+*.zip

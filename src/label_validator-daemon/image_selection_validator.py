@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import pandas as pd
-from keras.preprocessing import image
-from keras.applications.densenet import DenseNet201
-from keras.applications.densenet import preprocess_input, decode_predictions
-from keras.callbacks import ModelCheckpoint, EarlyStopping
-from keras.optimizers import Adam
-from keras.layers import Dense, GlobalAveragePooling2D, Dropout
-from keras.models import Sequential,load_model, model_from_json
+from tensorflow.keras.preprocessing import image
+from tensorflow.keras.applications.densenet import DenseNet201
+from tensorflow.keras.applications.densenet import preprocess_input, decode_predictions
+from tensorflow.keras.callbacks import EarlyStopping
+from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.layers import Dense, GlobalAveragePooling2D, Dropout
+from tensorflow.keras.models import Sequential
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import KFold
-from tqdm.notebook import tqdm
+from tqdm import tqdm
 
 
-num_epochs = 300
+num_epochs = 20
 batch_size = 64
 
 learning_rate = 0.001
@@ -26,26 +26,24 @@ n_split = 5
 
 conv_base = DenseNet201(include_top = False, weights='imagenet', input_shape=(224,224,3))
 
-early_stopping = EarlyStopping(monitor='val_loss', patience=10)
-
 kf = KFold(n_splits=n_split, shuffle=True)
 
 le = LabelEncoder()
 
-def model(num_classes):
+def create_classifier(num_classes):
     
-    model = Sequential()
+    classifier = Sequential()
 
-    model.add(GlobalAveragePooling2D(input_shape=conv_base.output[0].shape))
+    classifier.add(GlobalAveragePooling2D(input_shape=conv_base.output[0].shape))
 
-    model.add(Dense(num_classes, activation='softmax'))
+    classifier.add(Dense(num_classes, activation='softmax'))
     
     #모델 컴파일
-    model.compile(optimizer=Adam(learning_rate),  # Optimization
+    classifier.compile(optimizer=Adam(learning_rate),  # Optimization
                   loss='categorical_crossentropy',  # Loss Function 
                   metrics=['accuracy'])  # Metrics / Accuracy
     
-    return model
+    return classifier
 
 def extract_features(df, sample_count, num_classes):
     datagen = image.ImageDataGenerator(rescale=1./255)
@@ -68,23 +66,25 @@ def extract_features(df, sample_count, num_classes):
             break
     return data_features, data_labels
 
-def train_model(_df):
-    
+def train_model(df):
+    print("train_model 시작")
     df['label_encoding'] = list(map(str,le.fit_transform(df['label_temp'])))
     
     labels = set(df.label_temp.tolist())
 
     num_classes  = len(labels)
 
-    model = model(num_classes)
+    classifier = create_classifier(num_classes)
 
     data_features, data_labels = extract_features(df, len(df), num_classes)
+
+    early_stopping = EarlyStopping(monitor='val_loss', patience=3)
 
     for train_index, test_index in kf.split(data_features):
         x_train,x_test=data_features[train_index],data_features[test_index]
         y_train,y_test=data_labels[train_index],data_labels[test_index]
         
-        history = model.fit(x_train, y_train,
+        history = classifier.fit(x_train, y_train,
                             epochs=num_epochs,
                             batch_size=batch_size, 
                             validation_data=(x_test, y_test),
@@ -93,15 +93,15 @@ def train_model(_df):
 
     trained_model = Sequential()
     trained_model.add(conv_base)
-    trained_model.add(model)
+    trained_model.add(classifier)
 
     return trained_model
 
 def predict_label(df, model):
-    
+    print("predict_label 시작")
     label_predicted = []
     
-    for i in range(len(df)):
+    for i in tqdm(range(len(df))):
         img = image.load_img(df.iloc[i].data , target_size=(224,224))
         img_data = image.img_to_array(img)
 
@@ -110,11 +110,13 @@ def predict_label(df, model):
 
         #모델로 특징 추출
         label_predicted.append(model.predict_classes(img_data))
-        label_predicted = []
+    
+    label_predicted = le.inverse_transform(label_predicted)
     
     return label_predicted
 
-def compareLabel(df):
+def compare_label(df):
+    print("compare_label 시작")
     trained_model = train_model(df)
 
     label_predicted = predict_label(df, trained_model)
@@ -124,4 +126,5 @@ def compareLabel(df):
     matched_df = df[df['label_temp'] == df['label_predicted']]
     not_matched_df = df[df['label_temp'] != df['label_predicted']]
 
+    print("compare_label 완료")
     return matched_df, not_matched_df

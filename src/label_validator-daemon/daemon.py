@@ -180,6 +180,8 @@ def image_select(request):
     data = []
     for prob_key, prob_file in files.items():
         for label in labels:
+            if prob_file == './tmp/66/.DS_Store': ###
+                continue
             data.append({
                 "project_id": request['idx'],
                 "data_index": i,
@@ -190,6 +192,9 @@ def image_select(request):
             })
         i += 1
     inp = toDF(data)
+    
+    inp.to_csv('inp.csv', mode='w')###
+    
     res = psi_daemon.image_selection_label(inp)
     print(res)
 
