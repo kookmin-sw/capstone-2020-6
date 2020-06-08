@@ -9,7 +9,7 @@ from PIL import Image
 from bson import ObjectId
 import pandas as pd
 import cv2
-import psi_daemon
+# import psi_daemon
 
 def cos_sim(A, B):
     return dot(A, B)/(norm(A)*norm(B))
@@ -190,8 +190,8 @@ def image_select(request):
             })
         i += 1
     inp = toDF(data)
-    res = psi_daemon.image_selection_label(inp)
-    print(res)
+    # res = psi_daemon.image_selection_label(inp)
+    # print(res)
 
 def main():
     global files
