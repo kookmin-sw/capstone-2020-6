@@ -7,7 +7,9 @@ from numpy.linalg import norm
 import numpy as np
 from PIL import Image
 from bson import ObjectId
+import pandas as pd
 import cv2
+import psi_daemon
 
 def cos_sim(A, B):
     return dot(A, B)/(norm(A)*norm(B))
@@ -32,6 +34,17 @@ def mean(dddd):
 tsan = Tsan()
 files = []
 labels = []
+
+def toDF(inp):
+    keys = inp[0].keys()
+    oup = {}
+    for k in keys:
+        oup[k] = []
+    for row in inp:
+        for k in keys:
+            oup[k].append(row[k])
+    return pd.DataFrame.from_dict(oup)
+
 
 def text_select(request):
     pass
@@ -161,7 +174,24 @@ def image_capture_validator(request):
     tsan.save(request=request['idx'], answers=answers)
 
 def image_select(request):
-    pass
+    dataset = request
+    print(dataset)
+    i = 0
+    data = []
+    for prob_key, prob_file in files.items():
+        for label in labels:
+            data.append({
+                "project_id": request['idx'],
+                "data_index": i,
+                "data": prob_file,
+                "label_user": label['dataset'][i]['label'],
+                "user_id": label['username'],
+                "user_credibility": label['reliability']
+            })
+        i += 1
+    inp = toDF(data)
+    res = psi_daemon.image_selection_label(inp)
+    print(res)
 
 def main():
     global files
@@ -180,18 +210,16 @@ def main():
         print(request['idx'], idx)
         labels = tsan.getLabels(request)
         if idx == 1: # 텍스트 객관식
-            continue
             files = tsan.download(request)
             text_select(request)
         elif idx == 2: # 이미지 선택형
             idx = int(request['category']['idx'])
             image_choice(request)
         elif idx == 3: # 이미지 영역지정
-            continue
             files = tsan.download(request)
             image_capture_validator(request)
         elif idx == 4: # 이미지 객관식
-            continue
+            files = tsan.download(request)
             image_select(request)
         break
 
