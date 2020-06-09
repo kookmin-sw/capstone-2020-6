@@ -45,9 +45,61 @@ def toDF(inp):
             oup[k].append(row[k])
     return pd.DataFrame.from_dict(oup)
 
+def text_2_select(request):
+    dataset = request
+    print(dataset)
+    i = 0
+    data = []
+    listFiles = []
+    for prob_key, prob_file in files.items():
+        listFiles.append(prob_key)
+        f = open(prob_file, "r")
+        text = json.loads(f.read())['text']
+        f.close()
+        for label in labels:
+            if '.DS_Store' in prob_file:
+                continue
+            data.append({
+                "project_id": request['idx'],
+                "data_index": i,
+                "data": text,
+                "label_user": label['dataset'][i]['label'],
+                "user_id": label['username'],
+                "user_credibility": label['reliability']
+            })
+        i += 1
+    inp = toDF(data)
+    print(inp)
+    res, rels = psi_daemon.text_selection_label(inp)
+    res = json.loads(res)
+    rels = json.loads(rels)
+    print(res)
+    print(rels)
+    answers = {}
+    for r in res:
+        i = int(r['data_index'])
+        for label in labels:
+            label['dataset'][i]['is_answer'] = label['dataset'][i]['label'] == r['label_final']
+        answers[listFiles[i]] = r['label_final']
+    for label in labels:
+        label['reliability'] = [x['user_credibility'] for x in rels if x['user_id'] == label['username']][0]
+    for label in labels:
+        tsan.updateLabel(request=label['request'], username=label['username'], data=label)
+        tsan.update_reliability(label['username'], label['reliability'])
+    tsan.verifiedRequest(request=request['idx'])
+    tsan.save(request=request['idx'], answers=answers)
 
 def text_select(request):
-    pass
+    print(request['keywordSet'])
+    request['keywordSet'] = [x for x in request['keywordSet'] if x['name']]
+    if(len(request['keywordSet'])==2):
+        flag = False
+        for keyword in request['keywordSet']:
+            if keyword['name'] not in ["긍정", "부정"]:
+                flag = True
+        if not flag:
+            text_2_select(request)
+    keywords = request['keywordSet']
 
 def image_choice(request):
     global labels
