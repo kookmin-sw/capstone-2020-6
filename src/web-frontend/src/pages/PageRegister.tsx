@@ -137,13 +137,13 @@ class App extends React.Component<Props> {
                 type="text"
               />
             </Grid.Column>
-            <Grid.Column width={16}>
-              <Checkbox
-                onChange={this.props.registerStore?.setIsRequester}
-                value={this.props.registerStore?.isRequester}
-              />
-              <span style={{position: "relative", top: -3.5, left: 5}}>저는 의뢰자로 가입합니다.</span>
-            </Grid.Column>
+            {/*<Grid.Column width={16}>*/}
+            {/*  <Checkbox*/}
+            {/*    onChange={this.props.registerStore?.setIsRequester}*/}
+            {/*    value={this.props.registerStore?.isRequester}*/}
+            {/*  />*/}
+            {/*  <span style={{position: "relative", top: -3.5, left: 5}}>저는 의뢰자로 가입합니다.</span>*/}
+            {/*</Grid.Column>*/}
           </Grid>
           <br/>
           <button className="login_form_btn login_btn" onClick={this.props.registerStore?.submit}>회원가입</button>
