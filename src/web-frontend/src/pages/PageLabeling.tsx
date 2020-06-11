@@ -71,7 +71,8 @@ class PageLabeling extends React.Component<Props, RouteComponentProps> {
       this.props.history.push(`${this.props.match.url}/${labelingTypeValue}/0`);      
     })
     .catch((e:any)=> {
-      alert("알 수 없는 에러가 발생하였습니다.")
+      alert("로그인 후 사용 가능합니다.");
+      this.props.history.push('/');
     })
   }
 
