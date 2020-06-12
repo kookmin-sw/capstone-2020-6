@@ -73,6 +73,7 @@ def download(request, idx):
             answers[k]['text'] = d['text']
         response = HttpResponse(json.dumps(answers), content_type="application/json")
         response['Content-Disposition'] = 'inline; filename=%d.json'%(idx)
+    
         return response
     elif req.category.idx == 3:
         directory = "./tmp/data/%d/"%(idx)
@@ -85,6 +86,36 @@ def download(request, idx):
 
         zipf = zipfile.ZipFile('./tmp/%d.zip'%(idx), 'w', zipfile.ZIP_DEFLATED)
         zipdir(directory, zipf)
+        zipf.close()
+        
+        f = open('./tmp/%d.zip'%(idx), "rb")
+        data = f.read()
+        f.close()
+    elif req.category.idx == 4:
+        directory = "./tmp/data/%d/"%(idx)
+        try: os.makedirs(directory)
+        except: pass
+        assigned = db.assigned_dataset.find_one({"request": idx})
+        answers = assigned['answers']
+        labels = list(set([v for x, v in answers.items()]))
+        ans = {}
+        for l in labels:
+            ans[l] = []
+        for x, v in answers.items():
+            for l in labels:
+                if l == v:
+                    ans[l].append(x)
+        for l in labels:
+            directory = "./tmp/data/%d/%s/"%(idx, l)
+            try: os.makedirs(directory)
+            except: pass
+            for k in ans[l]:
+                img = db.image_dataset.find_one({"_id": ObjectId(k)})
+                with open(os.path.join(directory, "%s.jpg"%(k)), "wb") as f:
+                    f.write(img['data'])
+
+        zipf = zipfile.ZipFile('./tmp/%d.zip'%(idx), 'w', zipfile.ZIP_DEFLATED)
+        zipdir("./tmp/data/%d/"%(idx), zipf)
         zipf.close()
         
         f = open('./tmp/%d.zip'%(idx), "rb")
