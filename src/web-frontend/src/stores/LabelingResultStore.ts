@@ -50,14 +50,18 @@ export default class LabelingResultStore {
         })
         .then(({data}:any) => {
             this.answers = data.getLabelResultOfRequester.data
-            const category:any[] = []
-            this.answers.forEach((elem:any) => {
-                const cate = JSON.parse(elem)[0]
-                if(category.findIndex(function(x){ return x == cate }) == -1) {
-                    category.push(cate)
-                }
-            })
-            this.category = category
+            try {
+                const category:any[] = []
+                this.answers.forEach((elem:any) => {
+                    const cate = JSON.parse(elem)[0]
+                    if(category.findIndex(function(x){ return x == cate }) == -1) {
+                        category.push(cate)
+                    }
+                })
+                this.category = category
+            } catch {
+                
+            }
         })
         .catch(() => {})
     }
