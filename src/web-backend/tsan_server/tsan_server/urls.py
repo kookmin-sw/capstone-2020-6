@@ -21,6 +21,7 @@ from graphene_django.views import GraphQLView
 from django.urls import path
 from django.conf.urls import url, include
 
+import json
 import os
 from bson import ObjectId
 from django.conf import settings
@@ -62,6 +63,17 @@ def download(request, idx):
         f = open('./tmp/%d.zip'%(idx), "rb")
         data = f.read()
         f.close()
+    elif req.category.idx == 1:
+        answers = {}
+        assigned = db.assigned_dataset.find_one({"request": idx})
+        for k, v in assigned['answers'].items():
+            d = db.text_dataset.find_one({"_id": ObjectId(k)})
+            answers[k] = {}
+            answers[k]['label'] = v
+            answers[k]['text'] = d['text']
+        response = HttpResponse(json.dumps(answers), content_type="application/json")
+        response['Content-Disposition'] = 'inline; filename=%d.json'%(idx)
+        return response
     elif req.category.idx == 3:
         directory = "./tmp/data/%d/"%(idx)
         try: os.makedirs(directory)
