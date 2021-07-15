@@ -67,15 +67,12 @@
 
 **0. 최은미 교수님**
 
-<img src="img/최은미.png" alt="최은미" />
-
 ```markdown
 ✓ 6조 지도교수님
 ```
 
 **1. 이정하**
 
-<img src="img/이정하.png" alt="이정하" />
 
 ```markdown
 ✓ E-mail: jeongha3751@kookmin.ac.kr
@@ -83,8 +80,6 @@
 ```
 
 **2. 박상일**
-
-<img src="img/박상일.png" alt="박상일" />
 
 ```markdown
 ✓ E-mail: psi1104@kookmin.ac.kr
@@ -94,16 +89,12 @@
 
 **3. 박지희**
 
-<img src="img/박지희.png" alt="박지희" />
-
 ```markdown
 ✓ E-mail: jihi1013@kookmin.ac.kr
 ✓ Role: 블록체인
 ```
 
 **4. 윤여환**
-
-<img src="img/윤여환.png" alt="윤여환" />
 
 ```markdown
 ✓ E-mail: johnyhgmg@gmail.com
@@ -112,16 +103,12 @@
 
 **5. 이다은**
 
-<img src="img/이다은.png" alt="이다은" />
-
 ```markdown
 ✓ E-mail: cg140428@gmail.com
 ✓ Role: Back-End
 ```
 
 **6. 장태진**
-
-<img src="img/장태진.png" alt="이정하" />
 
 ```markdown
 ✓ E-mail: jtjisgod@gmail.com
